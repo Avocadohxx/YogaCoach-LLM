@@ -1,0 +1,16 @@
+{
+  "session_id": "s001",
+  "pose_id": "tadasana",
+  "timestamp_ms": 18600,
+  "tracking_quality": "good",
+  "feedback_allowed": true,
+  "deviations": [
+    {
+      "type": "shoulder_asymmetry",
+      "side": "right_higher",
+      "severity": "mild",
+      "confidence": 0.88,
+      "duration_ms": 1800
+    }
+  ]
+}

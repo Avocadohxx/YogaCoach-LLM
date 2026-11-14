@@ -1,0 +1,7 @@
+{
+  "should_speak": true,
+  "feedback_type": "correction",
+  "target": "shoulders",
+  "text": "检测到双肩高度有些差异，可以在舒适范围内放松肩膀并观察两侧位置。",
+  "grounded_event_type": "shoulder_asymmetry"
+}

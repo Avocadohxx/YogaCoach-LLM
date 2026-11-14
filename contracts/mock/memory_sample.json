@@ -1,0 +1,16 @@
+{
+  "_note": "示例数据，仅用于联调，不代表真实练习结果",
+  "recent_sessions": [
+    {
+      "session_id": "s000",
+      "pose_id": "tadasana",
+      "ended_at": "2026-11-15T10:00:00",
+      "summary": "示例摘要：山式练习约 2 分钟，检测到双肩高度差异 1 次。"
+    }
+  ],
+  "recent_feedback": [],
+  "preferences": {
+    "feedback_length": "short",
+    "voice": false
+  }
+}

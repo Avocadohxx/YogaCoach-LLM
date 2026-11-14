@@ -1,0 +1,11 @@
+{
+  "pose_id": "tadasana",
+  "name_zh": "山式",
+  "reviewed": false,
+  "allowed_camera_views": ["front"],
+  "allowed_targets": ["shoulders", "torso"],
+  "feedback_rules": {
+    "shoulder_asymmetry": "提醒放松肩膀并观察两侧高度，不强求固定幅度"
+  },
+  "safety_note": "出现不适请暂停练习"
+}

@@ -1,0 +1,52 @@
+# 每行：路径  负责人（GitHub 用户名）
+# 运行脚本时可用 A_USER=xxx B_USER=xxx ... 传入，否则是占位名，记得手动替换
+
+# A：数据与骨架、PPT 定稿
+/data/                            @A-username
+/scripts/extract_reference.py     @A-username
+/docs/keypoint_format.md          @A-username
+/pre/YogaCoach_Pre.pptx           @A-username
+/pre/YogaCoach_Pre.pdf            @A-username
+
+# B：姿态分析与后端入口
+/backend/main.py                  @B-username
+/backend/pose_analyzer.py         @B-username
+/backend/routes_pose.py           @B-username
+/tests/test_pose_analyzer.py      @B-username
+/experiments/detection/           @B-username
+/docs/detection_rules.md          @B-username
+
+# C：Agent
+/backend/agent.py                 @C-username
+/backend/tools.py                 @C-username
+/backend/prompts.py               @C-username
+/backend/routes_agent.py          @C-username
+/knowledge/                       @C-username
+/tests/test_agent.py              @C-username
+/experiments/agent/               @C-username
+/experiments/agent_cases.json     @C-username
+/docs/architecture.md             @C-username
+/pre/speaker_notes.md             @C-username
+
+# D：记忆与实验
+/backend/database.py              @D-username
+/backend/memory.py                @D-username
+/backend/routes_memory.py         @D-username
+/tests/test_memory.py             @D-username
+/experiments/cases.json           @D-username
+/experiments/evaluate.py          @D-username
+/experiments/memory/              @D-username
+/experiments/results/             @D-username
+/docs/memory_design.md            @D-username
+/pre/qa.md                        @D-username
+
+# E：前端与演示
+/frontend/                        @E-username
+/scripts/start_demo.sh            @E-username
+/README.md                        @E-username
+/experiments/e2e/                 @E-username
+/pre/demo_plan.md                 @E-username
+
+# 公共接口：任何改动都要全员知道
+/contracts/                       @A-username @B-username @C-username @D-username @E-username
+/backend/schemas.py               @A-username @B-username @C-username @D-username @E-username

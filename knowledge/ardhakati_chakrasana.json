@@ -1,0 +1,10 @@
+{
+  "pose_id": "ardhakati_chakrasana",
+  "name_zh": "站立侧弯式",
+  "reviewed": false,
+  "allowed_camera_views": ["front"],
+  "allowed_targets": [],
+  "feedback_rules": {},
+  "safety_note": "出现不适请暂停练习",
+  "todo": "待 B 确认检测项后由 C 补充 feedback_rules；内容需有懂瑜伽的人审核后再把 reviewed 改为 true"
+}

@@ -1,0 +1,28 @@
+# 密钥与本地环境
+.env
+*.pem
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 数据库与个人练习记录
+*.db
+*.sqlite3
+
+# 前端
+node_modules/
+frontend/dist/
+
+# 原始视频与大文件（未获再分发授权的视频不能入库）
+data/raw_videos/
+*.mp4
+*.mov
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
