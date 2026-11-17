@@ -1,0 +1,26 @@
+[
+  {
+    "source_label": "correct",
+    "directory": "tadasana_front_correct_full",
+    "total_frames": 2127,
+    "accepted_frames": 672,
+    "quality_counts": {
+      "accepted": 672,
+      "rejected_quality": 1455
+    },
+    "review_status": "pending",
+    "use_for": "integration only; not labeled evaluation ground truth"
+  },
+  {
+    "source_label": "incorrect",
+    "directory": "tadasana_front_incorrect_full",
+    "total_frames": 1894,
+    "accepted_frames": 405,
+    "quality_counts": {
+      "accepted": 405,
+      "rejected_quality": 1489
+    },
+    "review_status": "pending",
+    "use_for": "integration only; not labeled evaluation ground truth"
+  }
+]

@@ -1,0 +1,130 @@
+[
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Right Steps/Tadasana Right Steps Angle 1-converted.mp4",
+    "label": "correct",
+    "angle": 1,
+    "camera_view": "front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Right Steps/Tadasana Right Steps Angle 2-converted.mp4",
+    "label": "correct",
+    "angle": 2,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Right Steps/Tadasana Right Steps Angle 3-converted.mp4",
+    "label": "correct",
+    "angle": 3,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Right Steps/Tadasana Right Steps Angle 4-converted.mp4",
+    "label": "correct",
+    "angle": 4,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Wrong Steps/Tadasana Wrong Steps Angle 1-converted.mp4",
+    "label": "incorrect",
+    "angle": 1,
+    "camera_view": "front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Wrong Steps/Tadasana Wrong Steps Angle 2-converted.mp4",
+    "label": "incorrect",
+    "angle": 2,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Wrong Steps/Tadasana Wrong Steps Angle 3-converted.mp4",
+    "label": "incorrect",
+    "angle": 3,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "tadasana",
+    "path": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Wrong Steps/Tadasana Wrong Steps Angle 4-converted.mp4",
+    "label": "incorrect",
+    "angle": 4,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Right Steps/Ardhakati Chakrasana Right Step Angle 1-converted.mp4",
+    "label": "correct",
+    "angle": 1,
+    "camera_view": "front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Right Steps/Ardhakati Chakrasana Right Step Angle 2-converted.mp4",
+    "label": "correct",
+    "angle": 2,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Right Steps/Ardhakati Chakrasana Right Step Angle 3-converted.mp4",
+    "label": "correct",
+    "angle": 3,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Right Steps/Ardhakati Chakrasana Right Step Angle 4-converted.mp4",
+    "label": "correct",
+    "angle": 4,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Wrong Steps/Ardhakati Chakrasana Wrong Step Angle 1-converted.mp4",
+    "label": "incorrect",
+    "angle": 1,
+    "camera_view": "front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Wrong Steps/Ardhakati Chakrasana Wrong Step Angle 2-converted.mp4",
+    "label": "incorrect",
+    "angle": 2,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Wrong Steps/Ardhakati Chakrasana Wrong Step Angle 3-converted.mp4",
+    "label": "incorrect",
+    "angle": 3,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  },
+  {
+    "pose_id": "ardhakati_chakrasana",
+    "path": "Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Wrong Steps/Ardhakati Chakrasana Wrong Step Angle 4-converted.mp4",
+    "label": "incorrect",
+    "angle": 4,
+    "camera_view": "non_front",
+    "view_review": "angle mapping verified from correct-video snapshots at 8s; incorrect videos require review"
+  }
+]

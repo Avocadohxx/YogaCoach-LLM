@@ -26,3 +26,10 @@ data/raw_videos/
 Thumbs.db
 .idea/
 .vscode/
+
+# Downloaded MediaPipe model binaries
+data/models/*.task
+# Local whole-body experimental models
+data/models/*.zip
+data/models/**/*.onnx
+data/models/**/*.bin
