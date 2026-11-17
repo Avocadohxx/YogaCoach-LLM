@@ -1,0 +1,1746 @@
+[
+  {
+    "case_id": "g1_01",
+    "group": "basic",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g1_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g1_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g1_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g1_02",
+    "group": "basic",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g1_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g1_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g1_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g1_03",
+    "group": "basic",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g1_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g1_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g1_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g1_04",
+    "group": "basic",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g1_04_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "right",
+              "severity": "moderate",
+              "confidence": 0.81,
+              "duration_ms": 2600
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g1_04_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "right",
+              "severity": "moderate",
+              "confidence": 0.81,
+              "duration_ms": 2600
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g1_04_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "right",
+              "severity": "moderate",
+              "confidence": 0.81,
+              "duration_ms": 2600
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g1_05",
+    "group": "basic",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g1_05_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "moderate",
+              "confidence": 0.93,
+              "duration_ms": 4200
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g1_05_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "moderate",
+              "confidence": 0.93,
+              "duration_ms": 4200
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g1_05_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "moderate",
+              "confidence": 0.93,
+              "duration_ms": 4200
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g2_01",
+    "group": "gating",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g2_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": []
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g2_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": []
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g2_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": []
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g2_02",
+    "group": "gating",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g2_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g2_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g2_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g2_03",
+    "group": "gating",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g2_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.41,
+              "duration_ms": 600
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g2_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.41,
+              "duration_ms": 600
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g2_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.41,
+              "duration_ms": 600
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g2_04",
+    "group": "gating",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g2_04_current",
+          "pose_id": "ardhakati_chakrasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": []
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g2_04_current",
+          "pose_id": "ardhakati_chakrasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": []
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g2_04_current",
+          "pose_id": "ardhakati_chakrasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": []
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g2_05",
+    "group": "gating",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g2_05_current",
+          "pose_id": "ardhakati_chakrasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": []
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g2_05_current",
+          "pose_id": "ardhakati_chakrasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": []
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g2_05_current",
+          "pose_id": "ardhakati_chakrasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "low",
+          "feedback_allowed": false,
+          "deviations": []
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g3_01",
+    "group": "history",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g3_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g3_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g3_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [
+            {
+              "session_id": "g3_01_hist0",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-14T10:00:00Z",
+              "summary": "山式练习约 2 分钟，检测到：双肩高度差异 2 次（右侧偏高、最高程度轻微）。"
+            }
+          ],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g3_02",
+    "group": "history",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g3_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g3_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g3_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [
+            {
+              "session_id": "g3_02_hist0",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-14T10:00:00Z",
+              "summary": "山式练习约 2 分钟，检测到：双肩高度差异 2 次（右侧偏高、最高程度轻微）。"
+            },
+            {
+              "session_id": "g3_02_hist1",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-13T10:00:00Z",
+              "summary": "山式练习约 2 分钟，检测到：双肩高度差异 2 次（右侧偏高、最高程度轻微）。"
+            },
+            {
+              "session_id": "g3_02_hist2",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-12T10:00:00Z",
+              "summary": "山式练习约 2 分钟，检测到：双肩高度差异 2 次（右侧偏高、最高程度轻微）。"
+            }
+          ],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g3_03",
+    "group": "history",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g3_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g3_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g3_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [
+            {
+              "session_id": "g3_03_hist0",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-14T10:00:00Z",
+              "summary": "山式练习约 1 分钟，检测到：躯干侧倾 1 次（偏向左侧、最高程度中等）。"
+            }
+          ],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g3_04",
+    "group": "history",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g3_04_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g3_04_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g3_04_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [
+            {
+              "session_id": "g3_04_hist0",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-14T10:00:00Z",
+              "summary": "山式练习约 1 分钟，检测到：躯干侧倾 1 次（偏向左侧、最高程度中等）。"
+            }
+          ],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g4_11",
+    "group": "repetition",
+    "sequence_id": "g4_seq1",
+    "step": 1,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g4_11_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 30600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g4_11_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 30600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g4_11_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 30600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g4_12",
+    "group": "repetition",
+    "sequence_id": "g4_seq1",
+    "step": 2,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g4_12_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 42600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g4_12_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 42600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g4_12_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 42600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [
+            {
+              "event_type": "shoulder_asymmetry",
+              "text": "检测到双肩高度有些差异，可以在舒适范围内放松肩膀并观察两侧位置。",
+              "created_at": "2026-11-17T12:27:07.411Z"
+            }
+          ],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g4_13",
+    "group": "repetition",
+    "sequence_id": "g4_seq1",
+    "step": 3,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g4_13_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 54600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g4_13_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 54600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g4_13_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 54600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [
+            {
+              "event_type": "shoulder_asymmetry",
+              "text": "检测到双肩高度有些差异，可以在舒适范围内放松肩膀并观察两侧位置。",
+              "created_at": "2026-11-17T12:27:07.422Z"
+            },
+            {
+              "event_type": "shoulder_asymmetry",
+              "text": "检测到双肩高度有些差异，可以在舒适范围内放松肩膀并观察两侧位置。",
+              "created_at": "2026-11-17T12:27:07.422Z"
+            }
+          ],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g4_21",
+    "group": "repetition",
+    "sequence_id": "g4_seq2",
+    "step": 1,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g4_21_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 30600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g4_21_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 30600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g4_21_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 30600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g4_22",
+    "group": "repetition",
+    "sequence_id": "g4_seq2",
+    "step": 2,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g4_22_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 42600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g4_22_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 42600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g4_22_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 42600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [
+            {
+              "event_type": "torso_tilt",
+              "text": "检测到躯干有些侧倾，可以在舒适范围内感受重心回到中间。",
+              "created_at": "2026-11-17T12:27:07.445Z"
+            }
+          ],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g4_23",
+    "group": "repetition",
+    "sequence_id": "g4_seq2",
+    "step": 3,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g4_23_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 54600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g4_23_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 54600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g4_23_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 54600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [
+            {
+              "event_type": "torso_tilt",
+              "text": "检测到躯干有些侧倾，可以在舒适范围内感受重心回到中间。",
+              "created_at": "2026-11-17T12:27:07.457Z"
+            },
+            {
+              "event_type": "torso_tilt",
+              "text": "检测到躯干有些侧倾，可以在舒适范围内感受重心回到中间。",
+              "created_at": "2026-11-17T12:27:07.456Z"
+            }
+          ],
+          "preferences": {}
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g5_01",
+    "group": "preference",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g5_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g5_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g5_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "right_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {
+            "feedback_length": "short"
+          }
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g5_02",
+    "group": "preference",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g5_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g5_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g5_02_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "left",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {
+            "feedback_length": "short"
+          }
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g5_03",
+    "group": "preference",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g5_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g5_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g5_03_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "shoulder_asymmetry",
+              "side": "left_higher",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {
+            "feedback_length": "short",
+            "voice": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "case_id": "g6_01",
+    "group": "conflict",
+    "sequence_id": null,
+    "step": null,
+    "conditions": {
+      "template": {
+        "analysis_event": {
+          "session_id": "g6_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "right",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        }
+      },
+      "agent_no_memory": {
+        "analysis_event": {
+          "session_id": "g6_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "right",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      },
+      "agent_memory": {
+        "analysis_event": {
+          "session_id": "g6_01_current",
+          "pose_id": "tadasana",
+          "timestamp_ms": 18600,
+          "tracking_quality": "good",
+          "feedback_allowed": true,
+          "deviations": [
+            {
+              "type": "torso_tilt",
+              "side": "right",
+              "severity": "mild",
+              "confidence": 0.88,
+              "duration_ms": 1800
+            }
+          ]
+        },
+        "memory": {
+          "recent_sessions": [
+            {
+              "session_id": "g6_01_hist0",
+              "pose_id": "tadasana",
+              "ended_at": "2026-11-14T10:00:00Z",
+              "summary": "山式练习约 2 分钟，检测到：双肩高度差异 2 次（右侧偏高、最高程度轻微）。"
+            }
+          ],
+          "recent_feedback": [],
+          "preferences": {}
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "sessions": [
+    {
+      "session_id": "sim_s1",
+      "raw_deviation_reports": 35,
+      "stored_episodes": 2,
+      "scripted_windows": 2,
+      "summary_matches_stored_events": true,
+      "history_items_visible_at_start": 0,
+      "summary": "山式练习约 1 分钟，检测到：双肩高度差异 2 次（右侧偏高、最高程度轻微）。"
+    },
+    {
+      "session_id": "sim_s2",
+      "raw_deviation_reports": 35,
+      "stored_episodes": 2,
+      "scripted_windows": 2,
+      "summary_matches_stored_events": true,
+      "history_items_visible_at_start": 1,
+      "summary": "山式练习约 1 分钟，检测到：双肩高度差异 1 次（右侧偏高、最高程度轻微）；躯干侧倾 1 次（偏向左侧、最高程度轻微）。"
+    },
+    {
+      "session_id": "sim_s3",
+      "raw_deviation_reports": 10,
+      "stored_episodes": 1,
+      "scripted_windows": 1,
+      "summary_matches_stored_events": true,
+      "history_items_visible_at_start": 2,
+      "summary": "山式练习约 1 分钟，检测到：双肩高度差异 1 次（右侧偏高、最高程度轻微）。"
+    }
+  ],
+  "notes": "simulated event stream; measures D's layer only",
+  "totals": {
+    "raw_reports": 80,
+    "stored_episodes": 5,
+    "compression_ratio": 16.0,
+    "episodes_equal_scripted_windows": true,
+    "no_memory_control_is_empty": true,
+    "write_ms_median": 1.54,
+    "write_ms_p95": 2.13,
+    "read_ms_median": 0.59,
+    "writes_measured": 83
+  }
+}

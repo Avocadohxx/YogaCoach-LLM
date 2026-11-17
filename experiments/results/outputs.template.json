@@ -1,0 +1,650 @@
+[
+  {
+    "case_id": "g1_01",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_01",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_01",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_02",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_02",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_02",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_03",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_03",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_03",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_04",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_04",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_04",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_05",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_05",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g1_05",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_01",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_01",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_01",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_02",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_02",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_02",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_03",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_03",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_03",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_04",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_04",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_04",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_05",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_05",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g2_05",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_01",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_01",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_01",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_02",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_02",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_02",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_03",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_03",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_03",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_04",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_04",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g3_04",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_11",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_11",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_11",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_12",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_12",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_12",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_13",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_13",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_13",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_21",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_21",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_21",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_22",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_22",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_22",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_23",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_23",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g4_23",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_01",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_01",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_01",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_02",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_02",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_02",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_03",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_03",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g5_03",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g6_01",
+    "condition": "template",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g6_01",
+    "condition": "agent_no_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  },
+  {
+    "case_id": "g6_01",
+    "condition": "agent_memory",
+    "output": null,
+    "latency_ms": null,
+    "grounded": null,
+    "actionability": null,
+    "uses_history": null
+  }
+]
