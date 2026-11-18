@@ -1,9 +1,0 @@
-{
-  "source_video": "Yoga Postures Dataset/Videos/Tadasana/Tadasana Wrong Steps/Tadasana Wrong Steps Angle 1-converted.mp4",
-  "source_label": "incorrect",
-  "label_scope": "video filename only; not per-frame ground truth",
-  "camera_view": "front",
-  "source_timestamp_offset_ms": 0,
-  "segments": [],
-  "review_status": "requires_manual_review"
-}

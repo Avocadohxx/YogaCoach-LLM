@@ -1,9 +1,0 @@
-{
-  "model": "dwpose_l_384.onnx",
-  "fps": 30.007527548304516,
-  "frames": 1894,
-  "layout": "COCO-WholeBody 133",
-  "coordinates": "image pixels; scores are not MediaPipe visibility",
-  "roi": "fixed full image; one person only; no detector",
-  "review_status": "requires_manual_review"
-}
