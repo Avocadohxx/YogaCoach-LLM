@@ -9,6 +9,7 @@ def main():
     p.add_argument('--video', type=Path, required=True)
     p.add_argument('--model', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--model-label', default='DWPose-L (RTMPose)')
     args = p.parse_args()
     import cv2
     import numpy as np
@@ -37,13 +38,13 @@ def main():
                 if keypoints.shape != (1,133,2): raise ValueError(f'Unexpected shape: {keypoints.shape}')
                 stream.write(json.dumps(dict(timestamp_ms=ts,keypoints=keypoints[0].tolist(),scores=scores[0].tolist()),allow_nan=False)+'\n')
                 rendered=draw_skeleton(frame.copy(),keypoints,scores,openpose_skeleton=False,kpt_thr=.3)
-                cv2.putText(rendered,f'DWPose-L (RTMPose) | {ts} ms',(12,30),cv2.FONT_HERSHEY_SIMPLEX,.6,(0,0,255),2)
+                cv2.putText(rendered,f'{args.model_label} | {ts} ms',(12,30),cv2.FONT_HERSHEY_SIMPLEX,.6,(0,0,255),2)
                 writer.write(rendered)
                 if count==round(2067*fps/1000): cv2.imwrite(str(args.output/'comparison_frame_2067ms.jpg'),rendered)
                 count+=1
     finally:
         cap.release();writer.release()
-    (args.output/'metadata.json').write_text(json.dumps(dict(model=args.model.name,fps=fps,frames=count,layout='COCO-WholeBody 133',coordinates='image pixels; scores are not MediaPipe visibility',roi='fixed full image; one person only; no detector',review_status='requires_manual_review'),indent=2)+'\n')
+    (args.output/'metadata.json').write_text(json.dumps(dict(model=args.model.name,model_label=args.model_label,fps=fps,frames=count,layout='COCO-WholeBody 133',coordinates='image pixels; scores are not MediaPipe visibility',roi='fixed full image; one person only; no detector',review_status='requires_manual_review'),indent=2)+'\n')
     print(f'Rendered {count} frames')
 
 

@@ -1,0 +1,10 @@
+{
+  "frames": 2409,
+  "checks": [
+    "frame count",
+    "133 keypoints",
+    "finite values",
+    "increasing timestamps",
+    "video frame count"
+  ]
+}
