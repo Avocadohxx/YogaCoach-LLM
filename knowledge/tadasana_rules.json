@@ -1,0 +1,270 @@
+{
+  "version": "tadasana-rtmw-draft-v1",
+  "reviewed": false,
+  "review_record": null,
+  "expected_layout": "COCO-WholeBody 133",
+  "allowed_feature_versions": [
+    "dwpose133-geometry-v1"
+  ],
+  "allowed_source_models": [
+    "RTMW-x",
+    "rtmw_x_384.onnx"
+  ],
+  "min_keypoint_score": 0.5,
+  "evidence_status": "two_source_videos_no_frame_ground_truth_no_hold_review",
+  "scope": "front-view 2D geometric observations; raised-arm variant needs explicit phase",
+  "provenance": {
+    "correct": {
+      "source_file": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/tadasana_rtmw_original_correct_full/keypoints_133.jsonl",
+      "source_sha256": "e6b029d1848f88968b7b7df6f6bcb00a51fbeea0a21ce7dbc46735b7af0cb44e",
+      "features_jsonl_sha256": "99b02ee8a94e8868adff0c36010d2bd8198154f7fdaa7d2c04deda54c6d12654",
+      "frames": 2132,
+      "label_scope": "filename only; not per-frame correctness"
+    },
+    "incorrect": {
+      "source_file": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/tadasana_rtmw_original_incorrect_full/keypoints_133.jsonl",
+      "source_sha256": "13482ec38dd265847af2b3bdbeb90b3a0cace2df01c2ca7add78f20405579db2",
+      "features_jsonl_sha256": "a4b9c637119377ea417e5b7596c37fae250bd5f75648717aef6e7b96606d0ad8",
+      "frames": 1899,
+      "label_scope": "filename only; not per-frame correctness"
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "left_elbow_bend_overhead",
+      "event_type": "elbow_bend",
+      "target": "left_elbow",
+      "feature_name": "left_elbow_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "identity",
+      "applicable_phases": [
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        165.0,
+        180.0
+      ],
+      "trigger_range": [
+        160.0,
+        180.0
+      ],
+      "clear_range": [
+        165.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Two-arm>150deg geometric bucket only; NOT a verified hold label. 160deg trigger and 165deg clear are conservative demo choices.",
+      "descriptive_reference": {
+        "group": "arms_overhead_geometry",
+        "group_is_not_ground_truth": true,
+        "correct_p05": 169.31755934096216,
+        "correct_median": 175.54439716667375,
+        "incorrect_p05": 153.50617173602146,
+        "incorrect_median": 168.5504508624729
+      }
+    },
+    {
+      "rule_id": "right_elbow_bend_overhead",
+      "event_type": "elbow_bend",
+      "target": "right_elbow",
+      "feature_name": "right_elbow_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "identity",
+      "applicable_phases": [
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        165.0,
+        180.0
+      ],
+      "trigger_range": [
+        160.0,
+        180.0
+      ],
+      "clear_range": [
+        165.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Two-arm>150deg geometric bucket only; NOT a verified hold label. 160deg trigger and 165deg clear are conservative demo choices.",
+      "descriptive_reference": {
+        "group": "arms_overhead_geometry",
+        "group_is_not_ground_truth": true,
+        "correct_p05": 167.24355823808315,
+        "correct_median": 176.51100074880713,
+        "incorrect_p05": 148.66302691764164,
+        "incorrect_median": 167.650251779704
+      }
+    },
+    {
+      "rule_id": "shoulder_height_monitor",
+      "event_type": "shoulder_asymmetry",
+      "target": "shoulders",
+      "feature_name": "shoulder_height_diff",
+      "unit": "torso_ratio",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "applicable_phases": [
+        "arms_down_hold",
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        0.0,
+        0.04
+      ],
+      "trigger_range": [
+        0.0,
+        0.06
+      ],
+      "clear_range": [
+        0.0,
+        0.04
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Highly overlapping distributions; rounded descriptive range only. No events, even in preview."
+    },
+    {
+      "rule_id": "torso_tilt_monitor",
+      "event_type": "torso_tilt",
+      "target": "torso",
+      "feature_name": "torso_tilt_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "abs",
+      "applicable_phases": [
+        "arms_down_hold",
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        0.0,
+        3.0
+      ],
+      "trigger_range": [
+        0.0,
+        5.0
+      ],
+      "clear_range": [
+        0.0,
+        3.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Both sources mostly near upright; abs tilt overlaps, camera roll unverified. No events."
+    },
+    {
+      "rule_id": "stance_monitor",
+      "event_type": "stance_difference",
+      "target": "ankles",
+      "feature_name": "ankle_spacing_shoulder_ratio",
+      "unit": "shoulder_width_ratio",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "applicable_phases": [
+        "arms_down_hold",
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        0.25,
+        0.33
+      ],
+      "trigger_range": [
+        0.2,
+        0.4
+      ],
+      "clear_range": [
+        0.25,
+        0.35
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Rounded raised-arm reference bucket only, not a universal stance. Correct video starts wide. No events."
+    },
+    {
+      "rule_id": "left_upper_arm_monitor",
+      "event_type": "upper_arm_alignment",
+      "target": "left_upper_arm",
+      "feature_name": "left_arm_torso_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "applicable_phases": [
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        170.0,
+        180.0
+      ],
+      "trigger_range": [
+        160.0,
+        180.0
+      ],
+      "clear_range": [
+        170.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Geometric bucket already selected by arm angle; cannot validate this threshold on the same bucket. No events."
+    },
+    {
+      "rule_id": "right_upper_arm_monitor",
+      "event_type": "upper_arm_alignment",
+      "target": "right_upper_arm",
+      "feature_name": "right_arm_torso_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "applicable_phases": [
+        "arms_up_hold"
+      ],
+      "reference_range": [
+        170.0,
+        180.0
+      ],
+      "trigger_range": [
+        160.0,
+        180.0
+      ],
+      "clear_range": [
+        170.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Geometric bucket already selected by arm angle; cannot validate this threshold on the same bucket. No events."
+    }
+  ]
+}

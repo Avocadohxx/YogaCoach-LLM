@@ -11,6 +11,7 @@ from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel, Field
 
 from . import memory
+from .online_rules_133 import online_rules
 
 router = APIRouter(prefix="/api/memory", tags=["memory"])
 
@@ -97,6 +98,7 @@ def remove_session(session_id: str):
 def post_finish_session(session_id: str, body: Optional[FinishBody] = None):
     body = body or FinishBody()
     try:
+        online_rules.reset(session_id)
         summary = memory.finish_session(
             session_id, ended_at=body.ended_at, auto_summary=body.auto_summary
         )

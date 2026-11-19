@@ -27,6 +27,9 @@ POSE_NAMES = {
 DEVIATION_NAMES = {
     "shoulder_asymmetry": "双肩高度差异",
     "torso_tilt": "躯干侧倾",
+    "elbow_bend": "持续肘部弯曲",
+    "upper_arm_alignment": "上臂位置偏差",
+    "bend_direction_mismatch": "侧弯方向不一致",
 }
 SIDE_NAMES = {
     "left_higher": "左侧偏高",
@@ -345,6 +348,21 @@ def save_analysis_event(
             )
             saved += 1
     return {"saved": saved, "merged": merged, "skipped_reason": None}
+
+
+def update_rule_episode(session_id: str, lifecycle: dict[str, Any]) -> None:
+    """Update an already confirmed episode; interruptions never imply recovery."""
+    init_db()
+    with connection() as conn:
+        row = conn.execute('SELECT payload_json FROM pose_events WHERE session_id=? AND event_id=?',
+            (session_id, lifecycle['event_id'])).fetchone()
+        if row is None:
+            return
+        payload = json.loads(row['payload_json'])
+        payload.update(lifecycle_status=lifecycle['status'], duration_ms=lifecycle['duration_ms'],
+            end_timestamp_ms=lifecycle.get('end_timestamp_ms'), interruption_reason=lifecycle.get('interruption_reason'))
+        conn.execute('UPDATE pose_events SET duration_ms=?,payload_json=? WHERE session_id=? AND event_id=?',
+            (lifecycle['duration_ms'], json.dumps(payload, ensure_ascii=False), session_id, lifecycle['event_id']))
 
 
 def get_pose_events(session_id: str) -> list[dict[str, Any]]:

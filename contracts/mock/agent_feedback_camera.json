@@ -1,0 +1,8 @@
+{
+  "should_speak": true,
+  "feedback_type": "camera_hint",
+  "text": "请让全身清晰进入画面，并确认使用正面视角。",
+  "mode": "template",
+  "reason": "llm_unavailable",
+  "tools_used": ["analysis_snapshot", "reference_for", "context_for"]
+}

@@ -36,3 +36,5 @@ data/models/**/*.bin
 
 # Local batch execution logs
 data/batch_logs/
+# Browser-downloaded pose model (reproduce using scripts/download_pose_model.py)
+frontend/public/models/*.task

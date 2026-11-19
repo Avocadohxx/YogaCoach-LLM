@@ -63,3 +63,31 @@
 - 侧弯候选类型 `raised_arm_elbow_bend` 仅为讨论草案，未启用；山式规则不能直接用于侧弯。
 
 三类合成返回在 `mock/b_day1/`；完整输入在 `experiments/detection/fixtures/`，说明在 `experiments/detection/DAY1.md`。所有合成返回标为 `synthetic_mock/unvalidated_synthetic`；不得录入正式实验结果，也不应在实时练习中朗读Mock指导。
+
+## 集成实现更新（2026-11-19，待团队 Review）
+
+前端分析请求现在包含 `frame_seq`、用户确认的 `phase` 和侧弯身体 `side`，以匹配现有 `PoseFrame`。新增反馈端点接受完整 `AnalysisResult`，返回 `should_speak`、`feedback_type`、`text` 和 `mode=evidence_gate`；当前仅为保守证据门控，所有输入均不产生具体纠错，不代表 LLM/工具调用已完成。
+
+真实前端使用 `/api/memory/sessions` 创建/读取会话，以 `/api/memory/sessions/{id}/finish` 结束会话并获取事实总结。当前没有可信在线偏差，因此不写虚构姿态事件或反馈日志。`experiments/cases.json` 的数值为明确标注的合成测试数据，其 expected 仅代表离线策略目标。
+
+## LangGraph 实现更新（2026-11-19，后续迭代）
+
+真实反馈路径现为 `gate → tools → decide → compose → validate`，需要同一后端进程在最近 8 秒内实际出具的分析快照，完整事件必须匹配；synthetic_mock 仍被拒绝。镜头提示服务端冷却为 10 秒，结束会话不再反馈。可选 LLM 只能选择白名单提示编号，无配置或失败使用模板。
+
+当前输出 `mode` 可为 evidence_gate/template/llm，新增 `reason` 和 `tools_used`。参见 `mock/agent_feedback_camera.json`。旧 `agent_feedback.json` 是联调桩的模拟纠错示例，不代表当前真实路由支持纠错。开发启动使用单 worker；多实例需共享证据与冷却状态。
+
+## 主输入改为 133 点（用户确认）
+
+主链路：本地视频/摄像头 → 浏览器 JPEG 抽帧 → `POST /api/pose/frame` → 本地 RTMW 133 点 → 八项测量 → 反馈。
+
+`mock/landmarks_133.json` 来自现有 RTMW 参考 JSONL 第一帧，供接口形状验证，不是逐帧正确姿态真值。直接分析使用 `/api/analyze`，携带 keypoints[133][2]、scores[133]、layout=COCO-WholeBody 133、coordinate_space=image_pixels、会话和帧信息。scores 可超过 1，不能当成 MediaPipe visibility。
+
+原 33 点契约仅保留兼容。联调检查脚本真实后端使用 133 点样例，明确 mock 模式仍使用旧桩样例。A/E 不再以提供前端 MediaPipe 模型作为当前主链路前置条件。
+
+## 在线规则纠错契约更新
+
+JPEG 图像入口新增 phase（prepare/hold/transition/arms_down_hold/arms_up_hold/side_bend_hold/return_upright）、stream_id、movement_variant、raised_arm_side、bend_direction。旧 hold 保留兼容，仅测量，不推断具体保持阶段。前端暂停、切换来源和拖动进度后更换 stream_id。
+
+正式输出 analysis_mode=reviewed_rules_133、reference_status=reviewed_rule_config，rule_evaluation 保留规则审核和生命周期。正式 deviations 使用 RuleDeviation（elbow_bend/upper_arm_alignment/bend_direction_mismatch），包含 event_id、target、side、rule_id、rule_version、feature_name、observed_value、reference_range、duration_ms、min_keypoint_score；confidence/severity 为 null，不推断概率或程度。合成 Deviation 仍与正式事件分开。
+
+正式反馈包含 event_id、target、grounded_event_type，同一事件仅提醒一次并实施会话级冷却。直接 POST /api/analyze 的原始点仍只做测量；不能靠客户端构造的已审核标记取得正式反馈。下游需要 Review 新模式和字段，旧 mock 已按生成器同步新增 rule_evaluation=null。

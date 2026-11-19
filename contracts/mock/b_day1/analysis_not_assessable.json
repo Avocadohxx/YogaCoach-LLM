@@ -41,5 +41,6 @@
   "deviations": [],
   "reason_codes": [
     "low_visibility"
-  ]
+  ],
+  "rule_evaluation": null
 }

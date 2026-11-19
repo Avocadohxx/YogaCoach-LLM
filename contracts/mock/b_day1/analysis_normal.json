@@ -39,5 +39,6 @@
     }
   ],
   "deviations": [],
-  "reason_codes": []
+  "reason_codes": [],
+  "rule_evaluation": null
 }

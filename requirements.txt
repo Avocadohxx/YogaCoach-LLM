@@ -8,3 +8,7 @@ langgraph
 python-dotenv
 pytest
 httpx
+
+# Primary COCO-WholeBody 133 inference
+rtmlib
+onnxruntime
