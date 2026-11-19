@@ -1,0 +1,30 @@
+import {afterEach,expect,it,vi} from 'vitest';
+const hooks=vi.hoisted(()=>({effect:undefined as undefined|(()=>()=>void),refs:[] as unknown[],create:vi.fn()}));
+vi.mock('react',()=>({useEffect:(fn:()=>()=>void)=>{hooks.effect=fn;},useRef:(value:unknown)=>hooks.refs.length?hooks.refs.shift():{current:value}}));
+vi.mock('../services/poseLandmarker',()=>({createPoseLandmarker:hooks.create,connections:[]}));
+import Camera from './Camera';
+afterEach(()=>{vi.unstubAllGlobals();vi.clearAllMocks();});
+it('轨道结束后终止推理，保留的最后一帧不能恢复指导',async()=>{
+  let ended!:()=>void, tick!:(now:number)=>void;
+  const stop=vi.fn(),close=vi.fn(),detect=vi.fn();
+  const track={stop,addEventListener:(_name:string,fn:()=>void)=>{ended=fn;}};
+  vi.stubGlobal('navigator',{mediaDevices:{getUserMedia:vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})}});
+  vi.stubGlobal('requestAnimationFrame',vi.fn(fn=>{tick=fn;return 1;}));
+  vi.stubGlobal('cancelAnimationFrame',vi.fn());
+  hooks.create.mockResolvedValue({close,detectForVideo:detect});
+  hooks.refs=[{current:{play:()=>Promise.resolve(),readyState:4}},{current:{}}];
+  const lost=vi.fn();Camera({onFrame:vi.fn(),onStatus:vi.fn(),onTrackingLost:lost});
+  const cleanup=hooks.effect!();await Promise.resolve();await Promise.resolve();await Promise.resolve();
+  ended();tick(1000);
+  expect(lost).toHaveBeenCalledOnce();expect(close).toHaveBeenCalledOnce();expect(stop).toHaveBeenCalled();expect(detect).not.toHaveBeenCalled();cleanup();
+});
+it('play 等待中卸载，播放完成后不加载模型或更新状态',async()=>{
+  let resolve!:()=>void;const playing=new Promise<void>(r=>resolve=r);
+  const stop=vi.fn(),track={stop,addEventListener:vi.fn()};
+  vi.stubGlobal('navigator',{mediaDevices:{getUserMedia:vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})}});
+  vi.stubGlobal('cancelAnimationFrame',vi.fn());
+  hooks.refs=[{current:{play:()=>playing}},{current:{}}];
+  const status=vi.fn();Camera({onFrame:vi.fn(),onStatus:status,onTrackingLost:vi.fn()});
+  const cleanup=hooks.effect!();await Promise.resolve();cleanup();status.mockClear();resolve();await Promise.resolve();await Promise.resolve();
+  expect(hooks.create).not.toHaveBeenCalled();expect(status).not.toHaveBeenCalled();expect(stop).toHaveBeenCalled();
+});
