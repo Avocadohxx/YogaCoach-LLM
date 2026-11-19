@@ -1,0 +1,7 @@
+{
+  "source_features_sha256": "REPLACE_WITH_FEATURES_JSONL_SHA256",
+  "reviewed": false,
+  "review_record": null,
+  "segments": [],
+  "instructions": "Watch the source video; add non-overlapping [start_ms,end_ms) entries with phase, movement_variant, bend_direction (image_left/image_right/unknown), raised_arm_side (left/right/unknown). Both-arm entries use raised_arm_side=unknown. Unknown periods are not evaluated. This template provides no invented hold labels."
+}

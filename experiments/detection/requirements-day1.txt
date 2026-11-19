@@ -1,0 +1,8 @@
+# B-only minimal environment; avoids installing MediaPipe/LLM packages for geometry tests.
+# These direct versions were used for local verification; team root requirements unchanged.
+fastapi==0.163.1
+pydantic==2.14.1
+starlette==1.10.0
+pytest==9.2.0
+httpx==0.28.1
+uvicorn==0.54.0

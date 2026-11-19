@@ -1,0 +1,7 @@
+{
+  "source_features_sha256": "REPLACE_WITH_SHA256_OF_YOUR_FEATURES_JSONL",
+  "reviewed": false,
+  "review_record": null,
+  "segments": [],
+  "instructions": "Copy this file per source video. After actual video review, add ordered non-overlapping {start_ms,end_ms,phase} entries. Intervals are [start_ms,end_ms). Do not copy geometric preview windows as reviewed holds."
+}

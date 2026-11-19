@@ -1,0 +1,420 @@
+{
+  "version": "ardhakati-rtmw-draft-v1",
+  "exercise": "ardhakati_chakrasana",
+  "reviewed": false,
+  "review_record": null,
+  "expected_layout": "COCO-WholeBody 133",
+  "allowed_feature_versions": [
+    "dwpose133-geometry-v1"
+  ],
+  "allowed_source_models": [
+    "RTMW-x",
+    "rtmw_x_384.onnx"
+  ],
+  "min_keypoint_score": 0.5,
+  "primary_requested_variant": "both_arms_overhead",
+  "source_variant_evidence": "geometry_suggests_single_arm_only_not_manually_verified",
+  "rules": [
+    {
+      "rule_id": "left_raised_elbow_bend",
+      "event_type": "elbow_bend",
+      "target": "left_elbow",
+      "feature_name": "left_elbow_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "identity",
+      "required_arm": "left",
+      "applicable_phases": [
+        "arms_up_hold",
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead",
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        160.0,
+        180.0
+      ],
+      "trigger_range": [
+        150.0,
+        180.0
+      ],
+      "clear_range": [
+        160.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "150deg is below both correct-source whole-video minima (155.71/158.17). 160deg clear is an engineering hysteresis choice. Both-arm transfer is unvalidated. Single-arm mode checks only the explicitly raised arm; not a taught universal limit."
+    },
+    {
+      "rule_id": "left_upper_arm_alignment_both",
+      "event_type": "upper_arm_alignment",
+      "target": "left_upper_arm",
+      "feature_name": "left_arm_torso_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "identity",
+      "required_arm": "left",
+      "applicable_phases": [
+        "arms_up_hold",
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead"
+      ],
+      "reference_range": [
+        160.0,
+        180.0
+      ],
+      "trigger_range": [
+        150.0,
+        180.0
+      ],
+      "clear_range": [
+        160.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Requested both-arm version only: large arm-to-central-trunk deviation is a demo candidate. No both-arm reference frame exists in the attached clips; 150/160 are unvalidated design values."
+    },
+    {
+      "rule_id": "left_upper_arm_single_monitor",
+      "event_type": "upper_arm_alignment",
+      "target": "left_upper_arm",
+      "feature_name": "left_arm_torso_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "required_arm": "left",
+      "applicable_phases": [
+        "arms_up_hold",
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        130.0,
+        180.0
+      ],
+      "trigger_range": [
+        120.0,
+        180.0
+      ],
+      "clear_range": [
+        130.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Correct-source bent torso has raised-arm medians about139-144deg. Range is an illustrative monitor band, not an active judgement or validated standard."
+    },
+    {
+      "rule_id": "right_raised_elbow_bend",
+      "event_type": "elbow_bend",
+      "target": "right_elbow",
+      "feature_name": "right_elbow_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "identity",
+      "required_arm": "right",
+      "applicable_phases": [
+        "arms_up_hold",
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead",
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        160.0,
+        180.0
+      ],
+      "trigger_range": [
+        150.0,
+        180.0
+      ],
+      "clear_range": [
+        160.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "150deg is below both correct-source whole-video minima (155.71/158.17). 160deg clear is an engineering hysteresis choice. Both-arm transfer is unvalidated. Single-arm mode checks only the explicitly raised arm; not a taught universal limit."
+    },
+    {
+      "rule_id": "right_upper_arm_alignment_both",
+      "event_type": "upper_arm_alignment",
+      "target": "right_upper_arm",
+      "feature_name": "right_arm_torso_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "identity",
+      "required_arm": "right",
+      "applicable_phases": [
+        "arms_up_hold",
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead"
+      ],
+      "reference_range": [
+        160.0,
+        180.0
+      ],
+      "trigger_range": [
+        150.0,
+        180.0
+      ],
+      "clear_range": [
+        160.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Requested both-arm version only: large arm-to-central-trunk deviation is a demo candidate. No both-arm reference frame exists in the attached clips; 150/160 are unvalidated design values."
+    },
+    {
+      "rule_id": "right_upper_arm_single_monitor",
+      "event_type": "upper_arm_alignment",
+      "target": "right_upper_arm",
+      "feature_name": "right_arm_torso_angle_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "required_arm": "right",
+      "applicable_phases": [
+        "arms_up_hold",
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        130.0,
+        180.0
+      ],
+      "trigger_range": [
+        120.0,
+        180.0
+      ],
+      "clear_range": [
+        130.0,
+        180.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Correct-source bent torso has raised-arm medians about139-144deg. Range is an illustrative monitor band, not an active judgement or validated standard."
+    },
+    {
+      "rule_id": "bend_direction_mismatch",
+      "event_type": "bend_direction_mismatch",
+      "target": "torso",
+      "feature_name": "torso_tilt_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "candidate",
+      "transform": "expected_direction",
+      "required_arm": "none",
+      "applicable_phases": [
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead",
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        5.0,
+        null
+      ],
+      "trigger_range": [
+        -5.0,
+        null
+      ],
+      "clear_range": [
+        5.0,
+        null
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Tilt is multiplied by the independently declared intended image direction. Only opposite tilt beyond5deg is a candidate, not insufficient bend. Disabled as not_assessable when intended direction comes from this same geometry."
+    },
+    {
+      "rule_id": "lateral_bend_magnitude_monitor",
+      "event_type": "lateral_bend_magnitude",
+      "target": "torso",
+      "feature_name": "torso_tilt_deg",
+      "unit": "deg",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "abs",
+      "required_arm": "none",
+      "applicable_phases": [
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead",
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        15.0,
+        40.0
+      ],
+      "trigger_range": [
+        5.0,
+        50.0
+      ],
+      "clear_range": [
+        15.0,
+        40.0
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Both source directions and durations differ; no minimum/maximum teaching angle inferred. Monitor bounds are placeholders only; do not coach deeper bending from this value."
+    },
+    {
+      "rule_id": "shoulder_height_monitor",
+      "event_type": "shoulder_asymmetry",
+      "target": "shoulders",
+      "feature_name": "shoulder_height_diff",
+      "unit": "torso_ratio",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "required_arm": "none",
+      "applicable_phases": [
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead",
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        0.0,
+        0.8
+      ],
+      "trigger_range": [
+        0.0,
+        1.0
+      ],
+      "clear_range": [
+        0.0,
+        0.8
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Shoulder-height difference is expected in lateral bending. Never apply Tadasana level-shoulder alarms. Bounds are illustrative only."
+    },
+    {
+      "rule_id": "stance_monitor",
+      "event_type": "stance_difference",
+      "target": "ankles",
+      "feature_name": "ankle_spacing_shoulder_ratio",
+      "unit": "shoulder_width_ratio",
+      "enabled": true,
+      "mode": "monitor_only",
+      "transform": "identity",
+      "required_arm": "none",
+      "applicable_phases": [
+        "side_bend_hold"
+      ],
+      "applicable_variants": [
+        "both_arms_overhead",
+        "single_arm_overhead"
+      ],
+      "reference_range": [
+        0.18,
+        0.3
+      ],
+      "trigger_range": [
+        0.15,
+        0.4
+      ],
+      "clear_range": [
+        0.18,
+        0.35
+      ],
+      "temporal": {
+        "min_duration_ms": 1500,
+        "clear_duration_ms": 700,
+        "max_gap_ms": 500
+      },
+      "evidence": "Source ratios vary with projection and preparation. Illustrative monitoring range only; cannot measure plantar load or fixed pelvis."
+    }
+  ],
+  "provenance": {
+    "correct": {
+      "source_directory": "/Users/tzc/Downloads/YogaCoach-LLM-main/experiments/detection/outputs/ardhakati_chakrasana_rtmx_correct",
+      "files_sha256": {
+        "features.jsonl": "d334baee9fc8169a526766bd4c267948c0bd8884cb39bce6180048e7735ea19b",
+        "features.csv": "b2707c77fc9c6430f11e4f4da26f1c307a951fa62190de8cd7f30273f784ca8d",
+        "summary.json": "dbf104d45c4eb9c1c29c4c271f3771a0609777e28d41a30b674bbca352c8db01"
+      },
+      "frames": 2691,
+      "source_label_is_not_frame_ground_truth": true,
+      "camera_view": "angle_1_unverified"
+    },
+    "incorrect": {
+      "source_directory": "/Users/tzc/Downloads/YogaCoach-LLM-main/experiments/detection/outputs/ardhakati_chakrasana_rtmx_incorrect",
+      "files_sha256": {
+        "features.jsonl": "e380c40406bc8884847b5d25a32edef8bb5dd4b269bec670212f7d2daefde10a",
+        "features.csv": "ed7758b7b44f19c7948a99279c1d34c533348990460879edf5adb30299584437",
+        "summary.json": "3be572fac64551e447914ad0d96b41fa5a54b0ab326e266aa058a4bb5f207c25"
+      },
+      "frames": 2089,
+      "source_label_is_not_frame_ground_truth": true,
+      "camera_view": "angle_1_unverified"
+    }
+  },
+  "unsupported_checks": [
+    "hip_translation_or_fixed_pelvis",
+    "shoulder_depression",
+    "palms_together",
+    "head_neutral_or_forward_gaze",
+    "3D_coplanarity_or_rotation",
+    "weight_distribution_or_plantar_pressure",
+    "lateral_stretch_sensation"
+  ],
+  "limitations": [
+    "two_source_clips_only",
+    "unverified_camera_angle",
+    "no_frame_error_labels_or_hold_annotations",
+    "both_arm_variant_has_no_reference_samples"
+  ]
+}

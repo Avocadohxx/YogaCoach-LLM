@@ -1,0 +1,7 @@
+{
+  "source": "synthetic_python_generator",
+  "real_people": false,
+  "validated_reference": false,
+  "review_status": "TEAM_REVIEW_REQUIRED",
+  "note": "合成联调数据；持续1800ms、参考范围及事件均为手工设定，不是检测结果。confidence仅示意关键点质量，不是错误概率。normal也不代表真实动作标准。"
+}

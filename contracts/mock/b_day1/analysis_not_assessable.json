@@ -1,0 +1,45 @@
+{
+  "session_id": "synthetic-day1",
+  "pose_id": "tadasana",
+  "frame_seq": 0,
+  "timestamp_ms": 0,
+  "tracking_quality": "poor",
+  "assessment_status": "not_assessable",
+  "analysis_mode": "synthetic_mock",
+  "reference_status": "unvalidated_synthetic",
+  "feedback_allowed": false,
+  "observations": [
+    {
+      "name": "shoulder_height_diff",
+      "value": null,
+      "unit": "torso_ratio",
+      "valid": false,
+      "reason": "low_visibility"
+    },
+    {
+      "name": "torso_tilt_deg",
+      "value": null,
+      "unit": "deg",
+      "valid": false,
+      "reason": "low_visibility"
+    },
+    {
+      "name": "left_elbow_angle_deg",
+      "value": null,
+      "unit": "deg",
+      "valid": false,
+      "reason": "low_visibility"
+    },
+    {
+      "name": "right_elbow_angle_deg",
+      "value": null,
+      "unit": "deg",
+      "valid": false,
+      "reason": "low_visibility"
+    }
+  ],
+  "deviations": [],
+  "reason_codes": [
+    "low_visibility"
+  ]
+}

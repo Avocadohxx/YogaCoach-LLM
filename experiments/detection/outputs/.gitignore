@@ -1,0 +1,3 @@
+# Derived measurements stay local; regenerate from licensed source JSONL.
+*
+!.gitignore
