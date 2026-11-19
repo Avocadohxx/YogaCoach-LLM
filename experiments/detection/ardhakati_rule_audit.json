@@ -1,0 +1,3659 @@
+{
+  "schema_version": "ardhakati-descriptive-audit-v1",
+  "assumptions": [
+    "correct/incorrect are filename labels, not per-frame correctness ground truth",
+    "angle_1_unverified is not a verified frontal camera view",
+    "signed torso tilt refers to image x, not anatomical left/right; mirroring unresolved",
+    "geometric buckets include transitions and are not independently verified hold segments",
+    "arm-selected buckets cannot validate arm thresholds; selection would be circular",
+    "one clip per label cannot establish sensitivity, specificity, cross-person robustness, or clinical standards"
+  ],
+  "clips": {
+    "correct": {
+      "source_directory": "/Users/tzc/Downloads/YogaCoach-LLM-main/experiments/detection/outputs/ardhakati_chakrasana_rtmx_correct",
+      "files_sha256": {
+        "features.jsonl": "d334baee9fc8169a526766bd4c267948c0bd8884cb39bce6180048e7735ea19b",
+        "features.csv": "b2707c77fc9c6430f11e4f4da26f1c307a951fa62190de8cd7f30273f784ca8d",
+        "summary.json": "dbf104d45c4eb9c1c29c4c271f3771a0609777e28d41a30b674bbca352c8db01"
+      },
+      "frames": 2691,
+      "timestamp_range_ms": [
+        0,
+        89644
+      ],
+      "timestamp_deltas_ms": {
+        "33": 1816,
+        "34": 874
+      },
+      "nonincreasing_timestamps": 0,
+      "measurement_status_counts": {
+        "all_valid": 2691
+      },
+      "camera_view": "angle_1_unverified",
+      "source_selection": {
+        "pose_id": "ardhakati_chakrasana",
+        "source_video": "/Users/niuniu/Documents/block 4/Yoga Coach/Yoga Postures Dataset Original/Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Right Steps/Ardhakati Chakrasana Right Step Angle 1.mp4",
+        "source_label": "correct",
+        "label_scope": "filename only, not per-frame ground truth",
+        "dataset_variant": "original",
+        "camera_view": "angle_1_unverified",
+        "view_review": "Angle 1 selected by filename; anatomical view needs manual verification",
+        "source_timestamp_offset_ms": 0,
+        "segments": [],
+        "review_status": "requires_manual_review"
+      },
+      "source_metadata": {
+        "model": "rtmw_x_384.onnx",
+        "model_label": "RTMW-x",
+        "fps": 30.007519535738982,
+        "frames": 2691,
+        "layout": "COCO-WholeBody 133",
+        "coordinates": "image pixels; scores are not MediaPipe visibility",
+        "roi": "fixed full image; one person only; no detector",
+        "review_status": "requires_manual_review"
+      },
+      "all_file_consistency_checks_passed": true,
+      "mismatch_counts": {},
+      "raw_keypoints_verification": {
+        "path": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/ardhakati_chakrasana_rtmw_original_correct_full/keypoints_133.jsonl",
+        "available": true,
+        "sha256": "7e4d0d9ce18eedcc7909b8d679c22aefd9af4819c6c428388182b0c56b5f2c2f",
+        "declared_sha256": "7e4d0d9ce18eedcc7909b8d679c22aefd9af4819c6c428388182b0c56b5f2c2f",
+        "hash_matches": true,
+        "frames": 2691,
+        "all_133_scores": {
+          "count": 357903,
+          "min": 0.5243456959724426,
+          "max": 1.0179716348648071,
+          "mean": 0.8940046700980341,
+          "median": 0.9041776657104492,
+          "std": 0.05893175793460799,
+          "p05": 0.7844296872615815,
+          "p95": 0.9676582753658295
+        },
+        "relevant_body_scores": {
+          "count": 26910,
+          "min": 0.6819769144058228,
+          "max": 0.95924973487854,
+          "mean": 0.8409528412747144,
+          "median": 0.8523246943950653,
+          "std": 0.05571407852008031,
+          "p05": 0.7362647980451584,
+          "p95": 0.9147047013044357
+        },
+        "scores_above_one": 69,
+        "score_semantics": "raw model outputs; values above 1 preserved; not calibrated probabilities",
+        "scores_by_relevant_keypoint": {
+          "5": {
+            "count": 2691,
+            "min": 0.7281126976013184,
+            "max": 0.914781928062439,
+            "mean": 0.82048365222349,
+            "median": 0.8236852884292603,
+            "std": 0.046950926551594455,
+            "p05": 0.748273491859436,
+            "p95": 0.8992376923561096
+          },
+          "6": {
+            "count": 2691,
+            "min": 0.6819769144058228,
+            "max": 0.913569450378418,
+            "mean": 0.810539463557793,
+            "median": 0.8110268115997314,
+            "std": 0.05720156892996822,
+            "p05": 0.7066956758499146,
+            "p95": 0.8951457142829895
+          },
+          "7": {
+            "count": 2691,
+            "min": 0.764839768409729,
+            "max": 0.9453030824661255,
+            "mean": 0.8572429270382842,
+            "median": 0.8567310571670532,
+            "std": 0.03426303123403431,
+            "p05": 0.8036095499992371,
+            "p95": 0.9154899716377258
+          },
+          "8": {
+            "count": 2691,
+            "min": 0.728848934173584,
+            "max": 0.9222115278244019,
+            "mean": 0.8424921752528514,
+            "median": 0.8462356328964233,
+            "std": 0.042752016210293224,
+            "p05": 0.7770687937736511,
+            "p95": 0.9039809107780457
+          },
+          "9": {
+            "count": 2691,
+            "min": 0.6943928003311157,
+            "max": 0.95924973487854,
+            "mean": 0.8815610002337314,
+            "median": 0.8824827671051025,
+            "std": 0.03381374673284802,
+            "p05": 0.8220203816890717,
+            "p95": 0.9339451789855957
+          },
+          "10": {
+            "count": 2691,
+            "min": 0.7797378301620483,
+            "max": 0.9395335912704468,
+            "mean": 0.860698860691011,
+            "median": 0.8616012334823608,
+            "std": 0.03654794934976634,
+            "p05": 0.8085729479789734,
+            "p95": 0.9206022620201111
+          },
+          "11": {
+            "count": 2691,
+            "min": 0.7038676142692566,
+            "max": 0.8889431357383728,
+            "mean": 0.7830520534506521,
+            "median": 0.7787468433380127,
+            "std": 0.04704027907442754,
+            "p05": 0.715996116399765,
+            "p95": 0.8727603256702423
+          },
+          "12": {
+            "count": 2691,
+            "min": 0.6950465440750122,
+            "max": 0.8945997953414917,
+            "mean": 0.7801557159565585,
+            "median": 0.7710833549499512,
+            "std": 0.04503104330006711,
+            "p05": 0.7125549018383026,
+            "p95": 0.8632192313671112
+          },
+          "15": {
+            "count": 2691,
+            "min": 0.8195512294769287,
+            "max": 0.9357471466064453,
+            "mean": 0.884566242678907,
+            "median": 0.8860175609588623,
+            "std": 0.022013703513612974,
+            "p05": 0.8428727388381958,
+            "p95": 0.9198352694511414
+          },
+          "16": {
+            "count": 2691,
+            "min": 0.8298851251602173,
+            "max": 0.9454858303070068,
+            "mean": 0.8887363216638654,
+            "median": 0.8884600400924683,
+            "std": 0.02175709841041709,
+            "p05": 0.8496197164058685,
+            "p95": 0.9258715510368347
+          }
+        }
+      },
+      "all_frame_statistics": {
+        "shoulder_height_diff_px": {
+          "count": 2691,
+          "min": 0.0,
+          "max": 183.33333333333326,
+          "mean": 67.41220735785953,
+          "median": 37.5,
+          "std": 67.69420155803343,
+          "p05": 2.0833333333332575,
+          "p95": 170.83333333333326
+        },
+        "shoulder_height_diff": {
+          "count": 2691,
+          "min": 0.0,
+          "max": 0.7717924802291465,
+          "mean": 0.2719561332406151,
+          "median": 0.13712693834947537,
+          "std": 0.2846553986320438,
+          "p05": 0.007194198060563838,
+          "p95": 0.7291328610922404
+        },
+        "torso_tilt_deg": {
+          "count": 2691,
+          "min": -34.726669358370735,
+          "max": 30.54757174890702,
+          "mean": 0.7700213199286414,
+          "median": 0.4107153987650931,
+          "std": 15.36907476027286,
+          "p05": -29.58073409636593,
+          "p95": 27.265900229301543
+        },
+        "left_elbow_angle_deg": {
+          "count": 2691,
+          "min": 155.71143761592256,
+          "max": 180.0,
+          "mean": 171.06064660524294,
+          "median": 171.81887737481185,
+          "std": 5.2019957082882495,
+          "p05": 160.13043612906614,
+          "p95": 178.44897248987957
+        },
+        "right_elbow_angle_deg": {
+          "count": 2691,
+          "min": 158.16791825773822,
+          "max": 179.92894872254334,
+          "mean": 170.2567586756592,
+          "median": 170.1306179547232,
+          "std": 3.7593004907797267,
+          "p05": 164.0117172226196,
+          "p95": 175.9732892568394
+        },
+        "left_arm_torso_angle_deg": {
+          "count": 2691,
+          "min": 2.7876881436899743,
+          "max": 179.82874924753796,
+          "mean": 49.610106381759365,
+          "median": 9.689325485067044,
+          "std": 62.8346283869409,
+          "p05": 5.893044277094284,
+          "p95": 172.45504031385866
+        },
+        "right_arm_torso_angle_deg": {
+          "count": 2691,
+          "min": 3.036362726868017,
+          "max": 179.99680465223796,
+          "mean": 63.0766892810207,
+          "median": 10.582740427911771,
+          "std": 65.4640497167927,
+          "p05": 5.863595872895333,
+          "p95": 175.21407044921546
+        },
+        "ankle_spacing_shoulder_ratio": {
+          "count": 2691,
+          "min": 0.18153029971588053,
+          "max": 0.28747153810835124,
+          "mean": 0.22803684853235023,
+          "median": 0.22609336757768841,
+          "std": 0.01648293446222543,
+          "p05": 0.20506117955790018,
+          "p95": 0.261368203953941
+        }
+      },
+      "geometric_buckets_NOT_hold_labels": {
+        "all_frames": {
+          "frames": 2691,
+          "fraction": 1.0,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 2691,
+              "min": 0.0,
+              "max": 183.33333333333326,
+              "mean": 67.41220735785953,
+              "median": 37.5,
+              "std": 67.69420155803343,
+              "p05": 2.0833333333332575,
+              "p95": 170.83333333333326
+            },
+            "shoulder_height_diff": {
+              "count": 2691,
+              "min": 0.0,
+              "max": 0.7717924802291465,
+              "mean": 0.2719561332406151,
+              "median": 0.13712693834947537,
+              "std": 0.2846553986320438,
+              "p05": 0.007194198060563838,
+              "p95": 0.7291328610922404
+            },
+            "torso_tilt_deg": {
+              "count": 2691,
+              "min": -34.726669358370735,
+              "max": 30.54757174890702,
+              "mean": 0.7700213199286414,
+              "median": 0.4107153987650931,
+              "std": 15.36907476027286,
+              "p05": -29.58073409636593,
+              "p95": 27.265900229301543
+            },
+            "left_elbow_angle_deg": {
+              "count": 2691,
+              "min": 155.71143761592256,
+              "max": 180.0,
+              "mean": 171.06064660524294,
+              "median": 171.81887737481185,
+              "std": 5.2019957082882495,
+              "p05": 160.13043612906614,
+              "p95": 178.44897248987957
+            },
+            "right_elbow_angle_deg": {
+              "count": 2691,
+              "min": 158.16791825773822,
+              "max": 179.92894872254334,
+              "mean": 170.2567586756592,
+              "median": 170.1306179547232,
+              "std": 3.7593004907797267,
+              "p05": 164.0117172226196,
+              "p95": 175.9732892568394
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 2691,
+              "min": 2.7876881436899743,
+              "max": 179.82874924753796,
+              "mean": 49.610106381759365,
+              "median": 9.689325485067044,
+              "std": 62.8346283869409,
+              "p05": 5.893044277094284,
+              "p95": 172.45504031385866
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 2691,
+              "min": 3.036362726868017,
+              "max": 179.99680465223796,
+              "mean": 63.0766892810207,
+              "median": 10.582740427911771,
+              "std": 65.4640497167927,
+              "p05": 5.863595872895333,
+              "p95": 175.21407044921546
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 2691,
+              "min": 0.18153029971588053,
+              "max": 0.28747153810835124,
+              "mean": 0.22803684853235023,
+              "median": 0.22609336757768841,
+              "std": 0.01648293446222543,
+              "p05": 0.20506117955790018,
+              "p95": 0.261368203953941
+            }
+          },
+          "runs": {
+            "run_count": 1,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 0,
+                "end_ms": 89644,
+                "elapsed_ms": 89644,
+                "frames": 2691
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "torso_upright_abs_le_5": {
+          "frames": 1681,
+          "fraction": 0.6246748420661464,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 1681,
+              "min": 0.0,
+              "max": 60.41666666666674,
+              "mean": 17.901050961729126,
+              "median": 12.5,
+              "std": 16.18502915560889,
+              "p05": 0.0,
+              "p95": 45.83333333333326
+            },
+            "shoulder_height_diff": {
+              "count": 1681,
+              "min": 0.0,
+              "max": 0.22320573278243738,
+              "mean": 0.06506812792325092,
+              "median": 0.04332101734105622,
+              "std": 0.05854225520363605,
+              "p05": 0.0,
+              "p95": 0.16434108482344148
+            },
+            "torso_tilt_deg": {
+              "count": 1681,
+              "min": -4.8511160953015535,
+              "max": 4.941855049173359,
+              "mean": 0.3217565440791639,
+              "median": 0.2114225810392962,
+              "std": 1.8401863836994936,
+              "p05": -2.622401460541091,
+              "p95": 3.4422152858973716
+            },
+            "left_elbow_angle_deg": {
+              "count": 1681,
+              "min": 155.84933124456583,
+              "max": 180.0,
+              "mean": 173.3315256897609,
+              "median": 173.06324284834906,
+              "std": 3.255474805887555,
+              "p05": 169.36320312988704,
+              "p95": 178.63072995552034
+            },
+            "right_elbow_angle_deg": {
+              "count": 1681,
+              "min": 160.06181820838026,
+              "max": 179.92894872254334,
+              "mean": 171.38951786141917,
+              "median": 171.79082311111728,
+              "std": 3.2725104927374646,
+              "p05": 166.42956561483848,
+              "p95": 175.92857086190827
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 1681,
+              "min": 3.452258996282256,
+              "max": 179.82874924753796,
+              "mean": 36.107254655339254,
+              "median": 8.246277175935267,
+              "std": 53.92359148589283,
+              "p05": 5.747563129137044,
+              "p95": 175.09153107263134
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 1681,
+              "min": 4.691445298469607,
+              "max": 179.99680465223796,
+              "mean": 50.3691623917844,
+              "median": 9.784375781344108,
+              "std": 60.1465065598539,
+              "p05": 5.906785197760665,
+              "p95": 176.4522861927436
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 1681,
+              "min": 0.1947354126123286,
+              "max": 0.2865888714427861,
+              "mean": 0.23195173556388954,
+              "median": 0.22910452651349592,
+              "std": 0.015874024633573243,
+              "p05": 0.20933120849258624,
+              "p95": 0.2640714297506378
+            }
+          },
+          "runs": {
+            "run_count": 3,
+            "runs_ge_1500ms": 3,
+            "longest": [
+              {
+                "start_ms": 0,
+                "end_ms": 26927,
+                "elapsed_ms": 26927,
+                "frames": 809
+              },
+              {
+                "start_ms": 45722,
+                "end_ms": 65750,
+                "elapsed_ms": 20028,
+                "frames": 602
+              },
+              {
+                "start_ms": 80680,
+                "end_ms": 89644,
+                "elapsed_ms": 8964,
+                "frames": 270
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "torso_image_left_lt_minus15": {
+          "frames": 382,
+          "fraction": 0.14195466369379414,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 382,
+              "min": 120.83333333333348,
+              "max": 183.33333333333326,
+              "mean": 164.50698080279233,
+              "median": 166.66666666666674,
+              "std": 12.348875076957329,
+              "p05": 137.5,
+              "p95": 181.25
+            },
+            "shoulder_height_diff": {
+              "count": 382,
+              "min": 0.4370797105856611,
+              "max": 0.7710330027782137,
+              "mean": 0.6537991143490224,
+              "median": 0.666621511020748,
+              "std": 0.06975028995395528,
+              "p05": 0.5038260147229887,
+              "p95": 0.7429830872860743
+            },
+            "torso_tilt_deg": {
+              "count": 382,
+              "min": -34.726669358370735,
+              "max": -15.255118703057791,
+              "mean": -27.992297563569654,
+              "median": -28.60094525590104,
+              "std": 4.348504132007873,
+              "p05": -33.75747429430813,
+              "p95": -18.44516800303308
+            },
+            "left_elbow_angle_deg": {
+              "count": 382,
+              "min": 157.80178778547852,
+              "max": 174.17194606451645,
+              "mean": 161.9440998061768,
+              "median": 161.22657387517057,
+              "std": 2.9950096873107634,
+              "p05": 158.8608436502799,
+              "p95": 167.97499068111713
+            },
+            "right_elbow_angle_deg": {
+              "count": 382,
+              "min": 160.40004559466414,
+              "max": 179.28384005452986,
+              "mean": 167.16652311154303,
+              "median": 166.6741974196682,
+              "std": 3.3687719906198623,
+              "p05": 162.7734740766624,
+              "p95": 173.60415669971553
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 382,
+              "min": 139.2470169653938,
+              "max": 165.93523414319446,
+              "mean": 146.8842096544936,
+              "median": 143.92713002791632,
+              "std": 6.427720783608786,
+              "p05": 140.84352108206173,
+              "p95": 161.80893812201523
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 382,
+              "min": 3.7731273483097065,
+              "max": 12.116639415288084,
+              "mean": 8.422679099775781,
+              "median": 8.599097449575394,
+              "std": 1.7098277284439491,
+              "p05": 5.484340577624753,
+              "p95": 11.0219816358767
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 382,
+              "min": 0.19243909101063603,
+              "max": 0.24340327900934378,
+              "mean": 0.2195079395112825,
+              "median": 0.21914602732723032,
+              "std": 0.010235811786735117,
+              "p05": 0.20229742022497565,
+              "p95": 0.23471694843321245
+            }
+          },
+          "runs": {
+            "run_count": 1,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 67117,
+                "end_ms": 79813,
+                "elapsed_ms": 12696,
+                "frames": 382
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "torso_image_right_gt_15": {
+          "frames": 481,
+          "fraction": 0.178743961352657,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 481,
+              "min": 108.33333333333326,
+              "max": 172.91666666666674,
+              "mean": 157.765939015939,
+              "median": 162.5,
+              "std": 13.257170727594966,
+              "p05": 127.08333333333326,
+              "p95": 170.83333333333326
+            },
+            "shoulder_height_diff": {
+              "count": 481,
+              "min": 0.4121503595753861,
+              "max": 0.7717924802291465,
+              "mean": 0.6771628013257783,
+              "median": 0.7002842172194446,
+              "std": 0.07446491465607503,
+              "p05": 0.5055976911861461,
+              "p95": 0.7499839254139186
+            },
+            "torso_tilt_deg": {
+              "count": 481,
+              "min": 15.13583550374804,
+              "max": 30.54757174890702,
+              "mean": 25.0692173402808,
+              "median": 26.10485400909929,
+              "std": 3.512958384277926,
+              "p05": 18.211429360561443,
+              "p95": 29.42745640318973
+            },
+            "left_elbow_angle_deg": {
+              "count": 481,
+              "min": 164.74488129694222,
+              "max": 176.75931559542306,
+              "mean": 169.59961973360365,
+              "median": 169.34468530444843,
+              "std": 1.9970247324193162,
+              "p05": 166.91144672635872,
+              "p95": 173.84753698358924
+            },
+            "right_elbow_angle_deg": {
+              "count": 481,
+              "min": 161.4690784368318,
+              "max": 173.3523080781821,
+              "mean": 168.28960706555358,
+              "median": 168.373618673069,
+              "std": 2.288840955453911,
+              "p05": 164.51940715889552,
+              "p95": 171.74305896717775
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 481,
+              "min": 3.629252050192426,
+              "max": 16.00791660199945,
+              "mean": 10.704702731959589,
+              "median": 11.141359150834745,
+              "std": 2.2661149939266334,
+              "p05": 6.294498028732517,
+              "p95": 13.784486559804435
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 481,
+              "min": 133.77758955815509,
+              "max": 164.1370363606175,
+              "mean": 140.64496784714683,
+              "median": 138.44253406953152,
+              "std": 6.371222241346276,
+              "p05": 134.9623443433624,
+              "p95": 156.66846517011828
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 481,
+              "min": 0.18153029971588053,
+              "max": 0.253298434713881,
+              "mean": 0.2166730695453202,
+              "median": 0.21718612138153393,
+              "std": 0.01293672689110795,
+              "p05": 0.19505391818794537,
+              "p95": 0.23704991151750882
+            }
+          },
+          "runs": {
+            "run_count": 2,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 29026,
+                "end_ms": 44989,
+                "elapsed_ms": 15963,
+                "frames": 480
+              },
+              {
+                "start_ms": 28959,
+                "end_ms": 28959,
+                "elapsed_ms": 0,
+                "frames": 1
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "both_upper_arms_gt_150": {
+          "frames": 0,
+          "fraction": 0.0,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 0
+            },
+            "shoulder_height_diff": {
+              "count": 0
+            },
+            "torso_tilt_deg": {
+              "count": 0
+            },
+            "left_elbow_angle_deg": {
+              "count": 0
+            },
+            "right_elbow_angle_deg": {
+              "count": 0
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 0
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 0
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 0
+            }
+          },
+          "runs": {
+            "run_count": 0,
+            "runs_ge_1500ms": 0,
+            "longest": [],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "left_arm_gt150_right_lt60": {
+          "frames": 322,
+          "fraction": 0.11965811965811966,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 322,
+              "min": 37.5,
+              "max": 164.58333333333348,
+              "mean": 87.36413043478261,
+              "median": 66.66666666666652,
+              "std": 46.31249368933698,
+              "p05": 41.666666666666515,
+              "p95": 160.41666666666674
+            },
+            "shoulder_height_diff": {
+              "count": 322,
+              "min": 0.12901899899849117,
+              "max": 0.6672311576193386,
+              "mean": 0.323727431262512,
+              "median": 0.24090827481907515,
+              "std": 0.18054429419371495,
+              "p05": 0.14694293148470042,
+              "p95": 0.628382235774059
+            },
+            "torso_tilt_deg": {
+              "count": 322,
+              "min": -29.26568051447327,
+              "max": -0.6510603802294742,
+              "mean": -10.299017387289842,
+              "median": -5.699483349151301,
+              "std": 9.067490322756926,
+              "p05": -26.56505117707799,
+              "p95": -1.2643769694567848
+            },
+            "left_elbow_angle_deg": {
+              "count": 322,
+              "min": 155.71143761592256,
+              "max": 180.0,
+              "mean": 170.0949574581988,
+              "median": 170.16036692821115,
+              "std": 7.939433660407666,
+              "p05": 158.57632351229313,
+              "p95": 179.5464489205352
+            },
+            "right_elbow_angle_deg": {
+              "count": 322,
+              "min": 164.9695694765667,
+              "max": 179.76537485974126,
+              "mean": 174.02959551537364,
+              "median": 174.48100870271725,
+              "std": 3.1532412091659827,
+              "p05": 167.62960300935043,
+              "p95": 178.9741333057319
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 322,
+              "min": 150.02563193884922,
+              "max": 179.82874924753796,
+              "mean": 166.77557284251523,
+              "median": 169.2843787468084,
+              "std": 9.284819467065521,
+              "p05": 151.05791014716786,
+              "p95": 177.65380232831137
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 322,
+              "min": 3.036362726868017,
+              "max": 11.81269537257431,
+              "mean": 7.651575326823868,
+              "median": 7.376187092448513,
+              "std": 1.8499183977009228,
+              "p05": 4.6936881826012105,
+              "p95": 10.471130814179169
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 322,
+              "min": 0.20506117955789954,
+              "max": 0.2717873011676523,
+              "mean": 0.23954282989640568,
+              "median": 0.24104613935203104,
+              "std": 0.013383332048597449,
+              "p05": 0.21694324099680007,
+              "p95": 0.2621091500300086
+            }
+          },
+          "runs": {
+            "run_count": 5,
+            "runs_ge_1500ms": 2,
+            "longest": [
+              {
+                "start_ms": 62251,
+                "end_ms": 69849,
+                "elapsed_ms": 7598,
+                "frames": 229
+              },
+              {
+                "start_ms": 79413,
+                "end_ms": 82346,
+                "elapsed_ms": 2933,
+                "frames": 89
+              },
+              {
+                "start_ms": 69982,
+                "end_ms": 70016,
+                "elapsed_ms": 34,
+                "frames": 2
+              },
+              {
+                "start_ms": 70082,
+                "end_ms": 70082,
+                "elapsed_ms": 0,
+                "frames": 1
+              },
+              {
+                "start_ms": 70282,
+                "end_ms": 70282,
+                "elapsed_ms": 0,
+                "frames": 1
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "right_arm_gt150_left_lt60": {
+          "frames": 356,
+          "fraction": 0.13229282794500186,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 356,
+              "min": 31.25,
+              "max": 145.83333333333326,
+              "mean": 61.569522471910105,
+              "median": 41.66666666666674,
+              "std": 32.689979171836626,
+              "p05": 35.416666666666515,
+              "p95": 129.16666666666674
+            },
+            "shoulder_height_diff": {
+              "count": 356,
+              "min": 0.11672537025037738,
+              "max": 0.6182838554300714,
+              "mean": 0.23400062485105894,
+              "median": 0.15651531887946843,
+              "std": 0.1336296888083533,
+              "p05": 0.12659685224913098,
+              "p95": 0.5210715164548707
+            },
+            "torso_tilt_deg": {
+              "count": 356,
+              "min": 0.6687919529686771,
+              "max": 21.13982480865764,
+              "mean": 6.907702676210333,
+              "median": 3.7409924982199256,
+              "std": 5.728873002105288,
+              "p05": 1.5896799446799865,
+              "p95": 19.144572223619026
+            },
+            "left_elbow_angle_deg": {
+              "count": 356,
+              "min": 165.57034870005188,
+              "max": 180.0,
+              "mean": 174.68563958717016,
+              "median": 174.72341199350134,
+              "std": 2.500666649527108,
+              "p05": 170.8234647390865,
+              "p95": 179.14804588761487
+            },
+            "right_elbow_angle_deg": {
+              "count": 356,
+              "min": 158.16791825773822,
+              "max": 175.9194793491155,
+              "mean": 168.5360087490718,
+              "median": 169.68757281765636,
+              "std": 3.706557411100262,
+              "p05": 160.87575019400253,
+              "p95": 172.76884231716377
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 356,
+              "min": 2.7876881436899743,
+              "max": 11.879402060858055,
+              "mean": 7.931052509782672,
+              "median": 8.077329866282245,
+              "std": 2.1172769932116022,
+              "p05": 3.9391056810233396,
+              "p95": 10.877961283568387
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 356,
+              "min": 150.0122519437154,
+              "max": 179.99680465223796,
+              "mean": 169.78032056318446,
+              "median": 173.66973099099937,
+              "std": 8.408644987121448,
+              "p05": 152.97823932858503,
+              "p95": 178.88994900212228
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 356,
+              "min": 0.2007017370004368,
+              "max": 0.28747153810835124,
+              "mean": 0.24820085795176017,
+              "median": 0.25259006323973954,
+              "std": 0.01952935157814529,
+              "p05": 0.2143434831944943,
+              "p95": 0.27470158054028476
+            }
+          },
+          "runs": {
+            "run_count": 2,
+            "runs_ge_1500ms": 2,
+            "longest": [
+              {
+                "start_ms": 21328,
+                "end_ms": 30392,
+                "elapsed_ms": 9064,
+                "frames": 273
+              },
+              {
+                "start_ms": 44722,
+                "end_ms": 47455,
+                "elapsed_ms": 2733,
+                "frames": 83
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "image_left_bend_left_arm_gt120": {
+          "frames": 382,
+          "fraction": 0.14195466369379414,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 382,
+              "min": 120.83333333333348,
+              "max": 183.33333333333326,
+              "mean": 164.50698080279233,
+              "median": 166.66666666666674,
+              "std": 12.348875076957329,
+              "p05": 137.5,
+              "p95": 181.25
+            },
+            "shoulder_height_diff": {
+              "count": 382,
+              "min": 0.4370797105856611,
+              "max": 0.7710330027782137,
+              "mean": 0.6537991143490224,
+              "median": 0.666621511020748,
+              "std": 0.06975028995395528,
+              "p05": 0.5038260147229887,
+              "p95": 0.7429830872860743
+            },
+            "torso_tilt_deg": {
+              "count": 382,
+              "min": -34.726669358370735,
+              "max": -15.255118703057791,
+              "mean": -27.992297563569654,
+              "median": -28.60094525590104,
+              "std": 4.348504132007873,
+              "p05": -33.75747429430813,
+              "p95": -18.44516800303308
+            },
+            "left_elbow_angle_deg": {
+              "count": 382,
+              "min": 157.80178778547852,
+              "max": 174.17194606451645,
+              "mean": 161.9440998061768,
+              "median": 161.22657387517057,
+              "std": 2.9950096873107634,
+              "p05": 158.8608436502799,
+              "p95": 167.97499068111713
+            },
+            "right_elbow_angle_deg": {
+              "count": 382,
+              "min": 160.40004559466414,
+              "max": 179.28384005452986,
+              "mean": 167.16652311154303,
+              "median": 166.6741974196682,
+              "std": 3.3687719906198623,
+              "p05": 162.7734740766624,
+              "p95": 173.60415669971553
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 382,
+              "min": 139.2470169653938,
+              "max": 165.93523414319446,
+              "mean": 146.8842096544936,
+              "median": 143.92713002791632,
+              "std": 6.427720783608786,
+              "p05": 140.84352108206173,
+              "p95": 161.80893812201523
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 382,
+              "min": 3.7731273483097065,
+              "max": 12.116639415288084,
+              "mean": 8.422679099775781,
+              "median": 8.599097449575394,
+              "std": 1.7098277284439491,
+              "p05": 5.484340577624753,
+              "p95": 11.0219816358767
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 382,
+              "min": 0.19243909101063603,
+              "max": 0.24340327900934378,
+              "mean": 0.2195079395112825,
+              "median": 0.21914602732723032,
+              "std": 0.010235811786735117,
+              "p05": 0.20229742022497565,
+              "p95": 0.23471694843321245
+            }
+          },
+          "runs": {
+            "run_count": 1,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 67117,
+                "end_ms": 79813,
+                "elapsed_ms": 12696,
+                "frames": 382
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "image_right_bend_right_arm_gt120": {
+          "frames": 481,
+          "fraction": 0.178743961352657,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 481,
+              "min": 108.33333333333326,
+              "max": 172.91666666666674,
+              "mean": 157.765939015939,
+              "median": 162.5,
+              "std": 13.257170727594966,
+              "p05": 127.08333333333326,
+              "p95": 170.83333333333326
+            },
+            "shoulder_height_diff": {
+              "count": 481,
+              "min": 0.4121503595753861,
+              "max": 0.7717924802291465,
+              "mean": 0.6771628013257783,
+              "median": 0.7002842172194446,
+              "std": 0.07446491465607503,
+              "p05": 0.5055976911861461,
+              "p95": 0.7499839254139186
+            },
+            "torso_tilt_deg": {
+              "count": 481,
+              "min": 15.13583550374804,
+              "max": 30.54757174890702,
+              "mean": 25.0692173402808,
+              "median": 26.10485400909929,
+              "std": 3.512958384277926,
+              "p05": 18.211429360561443,
+              "p95": 29.42745640318973
+            },
+            "left_elbow_angle_deg": {
+              "count": 481,
+              "min": 164.74488129694222,
+              "max": 176.75931559542306,
+              "mean": 169.59961973360365,
+              "median": 169.34468530444843,
+              "std": 1.9970247324193162,
+              "p05": 166.91144672635872,
+              "p95": 173.84753698358924
+            },
+            "right_elbow_angle_deg": {
+              "count": 481,
+              "min": 161.4690784368318,
+              "max": 173.3523080781821,
+              "mean": 168.28960706555358,
+              "median": 168.373618673069,
+              "std": 2.288840955453911,
+              "p05": 164.51940715889552,
+              "p95": 171.74305896717775
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 481,
+              "min": 3.629252050192426,
+              "max": 16.00791660199945,
+              "mean": 10.704702731959589,
+              "median": 11.141359150834745,
+              "std": 2.2661149939266334,
+              "p05": 6.294498028732517,
+              "p95": 13.784486559804435
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 481,
+              "min": 133.77758955815509,
+              "max": 164.1370363606175,
+              "mean": 140.64496784714683,
+              "median": 138.44253406953152,
+              "std": 6.371222241346276,
+              "p05": 134.9623443433624,
+              "p95": 156.66846517011828
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 481,
+              "min": 0.18153029971588053,
+              "max": 0.253298434713881,
+              "mean": 0.2166730695453202,
+              "median": 0.21718612138153393,
+              "std": 0.01293672689110795,
+              "p05": 0.19505391818794537,
+              "p95": 0.23704991151750882
+            }
+          },
+          "runs": {
+            "run_count": 2,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 29026,
+                "end_ms": 44989,
+                "elapsed_ms": 15963,
+                "frames": 480
+              },
+              {
+                "start_ms": 28959,
+                "end_ms": 28959,
+                "elapsed_ms": 0,
+                "frames": 1
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        }
+      },
+      "threshold_continuous_runs_NOT_validated_events": {
+        "left_elbow_lt_145_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_145_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_150_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_150_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_155_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_155_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_160_all": {
+          "run_count": 34,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 79980,
+              "end_ms": 80946,
+              "elapsed_ms": 966,
+              "frames": 30
+            },
+            {
+              "start_ms": 69949,
+              "end_ms": 70449,
+              "elapsed_ms": 500,
+              "frames": 16
+            },
+            {
+              "start_ms": 70516,
+              "end_ms": 70782,
+              "elapsed_ms": 266,
+              "frames": 9
+            },
+            {
+              "start_ms": 71082,
+              "end_ms": 71249,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 78980,
+              "end_ms": 79147,
+              "elapsed_ms": 167,
+              "frames": 6
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_160_matching_image_bend15": {
+          "run_count": 31,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 69949,
+              "end_ms": 70449,
+              "elapsed_ms": 500,
+              "frames": 16
+            },
+            {
+              "start_ms": 70516,
+              "end_ms": 70782,
+              "elapsed_ms": 266,
+              "frames": 9
+            },
+            {
+              "start_ms": 71082,
+              "end_ms": 71249,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 78980,
+              "end_ms": 79147,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 75648,
+              "end_ms": 75781,
+              "elapsed_ms": 133,
+              "frames": 5
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_165_all": {
+          "run_count": 13,
+          "runs_ge_1500ms": 2,
+          "longest": [
+            {
+              "start_ms": 69249,
+              "end_ms": 77114,
+              "elapsed_ms": 7865,
+              "frames": 237
+            },
+            {
+              "start_ms": 77181,
+              "end_ms": 81646,
+              "elapsed_ms": 4465,
+              "frames": 135
+            },
+            {
+              "start_ms": 68783,
+              "end_ms": 69183,
+              "elapsed_ms": 400,
+              "frames": 13
+            },
+            {
+              "start_ms": 68316,
+              "end_ms": 68383,
+              "elapsed_ms": 67,
+              "frames": 3
+            },
+            {
+              "start_ms": 81746,
+              "end_ms": 81780,
+              "elapsed_ms": 34,
+              "frames": 2
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_165_matching_image_bend15": {
+          "run_count": 7,
+          "runs_ge_1500ms": 2,
+          "longest": [
+            {
+              "start_ms": 69249,
+              "end_ms": 77114,
+              "elapsed_ms": 7865,
+              "frames": 237
+            },
+            {
+              "start_ms": 77181,
+              "end_ms": 79813,
+              "elapsed_ms": 2632,
+              "frames": 80
+            },
+            {
+              "start_ms": 68783,
+              "end_ms": 69183,
+              "elapsed_ms": 400,
+              "frames": 13
+            },
+            {
+              "start_ms": 68316,
+              "end_ms": 68383,
+              "elapsed_ms": 67,
+              "frames": 3
+            },
+            {
+              "start_ms": 68516,
+              "end_ms": 68516,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_130_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_140_matching_image_bend15": {
+          "run_count": 4,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 77281,
+              "end_ms": 77314,
+              "elapsed_ms": 33,
+              "frames": 2
+            },
+            {
+              "start_ms": 76814,
+              "end_ms": 76814,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 77214,
+              "end_ms": 77214,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 77447,
+              "end_ms": 77447,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_150_matching_image_bend15": {
+          "run_count": 4,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 70316,
+              "end_ms": 79380,
+              "elapsed_ms": 9064,
+              "frames": 273
+            },
+            {
+              "start_ms": 70116,
+              "end_ms": 70249,
+              "elapsed_ms": 133,
+              "frames": 5
+            },
+            {
+              "start_ms": 69882,
+              "end_ms": 69949,
+              "elapsed_ms": 67,
+              "frames": 3
+            },
+            {
+              "start_ms": 70049,
+              "end_ms": 70049,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_160_matching_image_bend15": {
+          "run_count": 1,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 68050,
+              "end_ms": 79813,
+              "elapsed_ms": 11763,
+              "frames": 354
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_145_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_145_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_150_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_150_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_155_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_155_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_160_all": {
+          "run_count": 2,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 45189,
+              "end_ms": 45255,
+              "elapsed_ms": 66,
+              "frames": 3
+            },
+            {
+              "start_ms": 45489,
+              "end_ms": 45522,
+              "elapsed_ms": 33,
+              "frames": 2
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_160_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_165_all": {
+          "run_count": 38,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 44422,
+              "end_ms": 46755,
+              "elapsed_ms": 2333,
+              "frames": 71
+            },
+            {
+              "start_ms": 74615,
+              "end_ms": 75348,
+              "elapsed_ms": 733,
+              "frames": 23
+            },
+            {
+              "start_ms": 73881,
+              "end_ms": 74548,
+              "elapsed_ms": 667,
+              "frames": 21
+            },
+            {
+              "start_ms": 78680,
+              "end_ms": 79114,
+              "elapsed_ms": 434,
+              "frames": 14
+            },
+            {
+              "start_ms": 75648,
+              "end_ms": 75948,
+              "elapsed_ms": 300,
+              "frames": 10
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_165_matching_image_bend15": {
+          "run_count": 13,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 44422,
+              "end_ms": 44989,
+              "elapsed_ms": 567,
+              "frames": 18
+            },
+            {
+              "start_ms": 42856,
+              "end_ms": 42956,
+              "elapsed_ms": 100,
+              "frames": 4
+            },
+            {
+              "start_ms": 43023,
+              "end_ms": 43089,
+              "elapsed_ms": 66,
+              "frames": 3
+            },
+            {
+              "start_ms": 43322,
+              "end_ms": 43356,
+              "elapsed_ms": 34,
+              "frames": 2
+            },
+            {
+              "start_ms": 42123,
+              "end_ms": 42156,
+              "elapsed_ms": 33,
+              "frames": 2
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_130_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_140_matching_image_bend15": {
+          "run_count": 14,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 32125,
+              "end_ms": 41056,
+              "elapsed_ms": 8931,
+              "frames": 269
+            },
+            {
+              "start_ms": 41989,
+              "end_ms": 42723,
+              "elapsed_ms": 734,
+              "frames": 23
+            },
+            {
+              "start_ms": 43889,
+              "end_ms": 44356,
+              "elapsed_ms": 467,
+              "frames": 15
+            },
+            {
+              "start_ms": 41123,
+              "end_ms": 41490,
+              "elapsed_ms": 367,
+              "frames": 12
+            },
+            {
+              "start_ms": 41556,
+              "end_ms": 41856,
+              "elapsed_ms": 300,
+              "frames": 10
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_150_matching_image_bend15": {
+          "run_count": 1,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 30426,
+              "end_ms": 44689,
+              "elapsed_ms": 14263,
+              "frames": 429
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_160_matching_image_bend15": {
+          "run_count": 1,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 29293,
+              "end_ms": 44989,
+              "elapsed_ms": 15696,
+              "frames": 472
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "ankle_shoulder_ratio_gt_0.35_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "ankle_shoulder_ratio_gt_0.4_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "ankle_shoulder_ratio_gt_0.45_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "abs_torso_tilt_gt_30_all": {
+          "run_count": 12,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 75514,
+              "end_ms": 78347,
+              "elapsed_ms": 2833,
+              "frames": 86
+            },
+            {
+              "start_ms": 74815,
+              "end_ms": 75281,
+              "elapsed_ms": 466,
+              "frames": 15
+            },
+            {
+              "start_ms": 78414,
+              "end_ms": 78580,
+              "elapsed_ms": 166,
+              "frames": 6
+            },
+            {
+              "start_ms": 75348,
+              "end_ms": 75448,
+              "elapsed_ms": 100,
+              "frames": 4
+            },
+            {
+              "start_ms": 32992,
+              "end_ms": 33025,
+              "elapsed_ms": 33,
+              "frames": 2
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "abs_torso_tilt_gt_35_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "abs_torso_tilt_gt_40_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        }
+      }
+    },
+    "incorrect": {
+      "source_directory": "/Users/tzc/Downloads/YogaCoach-LLM-main/experiments/detection/outputs/ardhakati_chakrasana_rtmx_incorrect",
+      "files_sha256": {
+        "features.jsonl": "e380c40406bc8884847b5d25a32edef8bb5dd4b269bec670212f7d2daefde10a",
+        "features.csv": "ed7758b7b44f19c7948a99279c1d34c533348990460879edf5adb30299584437",
+        "summary.json": "3be572fac64551e447914ad0d96b41fa5a54b0ab326e266aa058a4bb5f207c25"
+      },
+      "frames": 2089,
+      "timestamp_range_ms": [
+        0,
+        69583
+      ],
+      "timestamp_deltas_ms": {
+        "33": 1409,
+        "34": 679
+      },
+      "nonincreasing_timestamps": 0,
+      "measurement_status_counts": {
+        "all_valid": 2089
+      },
+      "camera_view": "angle_1_unverified",
+      "source_selection": {
+        "pose_id": "ardhakati_chakrasana",
+        "source_video": "/Users/niuniu/Documents/block 4/Yoga Coach/Yoga Postures Dataset Original/Yoga Postures Dataset/Videos/Ardhakati Chakrasana/Ardhakati Chakrasana Wrong Steps/Ardhakati Chakrasana Wrong Step Angle 1.mp4",
+        "source_label": "incorrect",
+        "label_scope": "filename only, not per-frame ground truth",
+        "dataset_variant": "original",
+        "camera_view": "angle_1_unverified",
+        "view_review": "Angle 1 selected by filename; anatomical view needs manual verification",
+        "source_timestamp_offset_ms": 0,
+        "segments": [],
+        "review_status": "requires_manual_review"
+      },
+      "source_metadata": {
+        "model": "rtmw_x_384.onnx",
+        "model_label": "RTMW-x",
+        "fps": 30.00752223032134,
+        "frames": 2089,
+        "layout": "COCO-WholeBody 133",
+        "coordinates": "image pixels; scores are not MediaPipe visibility",
+        "roi": "fixed full image; one person only; no detector",
+        "review_status": "requires_manual_review"
+      },
+      "all_file_consistency_checks_passed": true,
+      "mismatch_counts": {},
+      "raw_keypoints_verification": {
+        "path": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/ardhakati_chakrasana_rtmw_original_incorrect_full/keypoints_133.jsonl",
+        "available": true,
+        "sha256": "4c9bbe4f699cd3c1f0756ef55db590989f0f25b3ce27cc79ecc317e0e1a1aba8",
+        "declared_sha256": "4c9bbe4f699cd3c1f0756ef55db590989f0f25b3ce27cc79ecc317e0e1a1aba8",
+        "hash_matches": true,
+        "frames": 2089,
+        "all_133_scores": {
+          "count": 277837,
+          "min": 0.3127758502960205,
+          "max": 1.0095022916793823,
+          "mean": 0.8821423419361246,
+          "median": 0.8960778713226318,
+          "std": 0.05929799815829399,
+          "p05": 0.7709897518157959,
+          "p95": 0.952168607711792
+        },
+        "relevant_body_scores": {
+          "count": 20890,
+          "min": 0.5748370885848999,
+          "max": 0.9312282800674438,
+          "mean": 0.8327451948773753,
+          "median": 0.8418029248714447,
+          "std": 0.044904716984824324,
+          "p05": 0.7569349765777588,
+          "p95": 0.8943958103656768
+        },
+        "scores_above_one": 30,
+        "score_semantics": "raw model outputs; values above 1 preserved; not calibrated probabilities",
+        "scores_by_relevant_keypoint": {
+          "5": {
+            "count": 2089,
+            "min": 0.7260215282440186,
+            "max": 0.8786619305610657,
+            "mean": 0.8245848029238462,
+            "median": 0.8289617300033569,
+            "std": 0.03176662342641818,
+            "p05": 0.7640086531639099,
+            "p95": 0.8664539575576782
+          },
+          "6": {
+            "count": 2089,
+            "min": 0.692344069480896,
+            "max": 0.8765331506729126,
+            "mean": 0.8116557737353203,
+            "median": 0.8199416399002075,
+            "std": 0.038280221984522536,
+            "p05": 0.7446335792541504,
+            "p95": 0.8595023870468139
+          },
+          "7": {
+            "count": 2089,
+            "min": 0.7619884610176086,
+            "max": 0.9091938734054565,
+            "mean": 0.8481030278139676,
+            "median": 0.8531781435012817,
+            "std": 0.028373416764705263,
+            "p05": 0.797398853302002,
+            "p95": 0.8870983481407165
+          },
+          "8": {
+            "count": 2089,
+            "min": 0.6346973776817322,
+            "max": 0.891265869140625,
+            "mean": 0.8304797693437911,
+            "median": 0.8307493925094604,
+            "std": 0.033356256510918274,
+            "p05": 0.771606731414795,
+            "p95": 0.8755702495574951
+          },
+          "9": {
+            "count": 2089,
+            "min": 0.7553967237472534,
+            "max": 0.9224134683609009,
+            "mean": 0.866834182582899,
+            "median": 0.8728827834129333,
+            "std": 0.02898807426602299,
+            "p05": 0.8107864856719971,
+            "p95": 0.9058053731918335
+          },
+          "10": {
+            "count": 2089,
+            "min": 0.5748370885848999,
+            "max": 0.9013973474502563,
+            "mean": 0.8386363875871643,
+            "median": 0.847332239151001,
+            "std": 0.04456380230156438,
+            "p05": 0.7596985816955566,
+            "p95": 0.8880157470703125
+          },
+          "11": {
+            "count": 2089,
+            "min": 0.7208564281463623,
+            "max": 0.8297593593597412,
+            "mean": 0.7816297324038168,
+            "median": 0.7842371463775635,
+            "std": 0.018171543355980917,
+            "p05": 0.7526615262031555,
+            "p95": 0.8060211658477783
+          },
+          "12": {
+            "count": 2089,
+            "min": 0.729900062084198,
+            "max": 0.8392671346664429,
+            "mean": 0.7757269078147874,
+            "median": 0.7771481871604919,
+            "std": 0.01890921514093014,
+            "p05": 0.7447866439819336,
+            "p95": 0.807447862625122
+          },
+          "15": {
+            "count": 2089,
+            "min": 0.7951582074165344,
+            "max": 0.9312282800674438,
+            "mean": 0.8730356191949675,
+            "median": 0.870934009552002,
+            "std": 0.023671241646638752,
+            "p05": 0.8345553159713746,
+            "p95": 0.919771695137024
+          },
+          "16": {
+            "count": 2089,
+            "min": 0.8207229375839233,
+            "max": 0.9255290031433105,
+            "mean": 0.8767657453731922,
+            "median": 0.8776618242263794,
+            "std": 0.01799168850410444,
+            "p05": 0.8441372871398926,
+            "p95": 0.9071389913558959
+          }
+        }
+      },
+      "all_frame_statistics": {
+        "shoulder_height_diff_px": {
+          "count": 2089,
+          "min": 0.0,
+          "max": 147.91666666666674,
+          "mean": 48.205880006382635,
+          "median": 31.25,
+          "std": 49.42280733660185,
+          "p05": 2.0833333333332575,
+          "p95": 137.5
+        },
+        "shoulder_height_diff": {
+          "count": 2089,
+          "min": 0.0,
+          "max": 0.7398643681850116,
+          "mean": 0.22811278315093908,
+          "median": 0.13203053955519095,
+          "std": 0.24837508954308654,
+          "p05": 0.009131163639317584,
+          "p95": 0.7034002357216986
+        },
+        "torso_tilt_deg": {
+          "count": 2089,
+          "min": -26.3069638257418,
+          "max": 35.18874313200395,
+          "mean": 5.981646220953711,
+          "median": 2.130952887104904,
+          "std": 12.455408147556701,
+          "p05": -9.516522253013848,
+          "p95": 32.024334401151556
+        },
+        "left_elbow_angle_deg": {
+          "count": 2089,
+          "min": 46.59191565965497,
+          "max": 180.0,
+          "mean": 165.99301889320057,
+          "median": 170.99717997270182,
+          "std": 16.096707564494668,
+          "p05": 133.06616629282092,
+          "p95": 176.4401039488992
+        },
+        "right_elbow_angle_deg": {
+          "count": 2089,
+          "min": 133.14979657811168,
+          "max": 180.0,
+          "mean": 169.55397839345392,
+          "median": 171.03031268533772,
+          "std": 6.953531634294858,
+          "p05": 153.91169268851243,
+          "p95": 178.13775210970107
+        },
+        "left_arm_torso_angle_deg": {
+          "count": 2089,
+          "min": 2.958184109404831,
+          "max": 179.84446788387265,
+          "mean": 37.13877091890516,
+          "median": 10.581280359066547,
+          "std": 53.70460669737272,
+          "p05": 7.102790403548675,
+          "p95": 171.498002463818
+        },
+        "right_arm_torso_angle_deg": {
+          "count": 2089,
+          "min": 1.2346317054040643,
+          "max": 179.9657629084525,
+          "mean": 70.06275102223738,
+          "median": 42.55758468934288,
+          "std": 66.02346183509272,
+          "p05": 6.171962173838085,
+          "p95": 177.8555019949168
+        },
+        "ankle_spacing_shoulder_ratio": {
+          "count": 2089,
+          "min": 0.19008596651195694,
+          "max": 0.6969209902870236,
+          "mean": 0.30949479670977265,
+          "median": 0.2467324403746306,
+          "std": 0.14856928888237858,
+          "p05": 0.2220161476312827,
+          "p95": 0.6664905793242754
+        }
+      },
+      "geometric_buckets_NOT_hold_labels": {
+        "all_frames": {
+          "frames": 2089,
+          "fraction": 1.0,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 2089,
+              "min": 0.0,
+              "max": 147.91666666666674,
+              "mean": 48.205880006382635,
+              "median": 31.25,
+              "std": 49.42280733660185,
+              "p05": 2.0833333333332575,
+              "p95": 137.5
+            },
+            "shoulder_height_diff": {
+              "count": 2089,
+              "min": 0.0,
+              "max": 0.7398643681850116,
+              "mean": 0.22811278315093908,
+              "median": 0.13203053955519095,
+              "std": 0.24837508954308654,
+              "p05": 0.009131163639317584,
+              "p95": 0.7034002357216986
+            },
+            "torso_tilt_deg": {
+              "count": 2089,
+              "min": -26.3069638257418,
+              "max": 35.18874313200395,
+              "mean": 5.981646220953711,
+              "median": 2.130952887104904,
+              "std": 12.455408147556701,
+              "p05": -9.516522253013848,
+              "p95": 32.024334401151556
+            },
+            "left_elbow_angle_deg": {
+              "count": 2089,
+              "min": 46.59191565965497,
+              "max": 180.0,
+              "mean": 165.99301889320057,
+              "median": 170.99717997270182,
+              "std": 16.096707564494668,
+              "p05": 133.06616629282092,
+              "p95": 176.4401039488992
+            },
+            "right_elbow_angle_deg": {
+              "count": 2089,
+              "min": 133.14979657811168,
+              "max": 180.0,
+              "mean": 169.55397839345392,
+              "median": 171.03031268533772,
+              "std": 6.953531634294858,
+              "p05": 153.91169268851243,
+              "p95": 178.13775210970107
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 2089,
+              "min": 2.958184109404831,
+              "max": 179.84446788387265,
+              "mean": 37.13877091890516,
+              "median": 10.581280359066547,
+              "std": 53.70460669737272,
+              "p05": 7.102790403548675,
+              "p95": 171.498002463818
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 2089,
+              "min": 1.2346317054040643,
+              "max": 179.9657629084525,
+              "mean": 70.06275102223738,
+              "median": 42.55758468934288,
+              "std": 66.02346183509272,
+              "p05": 6.171962173838085,
+              "p95": 177.8555019949168
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 2089,
+              "min": 0.19008596651195694,
+              "max": 0.6969209902870236,
+              "mean": 0.30949479670977265,
+              "median": 0.2467324403746306,
+              "std": 0.14856928888237858,
+              "p05": 0.2220161476312827,
+              "p95": 0.6664905793242754
+            }
+          },
+          "runs": {
+            "run_count": 1,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 0,
+                "end_ms": 69583,
+                "elapsed_ms": 69583,
+                "frames": 2089
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "torso_upright_abs_le_5": {
+          "frames": 1445,
+          "fraction": 0.6917185256103399,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 1445,
+              "min": 0.0,
+              "max": 60.416666666666515,
+              "mean": 19.012399077277962,
+              "median": 14.583333333333258,
+              "std": 15.810730696691582,
+              "p05": 2.0833333333332575,
+              "p95": 45.83333333333326
+            },
+            "shoulder_height_diff": {
+              "count": 1445,
+              "min": 0.0,
+              "max": 0.25800211418413116,
+              "mean": 0.08153801470754277,
+              "median": 0.06221976420601556,
+              "std": 0.06663257623124441,
+              "p05": 0.008927361678697773,
+              "p95": 0.19150717040387247
+            },
+            "torso_tilt_deg": {
+              "count": 1445,
+              "min": -4.8699417162811205,
+              "max": 4.958450919485398,
+              "mean": 1.4256849785778611,
+              "median": 1.5622249168423834,
+              "std": 1.9912349479498457,
+              "p05": -2.553880938825235,
+              "p95": 4.225163498095097
+            },
+            "left_elbow_angle_deg": {
+              "count": 1445,
+              "min": 46.59191565965497,
+              "max": 180.0,
+              "mean": 166.67283200521896,
+              "median": 171.36372995539844,
+              "std": 17.25640821035729,
+              "p05": 133.25473543629053,
+              "p95": 176.3596610233493
+            },
+            "right_elbow_angle_deg": {
+              "count": 1445,
+              "min": 133.56739958917623,
+              "max": 179.95481406338934,
+              "mean": 170.04064273395304,
+              "median": 171.122603769018,
+              "std": 5.73115561467064,
+              "p05": 157.22638784536656,
+              "p95": 177.13706834374437
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 1445,
+              "min": 4.720136931043622,
+              "max": 179.84446788387265,
+              "mean": 33.54997484863027,
+              "median": 9.643223910224224,
+              "std": 48.08154446123374,
+              "p05": 7.2172409696769835,
+              "p95": 171.35726955735078
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 1445,
+              "min": 1.2346317054040643,
+              "max": 179.9657629084525,
+              "mean": 53.698778016473284,
+              "median": 10.29012094695198,
+              "std": 62.58559052826588,
+              "p05": 5.905436600904822,
+              "p95": 178.42721633188864
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 1445,
+              "min": 0.19008596651195694,
+              "max": 0.6969209902870236,
+              "mean": 0.3357167738265682,
+              "median": 0.24840131369743002,
+              "std": 0.17044951366273936,
+              "p05": 0.2208705136132563,
+              "p95": 0.6740086375441584
+            }
+          },
+          "runs": {
+            "run_count": 8,
+            "runs_ge_1500ms": 5,
+            "longest": [
+              {
+                "start_ms": 1933,
+                "end_ms": 17596,
+                "elapsed_ms": 15663,
+                "frames": 471
+              },
+              {
+                "start_ms": 18662,
+                "end_ms": 33192,
+                "elapsed_ms": 14530,
+                "frames": 437
+              },
+              {
+                "start_ms": 48488,
+                "end_ms": 58652,
+                "elapsed_ms": 10164,
+                "frames": 306
+              },
+              {
+                "start_ms": 66383,
+                "end_ms": 69583,
+                "elapsed_ms": 3200,
+                "frames": 97
+              },
+              {
+                "start_ms": 61218,
+                "end_ms": 64184,
+                "elapsed_ms": 2966,
+                "frames": 90
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "torso_image_left_lt_minus15": {
+          "frames": 72,
+          "fraction": 0.03446625179511728,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 72,
+              "min": 100.0,
+              "max": 137.5,
+              "mean": 121.20949074074075,
+              "median": 120.83333333333348,
+              "std": 9.389946861163267,
+              "p05": 104.16666666666674,
+              "p95": 135.41666666666674
+            },
+            "shoulder_height_diff": {
+              "count": 72,
+              "min": 0.4456688116249245,
+              "max": 0.6722630007286394,
+              "mean": 0.5628619952321426,
+              "median": 0.5537818886594952,
+              "std": 0.058894150262101826,
+              "p05": 0.4680981690777937,
+              "p95": 0.6538697369309521
+            },
+            "torso_tilt_deg": {
+              "count": 72,
+              "min": -26.3069638257418,
+              "max": -15.06848815949222,
+              "mean": -20.2992458983426,
+              "median": -19.303000272667564,
+              "std": 3.811437825453756,
+              "p05": -26.177256206173173,
+              "p95": -15.509970873765647
+            },
+            "left_elbow_angle_deg": {
+              "count": 72,
+              "min": 129.09694461325762,
+              "max": 148.71944135177068,
+              "mean": 140.5584816001158,
+              "median": 143.48148189741437,
+              "std": 6.759993470305163,
+              "p05": 129.55843438376453,
+              "p95": 147.3550863988024
+            },
+            "right_elbow_angle_deg": {
+              "count": 72,
+              "min": 165.03248636522318,
+              "max": 178.23912994440204,
+              "mean": 172.26113223780396,
+              "median": 173.26599951697807,
+              "std": 3.4685985841115596,
+              "p05": 166.3381696464559,
+              "p95": 177.17742518677215
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 72,
+              "min": 155.953761296139,
+              "max": 177.96657979169532,
+              "mean": 162.78694648890846,
+              "median": 160.8784439759167,
+              "std": 5.088719091920011,
+              "p05": 156.5947971230585,
+              "p95": 170.50707053773033
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 72,
+              "min": 7.317336630737499,
+              "max": 10.99788182304141,
+              "mean": 9.185157897006587,
+              "median": 9.060731932207588,
+              "std": 0.9187051563825837,
+              "p05": 7.846924693050737,
+              "p95": 10.671919385843378
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 72,
+              "min": 0.22276613546594182,
+              "max": 0.287747389258431,
+              "mean": 0.25200587438607036,
+              "median": 0.25040156330529073,
+              "std": 0.014304367047133308,
+              "p05": 0.23107431957035357,
+              "p95": 0.2808472093155142
+            }
+          },
+          "runs": {
+            "run_count": 2,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 59185,
+                "end_ms": 60818,
+                "elapsed_ms": 1633,
+                "frames": 50
+              },
+              {
+                "start_ms": 64784,
+                "end_ms": 65484,
+                "elapsed_ms": 700,
+                "frames": 22
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "torso_image_right_gt_15": {
+          "frames": 419,
+          "fraction": 0.20057443752991863,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 419,
+              "min": 93.75,
+              "max": 147.91666666666674,
+              "mean": 131.5980509148767,
+              "median": 135.41666666666652,
+              "std": 10.920258121345572,
+              "p05": 106.25,
+              "p95": 143.75
+            },
+            "shoulder_height_diff": {
+              "count": 419,
+              "min": 0.41756111422566805,
+              "max": 0.7398643681850116,
+              "mean": 0.6618398785495443,
+              "median": 0.6835197819301427,
+              "std": 0.06033692823247789,
+              "p05": 0.5195942743483343,
+              "p95": 0.7191381191761586
+            },
+            "torso_tilt_deg": {
+              "count": 419,
+              "min": 15.004920382860218,
+              "max": 35.18874313200395,
+              "mean": 28.459307615111637,
+              "median": 29.931511840507817,
+              "std": 4.300339331593015,
+              "p05": 19.519714705366123,
+              "p95": 33.53281234056399
+            },
+            "left_elbow_angle_deg": {
+              "count": 419,
+              "min": 164.01787604031733,
+              "max": 179.48476407307416,
+              "mean": 170.42944415935858,
+              "median": 170.06473822975798,
+              "std": 2.911880952447129,
+              "p05": 166.31442677918892,
+              "p95": 176.50397628870562
+            },
+            "right_elbow_angle_deg": {
+              "count": 419,
+              "min": 149.27306677967255,
+              "max": 180.0,
+              "mean": 168.08477851197225,
+              "median": 169.20371696083723,
+              "std": 6.571748525637971,
+              "p05": 154.48553327738856,
+              "p95": 177.68030804133147
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 419,
+              "min": 4.700073914094315,
+              "max": 19.74657251846228,
+              "mean": 12.166074649715604,
+              "median": 12.640414670427788,
+              "std": 2.861023560526244,
+              "p05": 7.068354799580218,
+              "p95": 16.9421314875571
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 419,
+              "min": 116.90144889827421,
+              "max": 168.04397335287547,
+              "mean": 139.91492242844754,
+              "median": 137.83826452556693,
+              "std": 8.576952994259218,
+              "p05": 127.85914056658513,
+              "p95": 156.57557374410715
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 419,
+              "min": 0.19964538979197705,
+              "max": 0.315762140886853,
+              "mean": 0.24382063376903124,
+              "median": 0.23951083293555822,
+              "std": 0.019295710762716297,
+              "p05": 0.22175380272186948,
+              "p95": 0.2914994170017493
+            }
+          },
+          "runs": {
+            "run_count": 1,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 33991,
+                "end_ms": 47921,
+                "elapsed_ms": 13930,
+                "frames": 419
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "both_upper_arms_gt_150": {
+          "frames": 0,
+          "fraction": 0.0,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 0
+            },
+            "shoulder_height_diff": {
+              "count": 0
+            },
+            "torso_tilt_deg": {
+              "count": 0
+            },
+            "left_elbow_angle_deg": {
+              "count": 0
+            },
+            "right_elbow_angle_deg": {
+              "count": 0
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 0
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 0
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 0
+            }
+          },
+          "runs": {
+            "run_count": 0,
+            "runs_ge_1500ms": 0,
+            "longest": [],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "left_arm_gt150_right_lt60": {
+          "frames": 227,
+          "fraction": 0.1086644327429392,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 227,
+              "min": 25.0,
+              "max": 137.5,
+              "mean": 77.15675477239355,
+              "median": 75.0,
+              "std": 36.83268789531662,
+              "p05": 29.79166666666672,
+              "p95": 132.70833333333326
+            },
+            "shoulder_height_diff": {
+              "count": 227,
+              "min": 0.10212396117294689,
+              "max": 0.6722630007286394,
+              "mean": 0.34518336086552337,
+              "median": 0.3232081002551282,
+              "std": 0.17801842779480304,
+              "p05": 0.12399826699447775,
+              "p95": 0.641720552949322
+            },
+            "torso_tilt_deg": {
+              "count": 227,
+              "min": -26.3069638257418,
+              "max": 1.0095127826163812,
+              "mean": -10.003203769672963,
+              "median": -8.20235424462558,
+              "std": 8.227248660701617,
+              "p05": -25.401188675414005,
+              "p95": 0.49179718794590854
+            },
+            "left_elbow_angle_deg": {
+              "count": 227,
+              "min": 127.84849461946112,
+              "max": 158.41617857825216,
+              "mean": 138.3868116723911,
+              "median": 137.67884865021588,
+              "std": 6.861273161879104,
+              "p05": 129.33567545470058,
+              "p95": 148.76732944695996
+            },
+            "right_elbow_angle_deg": {
+              "count": 227,
+              "min": 140.43405854154054,
+              "max": 179.801882603169,
+              "mean": 171.7917325334304,
+              "median": 174.25641579949826,
+              "std": 7.763544649868131,
+              "p05": 152.38098887947746,
+              "p95": 178.66156385294173
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 227,
+              "min": 150.5055581528903,
+              "max": 179.84446788387265,
+              "mean": 169.5624495246078,
+              "median": 171.05798933628807,
+              "std": 7.4598956376440775,
+              "p05": 156.8616883969003,
+              "p95": 179.24926917107138
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 227,
+              "min": 1.2346317054040643,
+              "max": 10.99788182304141,
+              "mean": 8.149738433837381,
+              "median": 8.610215017082412,
+              "std": 1.8934195794919404,
+              "p05": 3.885739490672645,
+              "p95": 10.41361707039177
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 227,
+              "min": 0.22276613546594182,
+              "max": 0.2910653909156886,
+              "mean": 0.2573039005050362,
+              "median": 0.2567904052571149,
+              "std": 0.013475932420354924,
+              "p05": 0.23615769765524672,
+              "p95": 0.28117455610872816
+            }
+          },
+          "runs": {
+            "run_count": 1,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 58719,
+                "end_ms": 66250,
+                "elapsed_ms": 7531,
+                "frames": 227
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "right_arm_gt150_left_lt60": {
+          "frames": 320,
+          "fraction": 0.15318334131163236,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 320,
+              "min": 29.166666666666515,
+              "max": 137.5,
+              "mean": 57.792968749999986,
+              "median": 43.75,
+              "std": 30.091249363147664,
+              "p05": 31.25,
+              "p95": 127.08333333333326
+            },
+            "shoulder_height_diff": {
+              "count": 320,
+              "min": 0.12059894431776418,
+              "max": 0.6753619135698081,
+              "mean": 0.25379257872502387,
+              "median": 0.1870235062182627,
+              "std": 0.14767726168500514,
+              "p05": 0.13147535655150025,
+              "p95": 0.6225530997417714
+            },
+            "torso_tilt_deg": {
+              "count": 320,
+              "min": 1.966464568295754,
+              "max": 25.778430862189218,
+              "mean": 7.10037913088788,
+              "median": 4.005439585364984,
+              "std": 6.715916152773881,
+              "p05": 2.279983541981037,
+              "p95": 22.946861586468824
+            },
+            "left_elbow_angle_deg": {
+              "count": 320,
+              "min": 169.77715901484342,
+              "max": 180.0,
+              "mean": 174.38750977600387,
+              "median": 174.1932730944683,
+              "std": 2.213899307074554,
+              "p05": 171.32682595212023,
+              "p95": 179.0289780689208
+            },
+            "right_elbow_angle_deg": {
+              "count": 320,
+              "min": 147.86378175959015,
+              "max": 180.0,
+              "mean": 169.29548653372674,
+              "median": 173.21899579146623,
+              "std": 9.978105871601292,
+              "p05": 150.44480322331665,
+              "p95": 179.70863729717945
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 320,
+              "min": 2.958184109404831,
+              "max": 12.768253786817063,
+              "mean": 9.805396579680574,
+              "median": 10.34873176430982,
+              "std": 2.0156391009780306,
+              "p05": 4.7021216752910036,
+              "p95": 11.841775306389561
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 320,
+              "min": 150.32410816943118,
+              "max": 179.9657629084525,
+              "mean": 170.83017307340552,
+              "median": 173.74945974767502,
+              "std": 9.05852674792854,
+              "p05": 152.96021050948642,
+              "p95": 179.56400563386157
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 320,
+              "min": 0.21435005469079255,
+              "max": 0.2869999276570525,
+              "mean": 0.24908364658638635,
+              "median": 0.24695216150625435,
+              "std": 0.014263983277664875,
+              "p05": 0.22884777412995674,
+              "p95": 0.27057294150259265
+            }
+          },
+          "runs": {
+            "run_count": 3,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 26393,
+                "end_ms": 34891,
+                "elapsed_ms": 8498,
+                "frames": 256
+              },
+              {
+                "start_ms": 47721,
+                "end_ms": 49188,
+                "elapsed_ms": 1467,
+                "frames": 45
+              },
+              {
+                "start_ms": 41823,
+                "end_ms": 42423,
+                "elapsed_ms": 600,
+                "frames": 19
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "image_left_bend_left_arm_gt120": {
+          "frames": 72,
+          "fraction": 0.03446625179511728,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 72,
+              "min": 100.0,
+              "max": 137.5,
+              "mean": 121.20949074074075,
+              "median": 120.83333333333348,
+              "std": 9.389946861163267,
+              "p05": 104.16666666666674,
+              "p95": 135.41666666666674
+            },
+            "shoulder_height_diff": {
+              "count": 72,
+              "min": 0.4456688116249245,
+              "max": 0.6722630007286394,
+              "mean": 0.5628619952321426,
+              "median": 0.5537818886594952,
+              "std": 0.058894150262101826,
+              "p05": 0.4680981690777937,
+              "p95": 0.6538697369309521
+            },
+            "torso_tilt_deg": {
+              "count": 72,
+              "min": -26.3069638257418,
+              "max": -15.06848815949222,
+              "mean": -20.2992458983426,
+              "median": -19.303000272667564,
+              "std": 3.811437825453756,
+              "p05": -26.177256206173173,
+              "p95": -15.509970873765647
+            },
+            "left_elbow_angle_deg": {
+              "count": 72,
+              "min": 129.09694461325762,
+              "max": 148.71944135177068,
+              "mean": 140.5584816001158,
+              "median": 143.48148189741437,
+              "std": 6.759993470305163,
+              "p05": 129.55843438376453,
+              "p95": 147.3550863988024
+            },
+            "right_elbow_angle_deg": {
+              "count": 72,
+              "min": 165.03248636522318,
+              "max": 178.23912994440204,
+              "mean": 172.26113223780396,
+              "median": 173.26599951697807,
+              "std": 3.4685985841115596,
+              "p05": 166.3381696464559,
+              "p95": 177.17742518677215
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 72,
+              "min": 155.953761296139,
+              "max": 177.96657979169532,
+              "mean": 162.78694648890846,
+              "median": 160.8784439759167,
+              "std": 5.088719091920011,
+              "p05": 156.5947971230585,
+              "p95": 170.50707053773033
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 72,
+              "min": 7.317336630737499,
+              "max": 10.99788182304141,
+              "mean": 9.185157897006587,
+              "median": 9.060731932207588,
+              "std": 0.9187051563825837,
+              "p05": 7.846924693050737,
+              "p95": 10.671919385843378
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 72,
+              "min": 0.22276613546594182,
+              "max": 0.287747389258431,
+              "mean": 0.25200587438607036,
+              "median": 0.25040156330529073,
+              "std": 0.014304367047133308,
+              "p05": 0.23107431957035357,
+              "p95": 0.2808472093155142
+            }
+          },
+          "runs": {
+            "run_count": 2,
+            "runs_ge_1500ms": 1,
+            "longest": [
+              {
+                "start_ms": 59185,
+                "end_ms": 60818,
+                "elapsed_ms": 1633,
+                "frames": 50
+              },
+              {
+                "start_ms": 64784,
+                "end_ms": 65484,
+                "elapsed_ms": 700,
+                "frames": 22
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        },
+        "image_right_bend_right_arm_gt120": {
+          "frames": 406,
+          "fraction": 0.19435136428913355,
+          "statistics": {
+            "shoulder_height_diff_px": {
+              "count": 406,
+              "min": 93.75,
+              "max": 147.91666666666674,
+              "mean": 132.45073891625614,
+              "median": 135.41666666666674,
+              "std": 9.965138439998338,
+              "p05": 110.93749999999989,
+              "p95": 143.75
+            },
+            "shoulder_height_diff": {
+              "count": 406,
+              "min": 0.41756111422566805,
+              "max": 0.7398643681850116,
+              "mean": 0.663368399248172,
+              "median": 0.6846410947575974,
+              "std": 0.06062746357038123,
+              "p05": 0.5170469430574686,
+              "p95": 0.719673129330829
+            },
+            "torso_tilt_deg": {
+              "count": 406,
+              "min": 15.004920382860218,
+              "max": 35.18874313200395,
+              "mean": 28.568325543294318,
+              "median": 30.05437608287439,
+              "std": 4.321538362851599,
+              "p05": 19.462168127395632,
+              "p95": 33.587016438479694
+            },
+            "left_elbow_angle_deg": {
+              "count": 406,
+              "min": 164.01787604031733,
+              "max": 179.48476407307416,
+              "mean": 170.41383346764837,
+              "median": 170.0466569711073,
+              "std": 2.951205493879575,
+              "p05": 166.2893627229806,
+              "p95": 176.59754960105232
+            },
+            "right_elbow_angle_deg": {
+              "count": 406,
+              "min": 149.27306677967255,
+              "max": 180.0,
+              "mean": 167.8274434951952,
+              "median": 168.954101507239,
+              "std": 6.506351565548996,
+              "p05": 154.45267328629063,
+              "p95": 177.60653396423328
+            },
+            "left_arm_torso_angle_deg": {
+              "count": 406,
+              "min": 4.700073914094315,
+              "max": 19.74657251846228,
+              "mean": 12.315221398551595,
+              "median": 12.709436141768379,
+              "std": 2.7711442717205634,
+              "p05": 7.182145345873948,
+              "p95": 16.96423503337848
+            },
+            "right_arm_torso_angle_deg": {
+              "count": 406,
+              "min": 120.07983302386593,
+              "max": 168.04397335287547,
+              "mean": 140.59506413373728,
+              "median": 138.40999553031773,
+              "std": 7.8097214855705355,
+              "p05": 133.6155279886221,
+              "p95": 156.58092562213508
+            },
+            "ankle_spacing_shoulder_ratio": {
+              "count": 406,
+              "min": 0.19964538979197705,
+              "max": 0.315762140886853,
+              "mean": 0.2437895181677868,
+              "median": 0.23942606534028665,
+              "std": 0.019535450071161854,
+              "p05": 0.221753802721869,
+              "p95": 0.2914994170017493
+            }
+          },
+          "runs": {
+            "run_count": 3,
+            "runs_ge_1500ms": 2,
+            "longest": [
+              {
+                "start_ms": 33991,
+                "end_ms": 41023,
+                "elapsed_ms": 7032,
+                "frames": 212
+              },
+              {
+                "start_ms": 41523,
+                "end_ms": 47921,
+                "elapsed_ms": 6398,
+                "frames": 193
+              },
+              {
+                "start_ms": 41190,
+                "end_ms": 41190,
+                "elapsed_ms": 0,
+                "frames": 1
+              }
+            ],
+            "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+          }
+        }
+      },
+      "threshold_continuous_runs_NOT_validated_events": {
+        "left_elbow_lt_145_all": {
+          "run_count": 10,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 60651,
+              "end_ms": 65883,
+              "elapsed_ms": 5232,
+              "frames": 158
+            },
+            {
+              "start_ms": 56852,
+              "end_ms": 58052,
+              "elapsed_ms": 1200,
+              "frames": 37
+            },
+            {
+              "start_ms": 59818,
+              "end_ms": 60085,
+              "elapsed_ms": 267,
+              "frames": 9
+            },
+            {
+              "start_ms": 60218,
+              "end_ms": 60385,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 59618,
+              "end_ms": 59685,
+              "elapsed_ms": 67,
+              "frames": 3
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_145_matching_image_bend15": {
+          "run_count": 8,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 64784,
+              "end_ms": 65484,
+              "elapsed_ms": 700,
+              "frames": 22
+            },
+            {
+              "start_ms": 59818,
+              "end_ms": 60085,
+              "elapsed_ms": 267,
+              "frames": 9
+            },
+            {
+              "start_ms": 60218,
+              "end_ms": 60385,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 60651,
+              "end_ms": 60818,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 59618,
+              "end_ms": 59685,
+              "elapsed_ms": 67,
+              "frames": 3
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_150_all": {
+          "run_count": 3,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 58785,
+              "end_ms": 66050,
+              "elapsed_ms": 7265,
+              "frames": 219
+            },
+            {
+              "start_ms": 56819,
+              "end_ms": 58085,
+              "elapsed_ms": 1266,
+              "frames": 39
+            },
+            {
+              "start_ms": 3499,
+              "end_ms": 3699,
+              "elapsed_ms": 200,
+              "frames": 7
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_150_matching_image_bend15": {
+          "run_count": 2,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 59185,
+              "end_ms": 60818,
+              "elapsed_ms": 1633,
+              "frames": 50
+            },
+            {
+              "start_ms": 64784,
+              "end_ms": 65484,
+              "elapsed_ms": 700,
+              "frames": 22
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_155_all": {
+          "run_count": 3,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 58685,
+              "end_ms": 66117,
+              "elapsed_ms": 7432,
+              "frames": 224
+            },
+            {
+              "start_ms": 56819,
+              "end_ms": 58119,
+              "elapsed_ms": 1300,
+              "frames": 40
+            },
+            {
+              "start_ms": 3399,
+              "end_ms": 3799,
+              "elapsed_ms": 400,
+              "frames": 13
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_155_matching_image_bend15": {
+          "run_count": 2,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 59185,
+              "end_ms": 60818,
+              "elapsed_ms": 1633,
+              "frames": 50
+            },
+            {
+              "start_ms": 64784,
+              "end_ms": 65484,
+              "elapsed_ms": 700,
+              "frames": 22
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_160_all": {
+          "run_count": 5,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 58619,
+              "end_ms": 66350,
+              "elapsed_ms": 7731,
+              "frames": 233
+            },
+            {
+              "start_ms": 56719,
+              "end_ms": 58152,
+              "elapsed_ms": 1433,
+              "frames": 44
+            },
+            {
+              "start_ms": 3366,
+              "end_ms": 4099,
+              "elapsed_ms": 733,
+              "frames": 23
+            },
+            {
+              "start_ms": 66417,
+              "end_ms": 66417,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 68116,
+              "end_ms": 68116,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_160_matching_image_bend15": {
+          "run_count": 2,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 59185,
+              "end_ms": 60818,
+              "elapsed_ms": 1633,
+              "frames": 50
+            },
+            {
+              "start_ms": 64784,
+              "end_ms": 65484,
+              "elapsed_ms": 700,
+              "frames": 22
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_165_all": {
+          "run_count": 9,
+          "runs_ge_1500ms": 2,
+          "longest": [
+            {
+              "start_ms": 58585,
+              "end_ms": 66583,
+              "elapsed_ms": 7998,
+              "frames": 241
+            },
+            {
+              "start_ms": 56652,
+              "end_ms": 58185,
+              "elapsed_ms": 1533,
+              "frames": 47
+            },
+            {
+              "start_ms": 3332,
+              "end_ms": 4232,
+              "elapsed_ms": 900,
+              "frames": 28
+            },
+            {
+              "start_ms": 6198,
+              "end_ms": 6898,
+              "elapsed_ms": 700,
+              "frames": 22
+            },
+            {
+              "start_ms": 67816,
+              "end_ms": 68116,
+              "elapsed_ms": 300,
+              "frames": 10
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_elbow_lt_165_matching_image_bend15": {
+          "run_count": 2,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 59185,
+              "end_ms": 60818,
+              "elapsed_ms": 1633,
+              "frames": 50
+            },
+            {
+              "start_ms": 64784,
+              "end_ms": 65484,
+              "elapsed_ms": 700,
+              "frames": 22
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_130_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_140_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_150_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "left_arm_lt_160_matching_image_bend15": {
+          "run_count": 3,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 59918,
+              "end_ms": 60651,
+              "elapsed_ms": 733,
+              "frames": 23
+            },
+            {
+              "start_ms": 59685,
+              "end_ms": 59852,
+              "elapsed_ms": 167,
+              "frames": 6
+            },
+            {
+              "start_ms": 59518,
+              "end_ms": 59618,
+              "elapsed_ms": 100,
+              "frames": 4
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_145_all": {
+          "run_count": 2,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 17662,
+              "end_ms": 18429,
+              "elapsed_ms": 767,
+              "frames": 24
+            },
+            {
+              "start_ms": 61718,
+              "end_ms": 61818,
+              "elapsed_ms": 100,
+              "frames": 4
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_145_matching_image_bend15": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_150_all": {
+          "run_count": 7,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 17596,
+              "end_ms": 18629,
+              "elapsed_ms": 1033,
+              "frames": 32
+            },
+            {
+              "start_ms": 30226,
+              "end_ms": 30492,
+              "elapsed_ms": 266,
+              "frames": 9
+            },
+            {
+              "start_ms": 61718,
+              "end_ms": 61851,
+              "elapsed_ms": 133,
+              "frames": 5
+            },
+            {
+              "start_ms": 30559,
+              "end_ms": 30559,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 30659,
+              "end_ms": 30659,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_150_matching_image_bend15": {
+          "run_count": 2,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 41889,
+              "end_ms": 41889,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 42123,
+              "end_ms": 42123,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_155_all": {
+          "run_count": 8,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 17529,
+              "end_ms": 18695,
+              "elapsed_ms": 1166,
+              "frames": 36
+            },
+            {
+              "start_ms": 30059,
+              "end_ms": 31192,
+              "elapsed_ms": 1133,
+              "frames": 35
+            },
+            {
+              "start_ms": 41823,
+              "end_ms": 42489,
+              "elapsed_ms": 666,
+              "frames": 21
+            },
+            {
+              "start_ms": 61418,
+              "end_ms": 62051,
+              "elapsed_ms": 633,
+              "frames": 20
+            },
+            {
+              "start_ms": 42923,
+              "end_ms": 42989,
+              "elapsed_ms": 66,
+              "frames": 3
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_155_matching_image_bend15": {
+          "run_count": 4,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 41823,
+              "end_ms": 42489,
+              "elapsed_ms": 666,
+              "frames": 21
+            },
+            {
+              "start_ms": 42923,
+              "end_ms": 42989,
+              "elapsed_ms": 66,
+              "frames": 3
+            },
+            {
+              "start_ms": 43156,
+              "end_ms": 43156,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 43256,
+              "end_ms": 43256,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_160_all": {
+          "run_count": 9,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 41756,
+              "end_ms": 43322,
+              "elapsed_ms": 1566,
+              "frames": 48
+            },
+            {
+              "start_ms": 29992,
+              "end_ms": 31359,
+              "elapsed_ms": 1367,
+              "frames": 42
+            },
+            {
+              "start_ms": 17462,
+              "end_ms": 18762,
+              "elapsed_ms": 1300,
+              "frames": 40
+            },
+            {
+              "start_ms": 61385,
+              "end_ms": 62084,
+              "elapsed_ms": 699,
+              "frames": 22
+            },
+            {
+              "start_ms": 48188,
+              "end_ms": 48554,
+              "elapsed_ms": 366,
+              "frames": 12
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_160_matching_image_bend15": {
+          "run_count": 3,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 41756,
+              "end_ms": 43322,
+              "elapsed_ms": 1566,
+              "frames": 48
+            },
+            {
+              "start_ms": 41623,
+              "end_ms": 41656,
+              "elapsed_ms": 33,
+              "frames": 2
+            },
+            {
+              "start_ms": 39523,
+              "end_ms": 39523,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_165_all": {
+          "run_count": 22,
+          "runs_ge_1500ms": 3,
+          "longest": [
+            {
+              "start_ms": 41590,
+              "end_ms": 43456,
+              "elapsed_ms": 1866,
+              "frames": 57
+            },
+            {
+              "start_ms": 17396,
+              "end_ms": 18962,
+              "elapsed_ms": 1566,
+              "frames": 48
+            },
+            {
+              "start_ms": 29959,
+              "end_ms": 31525,
+              "elapsed_ms": 1566,
+              "frames": 48
+            },
+            {
+              "start_ms": 38524,
+              "end_ms": 39757,
+              "elapsed_ms": 1233,
+              "frames": 38
+            },
+            {
+              "start_ms": 47821,
+              "end_ms": 48888,
+              "elapsed_ms": 1067,
+              "frames": 33
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_elbow_lt_165_matching_image_bend15": {
+          "run_count": 6,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 41590,
+              "end_ms": 43456,
+              "elapsed_ms": 1866,
+              "frames": 57
+            },
+            {
+              "start_ms": 38524,
+              "end_ms": 39757,
+              "elapsed_ms": 1233,
+              "frames": 38
+            },
+            {
+              "start_ms": 47821,
+              "end_ms": 47921,
+              "elapsed_ms": 100,
+              "frames": 4
+            },
+            {
+              "start_ms": 37857,
+              "end_ms": 37857,
+              "elapsed_ms": 0,
+              "frames": 1
+            },
+            {
+              "start_ms": 39890,
+              "end_ms": 39890,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_130_matching_image_bend15": {
+          "run_count": 1,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 40823,
+              "end_ms": 41556,
+              "elapsed_ms": 733,
+              "frames": 23
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_140_matching_image_bend15": {
+          "run_count": 12,
+          "runs_ge_1500ms": 3,
+          "longest": [
+            {
+              "start_ms": 43422,
+              "end_ms": 47321,
+              "elapsed_ms": 3899,
+              "frames": 118
+            },
+            {
+              "start_ms": 39723,
+              "end_ms": 41623,
+              "elapsed_ms": 1900,
+              "frames": 58
+            },
+            {
+              "start_ms": 36991,
+              "end_ms": 38790,
+              "elapsed_ms": 1799,
+              "frames": 55
+            },
+            {
+              "start_ms": 36824,
+              "end_ms": 36924,
+              "elapsed_ms": 100,
+              "frames": 4
+            },
+            {
+              "start_ms": 39590,
+              "end_ms": 39657,
+              "elapsed_ms": 67,
+              "frames": 3
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_150_matching_image_bend15": {
+          "run_count": 2,
+          "runs_ge_1500ms": 2,
+          "longest": [
+            {
+              "start_ms": 34925,
+              "end_ms": 41790,
+              "elapsed_ms": 6865,
+              "frames": 207
+            },
+            {
+              "start_ms": 42456,
+              "end_ms": 47688,
+              "elapsed_ms": 5232,
+              "frames": 158
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "right_arm_lt_160_matching_image_bend15": {
+          "run_count": 1,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 34258,
+              "end_ms": 47921,
+              "elapsed_ms": 13663,
+              "frames": 411
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "ankle_shoulder_ratio_gt_0.35_all": {
+          "run_count": 1,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 1500,
+              "end_ms": 13397,
+              "elapsed_ms": 11897,
+              "frames": 358
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "ankle_shoulder_ratio_gt_0.4_all": {
+          "run_count": 3,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 1566,
+              "end_ms": 12697,
+              "elapsed_ms": 11131,
+              "frames": 335
+            },
+            {
+              "start_ms": 13230,
+              "end_ms": 13330,
+              "elapsed_ms": 100,
+              "frames": 4
+            },
+            {
+              "start_ms": 12797,
+              "end_ms": 12797,
+              "elapsed_ms": 0,
+              "frames": 1
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "ankle_shoulder_ratio_gt_0.45_all": {
+          "run_count": 1,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 1600,
+              "end_ms": 12564,
+              "elapsed_ms": 10964,
+              "frames": 330
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "abs_torso_tilt_gt_30_all": {
+          "run_count": 6,
+          "runs_ge_1500ms": 1,
+          "longest": [
+            {
+              "start_ms": 42823,
+              "end_ms": 46688,
+              "elapsed_ms": 3865,
+              "frames": 117
+            },
+            {
+              "start_ms": 37191,
+              "end_ms": 38590,
+              "elapsed_ms": 1399,
+              "frames": 43
+            },
+            {
+              "start_ms": 38824,
+              "end_ms": 39790,
+              "elapsed_ms": 966,
+              "frames": 30
+            },
+            {
+              "start_ms": 46755,
+              "end_ms": 47122,
+              "elapsed_ms": 367,
+              "frames": 12
+            },
+            {
+              "start_ms": 37091,
+              "end_ms": 37124,
+              "elapsed_ms": 33,
+              "frames": 2
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "abs_torso_tilt_gt_35_all": {
+          "run_count": 1,
+          "runs_ge_1500ms": 0,
+          "longest": [
+            {
+              "start_ms": 43656,
+              "end_ms": 43722,
+              "elapsed_ms": 66,
+              "frames": 3
+            }
+          ],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        },
+        "abs_torso_tilt_gt_40_all": {
+          "run_count": 0,
+          "runs_ge_1500ms": 0,
+          "longest": [],
+          "timestamp_semantics": "last qualifying timestamp minus first; no invented trailing frame duration"
+        }
+      }
+    }
+  },
+  "design_recommendations": {
+    "variant_warning": "Neither clip contains a frame with both upper-arm/trunk angles >150 degrees. Signed bend buckets show one raised arm and one lowered arm. These clips support a one-arm variant preview, not calibration of the requested two-arms-overhead variant.",
+    "safe_default": "Unreviewed rules off, unknown phase and unverified view block feedback. Explicit exploratory opt-in and declared compatible variant are required for demo replay.",
+    "elbow_draft": {
+      "trigger_lt_deg": 150,
+      "clear_ge_deg": 160,
+      "min_duration_ms": 1500,
+      "clear_duration_ms": 700,
+      "max_gap_ms": 500,
+      "scope": "Only the arm declared raised by the current independently supplied phase/variant; both elbows for a separately verified two-arm variant.",
+      "evidence": "Supplied correct clip has no elbow below 150 degrees. Incorrect left elbow stays below 150 for 7265ms overall, including 1633ms in the <-15deg image-left bend bucket. Right elbow deviations are shorter and overlapping.",
+      "limitations": "Conservative engineering demo, not yoga instruction; 160deg recovery is a hysteresis design choice, not a percentile estimate; upper-arm selection must not be needed to make an elbow error assessable."
+    },
+    "monitor_only": [
+      "Torso side-bend amplitude and too-little/too-much bend: no reviewed target or hold windows; do not encourage deeper bend from these clips.",
+      "Upper-arm/trunk angle: correct bend phases have raised-arm median around139–144deg, so 165deg upright-overhead threshold causes false candidates.",
+      "Stance ratio: incorrect has >0.4 for11131ms early, but human stance vs camera/rotation/subject effect is unverified; shoulder denominator changes with side-bend.",
+      "Shoulder height difference is expected to increase in side-bend; never reuse the mountain leveling rule.",
+      "Hip centering/motion, head alignment, palms together, depressed shoulders, body coplanarity, and weight distribution cannot be established from the existing eight scalar features."
+    ]
+  }
+}

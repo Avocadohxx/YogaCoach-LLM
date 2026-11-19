@@ -1,0 +1,10 @@
+{
+  "source_video": "Yoga Postures Dataset Original/Yoga Postures Dataset/Videos/Tadasana/Tadasana Right Steps/Tadasana Right Steps Angle 1.mp4",
+  "dataset_variant": "original",
+  "source_label": "correct",
+  "label_scope": "source filename only; not per-frame ground truth",
+  "camera_view": "front",
+  "source_timestamp_offset_ms": 0,
+  "segments": [],
+  "review_status": "requires_manual_review"
+}

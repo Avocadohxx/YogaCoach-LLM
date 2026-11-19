@@ -1,0 +1,12 @@
+{
+  "source_video": "Yoga Postures Dataset Original/Yoga Postures Dataset/Videos/Tadasana/Tadasana Wrong Steps/Tadasana Wrong Steps Angle 1.mp4",
+  "model_family": "dwpose",
+  "dataset_variant": "original",
+  "source_label": "incorrect",
+  "label_scope": "video filename only; not per-frame ground truth",
+  "camera_view": "front",
+  "source_timestamp_offset_ms": 0,
+  "segments": [],
+  "review_status": "requires_manual_review",
+  "reference_usage": "any automatically selected representative is NOT an approved correct-pose reference"
+}
