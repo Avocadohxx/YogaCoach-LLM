@@ -1,1 +1,2 @@
 *.sh text eol=lf
+data/models/rtmw_x_384.onnx filter=lfs diff=lfs merge=lfs -text

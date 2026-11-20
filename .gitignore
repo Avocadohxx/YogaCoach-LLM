@@ -38,3 +38,5 @@ data/models/**/*.bin
 data/batch_logs/
 # Browser-downloaded pose model (reproduce using scripts/download_pose_model.py)
 frontend/public/models/*.task
+# Share the production RTMW weight through Git LFS
+!data/models/rtmw_x_384.onnx
