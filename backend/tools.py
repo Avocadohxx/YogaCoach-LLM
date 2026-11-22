@@ -1,5 +1,6 @@
 """Read-only tools. Knowledge files retain their explicit review status."""
 import json
+import os
 from pathlib import Path
 from backend import memory
 
@@ -7,8 +8,18 @@ from backend import memory
 def reference_for(pose_id: str) -> dict:
     if pose_id not in {"tadasana", "ardhakati_chakrasana"}:
         raise ValueError("unsupported pose")
-    path = Path(__file__).resolve().parents[1] / "knowledge" / f"{pose_id}.json"
-    return json.loads(path.read_text(encoding="utf-8"))
+    project_root = Path(__file__).resolve().parents[1]
+    root = project_root / "knowledge"
+    path = root / f"{pose_id}.json"
+    reference = json.loads(path.read_text(encoding="utf-8"))
+    # Read the same manifest/environment override as the online evaluator.
+    manifest = json.loads((root / "rules_manifest.json").read_text(encoding="utf-8"))
+    entry = manifest[pose_id]
+    rule_path = Path(os.getenv(entry["environment"], str(project_root / entry["path"])))
+    if not rule_path.is_absolute():
+        rule_path = project_root / rule_path
+    reference["rules_file"] = str(rule_path.resolve())
+    return reference
 
 
 def context_for(session_id: str, pose_id: str) -> dict:

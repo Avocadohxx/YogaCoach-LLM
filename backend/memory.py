@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import re
 import uuid
+from collections import Counter, defaultdict
 from datetime import datetime
 from typing import Any
 
@@ -429,6 +430,31 @@ def build_session_summary(session_id: str) -> str:
         text = head + "，检测到：" + "；".join(parts) + "。"
     if feedback:
         text += f"期间系统给出提示 {len(feedback)} 次。"
+        prompt_groups: dict[str, list[str]] = defaultdict(list)
+        for item in feedback:
+            event_type = item.get("event_type") or "general_hint"
+            if event_type == "camera_hint":
+                label = "镜头与观察提示"
+            elif event_type in DEVIATION_NAMES:
+                label = f"{DEVIATION_NAMES[event_type]}纠正提示"
+            else:
+                label = "其他练习提示"
+            prompt_groups[label].append(item["feedback_text"].strip())
+
+        prompt_parts = []
+        for label, messages in prompt_groups.items():
+            variants = Counter(messages)
+            examples = []
+            for message, count in variants.most_common(2):
+                quoted = message if len(message) <= 180 else message[:177] + "…"
+                examples.append(f"“{quoted}”（{count} 次）")
+            extra = len(variants) - len(examples)
+            detail = "、".join(examples)
+            if extra:
+                detail += f"；另有 {extra} 种不同表述"
+            prompt_parts.append(f"{label}（共 {len(messages)} 次）：{detail}")
+        if prompt_parts:
+            text += "本次提示重点：" + "；".join(prompt_parts) + "。"
     return text
 
 

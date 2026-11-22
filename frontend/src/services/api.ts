@@ -1,4 +1,4 @@
-export type Pose = "tadasana" | "ardhakati_chakrasana";
+﻿export type Pose = "tadasana" | "ardhakati_chakrasana";
 export type Phase133 =
   | "prepare"
   | "hold"
@@ -29,6 +29,12 @@ export type Analysis = {
     pending_count: number;
     scope: string;
     phase: string;
+    rule_results?: {
+      mode: string;
+      reason?: string | null;
+      status: string;
+      feature_name: string;
+    }[];
   } | null;
   deviations: {
     event_id?: string;

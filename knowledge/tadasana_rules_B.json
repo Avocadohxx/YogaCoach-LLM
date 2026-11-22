@@ -60,7 +60,7 @@
       "temporal": {
         "min_duration_ms": 1500,
         "clear_duration_ms": 700,
-        "max_gap_ms": 500
+        "max_gap_ms": 1500
       },
       "evidence": "Two-arm>150deg geometric bucket only; NOT a verified hold label. 160deg trigger and 165deg clear are conservative demo choices.",
       "descriptive_reference": {
@@ -100,7 +100,7 @@
       "temporal": {
         "min_duration_ms": 1500,
         "clear_duration_ms": 700,
-        "max_gap_ms": 500
+        "max_gap_ms": 1500
       },
       "evidence": "Two-arm>150deg geometric bucket only; NOT a verified hold label. 160deg trigger and 165deg clear are conservative demo choices.",
       "descriptive_reference": {

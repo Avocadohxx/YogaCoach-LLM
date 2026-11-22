@@ -1,6 +1,7 @@
 """JPEG camera/video frames -> local 133-point inference -> measurements."""
 from typing import Literal
 from time import monotonic
+import logging
 import cv2
 import numpy as np
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -13,6 +14,7 @@ from backend.pose_analyzer_133 import analyze_frame_133
 from backend.schemas import PoseFrame133, PoseId
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 MAX_BYTES = 2 * 1024 * 1024
 
 
@@ -28,15 +30,13 @@ def process(data, session_id, pose_id, frame_seq, timestamp_ms, phase, camera_vi
     try:
         points, scores = inference_133.infer(image)
     except (ImportError, RuntimeError) as exc:
+        logger.exception('133 点模型推理初始化或执行失败。')
         raise HTTPException(503, '133 点推理不可用，请检查模型与推理依赖。') from exc
     frame = PoseFrame133(session_id=session_id, pose_id=pose_id, frame_seq=frame_seq,
         timestamp_ms=timestamp_ms, phase=phase, camera_view=camera_view, keypoints=points, scores=scores, image_width=image.shape[1], image_height=image.shape[0], stream_id=stream_id, movement_variant=movement_variant, raised_arm_side=raised_arm_side, bend_direction=bend_direction)
-    if received_at is not None and monotonic() - received_at > 2.0:
-        online_rules.reset(session_id)
-        event = analyze_frame_133(frame)
-        event.reason_codes.append('inference_frame_expired')
-    else:
-        event = online_rules.analyze(frame, inference_133.source_model())
+    # Sequential client requests can take longer than two seconds on CPU.
+    # Preserve ordered observations; OnlineRules enforces timestamp/gap limits.
+    event = online_rules.analyze(frame, inference_133.source_model())
     store.record(event)
     return {'layout': 'COCO-WholeBody 133', 'coordinate_space': 'image_pixels',
             'image_width': image.shape[1], 'image_height': image.shape[0],

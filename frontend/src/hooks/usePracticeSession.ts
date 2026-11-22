@@ -101,7 +101,6 @@ export function usePracticeSession({
   async function finish() {
     setBusy(true);
     live.current?.close();
-    setFeedback("练习已结束。");
     const current = run.current;
     const item: Summary = {
       id: current.id,
