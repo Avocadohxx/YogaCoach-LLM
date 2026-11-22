@@ -91,11 +91,25 @@ class OnlineRules:
             else:
                 comparison = compare_ardhakati_frame(features, **args, movement_variant=frame.movement_variant,
                     raised_arm_side=frame.raised_arm_side, bend_direction=frame.bend_direction)
-            # Any incomplete frame interrupts the WHOLE online correction stream.
-            # This avoids confirming a timer while required evidence was missing.
-            if event.tracking_quality != 'good':
-                for rule in comparison['rule_results']:
-                    rule.update(status='not_assessable', reason='tracking_quality_not_good')
+            # Gate each rule on the measurements it actually depends on.
+            # Missing ankles must not cancel an otherwise clear elbow measure.
+            valid_observations = {item.name for item in event.observations if item.valid}
+            for rule in comparison['rule_results']:
+                if rule['mode'] != 'candidate' or rule['status'] not in {'deviation', 'gray_zone', 'within_reference'}:
+                    continue
+                if rule['feature_name'] not in valid_observations:
+                    rule.update(status='not_assessable', reason='required_measurement_invalid')
+            candidates = [r for r in comparison['rule_results'] if r['mode'] == 'candidate' and r['status'] != 'disabled']
+            if candidates and all(r['status'] in {'deviation', 'gray_zone', 'within_reference'} for r in candidates):
+                # Quality is scoped to the enabled corrections: unrelated missing
+                # ankle/stance measurements do not invalidate visible elbow data.
+                event.tracking_quality = 'good'
+            eligible_ids = {r['rule_id'] for r in candidates}
+            assessed_ids = {r['rule_id'] for r in candidates if r['status'] in {'deviation', 'gray_zone', 'within_reference'}}
+            comparison['assessment_coverage'].update(
+                eligible_rule_ids=sorted(eligible_ids), assessed_rule_ids=sorted(assessed_ids),
+                unassessed_rule_ids=sorted(eligible_ids-assessed_ids),
+                complete_for_enabled_phase_rules=bool(eligible_ids) and eligible_ids == assessed_ids)
             tracked = previous['tracker'].update(comparison)
             previous['comparison'] = deepcopy(comparison)
             for lifecycle in tracked['new_events']:
@@ -110,7 +124,9 @@ class OnlineRules:
             if not rules['reviewed']:
                 event.reason_codes.append('rules_require_manual_review')
                 return event
-            if event.tracking_quality != 'good':
+            assessed_candidates = [r for r in comparison['rule_results'] if r['mode'] == 'candidate' and r['rule_id'] in eligible_ids]
+            if not assessed_candidates or any(r['status'] == 'not_assessable' for r in assessed_candidates):
+                event.reason_codes += sorted({r['reason'] for r in assessed_candidates if r['reason']})
                 return event
             if comparison['reason_codes'] or not comparison['assessment_coverage']['complete_for_enabled_phase_rules']:
                 event.reason_codes += comparison['reason_codes'] or sorted({r['reason'] for r in comparison['rule_results'] if r['status']=='not_assessable' and r['reason']}) or ['explicit_supported_phase_required']
@@ -120,7 +136,7 @@ class OnlineRules:
             # Active events remain available if the confirmation response was lost;
             # the Agent deduplicates by event ID, not by frame or posture label.
             active = [e for e in tracked['active_events'] if e['rule_status'] == 'deviation']
-            if event.tracking_quality == 'good':
+            if event.tracking_quality == 'good' or active:
                 for item in active:
                     event.deviations.append(RuleDeviation(event_id=item['event_id'], type=item['event_type'],
                         target=item['target'], side='left' if item['target'].startswith('left_') else 'right' if item['target'].startswith('right_') else None,

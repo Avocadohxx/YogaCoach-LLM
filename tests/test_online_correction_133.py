@@ -189,13 +189,13 @@ def test_claim_correction_is_atomic_and_once_per_episode():
 def test_selected_event_must_still_be_current_even_when_another_event_remains(practice, monkeypatch):
     sid,snapshots,service=practice
     event=sequence(practice)
-    def slow_selection(_):
+    def slow_generation(_):
         newer=event.model_copy(deep=True)
         newer.frame_seq+=1
         newer.deviations[0].event_id='some-other-current-event'
         snapshots.record(newer)
-        return 'short'
-    monkeypatch.setattr(llm,'select_correction',slow_selection)
+        return llm.CoachingSuggestion(text='可以轻轻伸展左肘，不必锁死。',target='left_elbow',grounded_event_type='elbow_bend')
+    monkeypatch.setattr(llm,'generate_correction',slow_generation)
     assert not client.post('/api/agent/feedback',json=event.model_dump()).json()['should_speak']
     assert memory.get_recent_feedback(sid)==[]
 
@@ -224,7 +224,7 @@ def test_side_bend_adapter_can_use_independently_reviewed_config(practice,tmp_pa
     assert event.feedback_allowed and event.deviations[0].type=='elbow_bend'
 
 
-def test_slow_inference_frame_cannot_trigger_correction(practice,monkeypatch):
+def test_slow_inference_frame_is_retained_for_ordered_rule_evaluation(practice,monkeypatch):
     sid,_,_=practice
     data=raw()
     monkeypatch.setattr(routes.inference_133,'infer',lambda image:(data['keypoints'],data['scores']))
@@ -232,4 +232,5 @@ def test_slow_inference_frame_cannot_trigger_correction(practice,monkeypatch):
     jpeg=cv2.imencode('.jpg',np.zeros((120,120,3),dtype=np.uint8))[1].tobytes()
     result=routes.process(jpeg,sid,'tadasana',0,0,'arms_up_hold','front',received_at=0.)
     assert not result['analysis']['feedback_allowed']
-    assert 'inference_frame_expired' in result['analysis']['reason_codes']
+    assert 'inference_frame_expired' not in result['analysis']['reason_codes']
+    assert 'confirming_sustained_deviation' in result['analysis']['reason_codes']

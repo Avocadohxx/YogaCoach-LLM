@@ -6,8 +6,16 @@
 
 Python >=3.10、Node.js >=20。仓库根目录：
 
-```sh
+```powershell
 python -m venv .venv
+\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+\.venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+```
+
+macOS/Linux 激活方式：
+
+```sh
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
@@ -26,11 +34,13 @@ npm run dev
 
 默认模型：`data/models/rtmw_x_384.onnx`，本地已有。其他环境请放置团队相同权重，或配置根目录 `.env` 中的 `POSE133_MODEL_PATH`。不需要前端 MediaPipe 模型。仅支持正面、单人、全身入镜；当前采用与参考数据一致的全图 ROI，没有多人检测器。
 
+如果 `/api/pose/frame` 返回 503，请查看启动后端的终端日志。`rtmlib`、`onnxruntime` 缺失或模型初始化失败时，日志会记录具体异常；请确认安装依赖和启动 Uvicorn 使用的是同一个 Python 环境。Windows 可用 `\.venv\Scripts\python.exe -m pip show rtmlib onnxruntime` 检查。
+
 ## 当前能力与限制
 
 - `/api/pose/frame`：JPEG → RTMW → 133 点、原始 scores 和结构化测量。
 - `/api/analyze`：接受 133 点像素坐标和原始 scores；保留旧 33 点输入兼容，但前端主链路不再使用它。
-- `/api/agent/feedback`：LangGraph 证据核验、知识/记忆读取、镜头提示和冷却。可选 chat-completions 兼容 LLM 仅选择受控镜头提示；缺配置或失败使用模板。
+- `/api/agent/feedback`：LangGraph 证据核验、知识/记忆读取、镜头提示和冷却。对服务端规则确认的动作偏差，chat-completions 兼容 LLM 可基于最小测量摘要生成结构化建议；目标/事件不匹配或生成失败时回退模板。镜头提示仍只选择受控模板。LLM 输入不含图像、原始关键点、会话 ID 或历史记录。
 - `/api/memory`：SQLite 会话、总结、历史、偏好；真实模式创建和结束会话，模拟历史单独保存在浏览器。
 - 原始模型 scores 不是 visibility，也不是概率，可以超过 1；133 点像素坐标不做二次宽高缩放。
 - 133 点离线规则和事件跟踪已存在，正式在线规则/阶段与阈值审核仍待完成，当前测量不声称动作正确或错误。

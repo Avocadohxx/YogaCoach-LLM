@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from backend import agent, llm, memory
 from backend.evidence import EvidenceStore
 from backend.main import app
-from backend.schemas import AnalysisResult
+from backend.schemas import AnalysisResult, RuleDeviation
 from experiments.detection.synthetic_day1 import make_frame
 
 client = TestClient(app)
@@ -91,6 +91,127 @@ def test_provider_http_contract(monkeypatch):
         return httpx.Response(200, json={'choices': [{'message': {'content': '{"message_id":"short"}'}}]})
     monkeypatch.setattr(llm.httpx, 'Client', lambda **kw: actual_client(transport=httpx.MockTransport(handle), **kw))
     assert llm.select_message('short') == 'short'
+
+
+def test_provider_receives_numeric_rule_summary_and_returns_structured_advice(monkeypatch):
+    monkeypatch.setenv('LLM_API_KEY', 'test-only')
+    monkeypatch.setenv('LLM_BASE_URL', 'https://provider.invalid/v1')
+    monkeypatch.setenv('LLM_MODEL', 'test')
+    actual_client = httpx.Client
+    def handle(request):
+        payload = json.loads(request.content)
+        assert payload['model'] == 'test'
+        user = json.loads(payload['messages'][1]['content'])
+        assert user['observed_value'] == 151.2
+        assert user['reference_range'] == [168.0, 180.0]
+        assert user['target'] == 'left_elbow'
+        assert 'keypoints' not in user and 'session_id' not in user
+        return httpx.Response(200, json={'choices': [{'message': {'content': json.dumps({
+            'text': '可以在舒适范围内轻轻伸展左肘。',
+            'target': 'left_elbow', 'grounded_event_type': 'elbow_bend',
+        }, ensure_ascii=False)}}]})
+    monkeypatch.setattr(llm.httpx, 'Client', lambda **kw: actual_client(transport=httpx.MockTransport(handle), **kw))
+    result = llm.generate_correction({
+        'pose': 'tadasana', 'target': 'left_elbow', 'event_type': 'elbow_bend',
+        'feature_name': 'left_elbow_angle_deg', 'observed_value': 151.2, 'unit': 'deg',
+        'reference_range': [168.0, 180.0], 'phase': 'arms_up_hold', 'duration_ms': 1800,
+        'minimum_keypoint_score': 0.8, 'safety_constraints': ['不要强行伸展'],
+    })
+    assert result.target == 'left_elbow'
+    assert result.grounded_event_type == 'elbow_bend'
+    assert '伸展' in result.text
+
+
+def test_confirmed_correction_sends_numeric_evidence_and_accepts_grounded_llm_reply(practice, monkeypatch):
+    event, _ = practice
+    selected = {
+        'event_id': 'episode-1', 'type': 'elbow_bend', 'target': 'left_elbow',
+        'rule_id': 'left_elbow_bend_overhead', 'rule_version': 'tadasana-test-v1', 'feature_name': 'left_elbow_angle_deg',
+        'observed_value': 151.2, 'reference_range': [168.0, 180.0],
+        'duration_ms': 1800, 'min_keypoint_score': 0.8,
+    }
+    selected['rule_version'] = 'tadasana-rtmw-draft-v1'
+    selected['event_id'] = 'synthetic-day1-episode-1'
+    deviation = RuleDeviation(**selected)
+    event = event.model_copy(update={
+        'analysis_mode': 'reviewed_rules_133', 'reference_status': 'reviewed_rule_config',
+        'assessment_status': 'deviation', 'feedback_allowed': True,
+        'rule_evaluation': {'phase': 'arms_up_hold'},
+        'deviations': [deviation],
+    })
+    monkeypatch.setattr(agent, 'store', EvidenceStore())
+    agent.store.record(event)
+    captured = {}
+    def generate(evidence):
+        captured.update(evidence)
+        return llm.CoachingSuggestion(text='可以在舒适范围内轻轻伸展左肘，不必锁死。',
+            target='left_elbow', grounded_event_type='elbow_bend')
+    monkeypatch.setattr(llm, 'generate_correction', generate)
+    result = agent.feedback_for(event)
+    assert captured['observed_value'] == 151.2
+    assert captured['reference_range'] == [168.0, 180.0]
+    assert captured['unit'] == 'deg'
+    assert 'session_id' not in captured and 'keypoints' not in captured
+    assert result.mode == 'llm' and result.feedback_type == 'correction'
+    assert result.target == 'left_elbow'
+    assert result.text == '可以在舒适范围内轻轻伸展左肘，不必锁死。'
+
+
+def test_default_correction_rules_match_online_ruleset(practice, monkeypatch):
+    event, _ = practice
+    selected = {
+        'event_id': 'synthetic-day1-episode-default-rules', 'type': 'elbow_bend',
+        'target': 'left_elbow', 'rule_id': 'left_elbow_bend_overhead',
+        'rule_version': 'tadasana-rtmw-draft-v1', 'feature_name': 'left_elbow_angle_deg',
+        'observed_value': 151.2, 'reference_range': [168.0, 180.0],
+        'duration_ms': 1800, 'min_keypoint_score': 0.8,
+    }
+    deviation = RuleDeviation(**selected)
+    event = event.model_copy(update={
+        'analysis_mode': 'reviewed_rules_133', 'reference_status': 'reviewed_rule_config',
+        'assessment_status': 'deviation', 'feedback_allowed': True,
+        'rule_evaluation': {'phase': 'arms_up_hold'}, 'deviations': [deviation],
+    })
+    monkeypatch.setattr(agent, 'store', EvidenceStore())
+    agent.store.record(event)
+    from backend.tools import reference_for
+    reference = reference_for('tadasana')
+    assert reference['rules_file'] == 'tadasana_rules_B.json'
+    payload = agent._correction_evidence(deviation.model_dump(), event, reference)
+    assert payload['reference_range'] == [168.0, 180.0]
+    assert payload['observed_value'] == 151.2
+
+
+
+@pytest.mark.parametrize('target,event_type,text', [
+    ('right_elbow', 'elbow_bend', '伸展左肘。'),
+    ('left_elbow', 'torso_tilt', '伸展左肘。'),
+    ('left_elbow', 'elbow_bend', '必须锁死关节并治疗疼痛。'),
+])
+def test_invalid_llm_correction_falls_back_to_safe_template(practice, monkeypatch, target, event_type, text):
+    event, _ = practice
+    selected = {
+        'event_id': 'episode-2', 'type': 'elbow_bend', 'target': 'left_elbow',
+        'rule_id': 'left_elbow_bend_overhead', 'rule_version': 'tadasana-test-v1', 'feature_name': 'left_elbow_angle_deg',
+        'observed_value': 151.2, 'reference_range': [168.0, 180.0],
+        'duration_ms': 1800, 'min_keypoint_score': 0.8,
+    }
+    selected['rule_version'] = 'tadasana-rtmw-draft-v1'
+    selected['event_id'] = 'synthetic-day1-episode-2'
+    deviation = RuleDeviation(**selected)
+    event = event.model_copy(update={
+        'analysis_mode': 'reviewed_rules_133', 'reference_status': 'reviewed_rule_config',
+        'assessment_status': 'deviation', 'feedback_allowed': True,
+        'rule_evaluation': {'phase': 'arms_up_hold'}, 'deviations': [deviation],
+    })
+    monkeypatch.setattr(agent, 'store', EvidenceStore())
+    agent.store.record(event)
+    monkeypatch.setattr(llm, 'generate_correction', lambda _: llm.CoachingSuggestion(
+        text=text, target=target, grounded_event_type=event_type))
+    reply = agent.feedback_for(event)
+    assert reply.mode == 'template'
+    assert reply.feedback_type == 'correction'
+    assert '治疗疼痛' not in reply.text and '必须锁死' not in reply.text
 
 
 def test_snapshot_store_is_bounded_and_replay_cannot_overwrite(practice):

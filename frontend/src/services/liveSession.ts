@@ -56,7 +56,9 @@ export function createLiveSession(id:string, pose:Pose, started:number, show:(te
     if(signature!==evidence){evidence=signature;evidenceVersion++;show(signature?'正在获取当前画面的提醒…':'已获得 133 点测量，参考规则尚未校准。');}
     if(!signature){
       const reasons=event.reason_codes||[];
-      show(reasons.includes('frame_gap_reset')?'画面分析间隔较长，已重新积累持续证据。':reasons.includes('rules_require_manual_review')?'当前动作规则尚未审核，仅显示测量。':(event.rule_evaluation?.pending_count||0)>0?'正在确认偏差是否持续，请保持自然呼吸。':event.analysis_mode==='reviewed_rules_133'?'当前未触发持续偏差；这不代表整体动作完全标准。':reasons.includes('explicit_supported_phase_required')?'请选择实际动作阶段；山式纠错支持双臂举起保持。':'已获得 133 点测量，参考规则尚未校准。');return;
+      const ruleReasons=event.rule_evaluation?.rule_results?.filter(r=>r.mode==='candidate'&&r.reason).map(r=>r.reason);
+      const hasElbowEvidence=(event.observations||[]).some(o=>(o.name==='left_elbow_angle_deg'||o.name==='right_elbow_angle_deg')&&o.valid);
+      show(reasons.includes('frame_gap_reset')?'画面分析间隔较长，正在重新确认持续偏差。':reasons.includes('rules_require_manual_review')?'当前动作规则尚未审核，仅显示测量。':(event.rule_evaluation?.pending_count||0)>0?'肘部角度偏离参考范围，正在确认是否持续。':event.analysis_mode==='reviewed_rules_133'?'当前未触发持续偏差；这不代表整体动作完全标准。':reasons.includes('explicit_supported_phase_required')?'请选择实际动作阶段；山式纠错支持双臂举起保持。':!hasElbowEvidence||ruleReasons?.includes('required_measurement_invalid')?'请调整摄像头，让双肩、手肘和手腕完整入镜。':ruleReasons?.includes('source_model_missing_or_mismatch')?'当前模型不符合已配置的山式规则。':ruleReasons?.includes('front_view_required')?'请正对摄像头练习山式。':'已获得角度测量，等待持续偏差确认。');return;
     }
     if(feedbackBusy || now-lastFeedback<10000)return;
     feedbackBusy=true;lastFeedback=now;const version=evidenceVersion;

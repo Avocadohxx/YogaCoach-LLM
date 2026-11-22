@@ -1,8 +1,4 @@
-"""LangGraph evidence -> tools -> decision -> bounded generation -> validation.
-
-Reviewed 133-point rules may produce grounded correction templates. Other
-inputs remain measurement-only. Tools are deterministic graph-node calls.
-"""
+"""LangGraph evidence -> tools -> decision -> grounded generation -> validation."""
 import logging
 from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
@@ -63,20 +59,114 @@ def compose(state: State):
     messages = CORRECTION_MESSAGES[(selected['type'], selected['target'])] if selected else CAMERA_MESSAGES
     message_id, mode, reason = ('short' if preference == 'short' else 'full'), 'template', 'llm_unavailable'
     try:
-        message_id = (llm.select_correction if selected else llm.select_message)(preference)
+        if selected:
+            try:
+                evidence = _correction_evidence(selected, state['event'], state['reference'])
+                suggestion = llm.generate_correction(evidence)
+                _validate_suggestion(suggestion, selected)
+            except Exception:
+                logger.info('LLM correction unavailable or failed validation; using grounded rule template')
+                suggestion = None
+            if suggestion is None:
+                fallback = _fallback_correction(selected)
+                if fallback is None:
+                    return {'feedback': Feedback(reason='llm_unavailable_no_safe_template')}
+                return {'feedback': Feedback(
+                    should_speak=True, feedback_type='correction', text=fallback,
+                    mode='template', reason='llm_unavailable_or_invalid',
+                    event_id=selected['event_id'], target=selected['target'],
+                    grounded_event_type=selected['type'],
+                    tools_used=['analysis_snapshot', 'reference_for', 'context_for'],
+                )}
+            return {'feedback': Feedback(
+                should_speak=True, feedback_type='correction', text=suggestion.text,
+                mode='llm', reason='confirmed_rule_deviation', event_id=selected['event_id'],
+                target=selected['target'], grounded_event_type=selected['type'],
+                tools_used=['analysis_snapshot', 'reference_for', 'context_for'],
+            )}
+        message_id = llm.select_message(preference)
         # Validate even an injected/test provider's return before indexing templates.
         if message_id not in messages:
             raise ValueError('invalid_selection')
-        mode, reason = 'llm', 'confirmed_rule_deviation' if selected else 'camera_quality'
+        mode, reason = 'llm', 'camera_quality'
     except Exception:
         # Provider errors can contain credentials or response bodies: do not log them.
         message_id = 'short' if preference == 'short' else 'full'
-        logger.info('LLM selector unavailable; using camera template')
-    return {'feedback': Feedback(should_speak=True, feedback_type='correction' if selected else 'camera_hint',
+        logger.info('LLM generation/selection unavailable or invalid; using safe template')
+    return {'feedback': Feedback(should_speak=True, feedback_type='camera_hint',
         text=messages[message_id], mode=mode, reason=reason,
-        event_id=selected['event_id'] if selected else None, target=selected['target'] if selected else None,
-        grounded_event_type=selected['type'] if selected else None,
+        event_id=None, target=None, grounded_event_type=None,
         tools_used=['analysis_snapshot', 'reference_for', 'context_for'])}
+
+
+def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict) -> dict:
+    """Build a minimal LLM payload from server-validated measurements/rules."""
+    from pathlib import Path
+    import json
+    root = Path(__file__).resolve().parents[1]
+    ruleset = None
+    rule_file = reference.get('rules_file')
+    if not rule_file:
+        raise ValueError('reviewed_ruleset_missing')
+    rule_path = Path(rule_file)
+    if not rule_path.is_absolute():
+        rule_path = root / 'knowledge' / rule_path
+    try:
+        candidate = json.loads(rule_path.read_text(encoding='utf-8'))
+    except (OSError, ValueError) as exc:
+        raise ValueError('reviewed_ruleset_missing') from exc
+    ruleset = candidate if any(
+        item.get('rule_id') == selected.get('rule_id') for item in candidate.get('rules', [])
+    ) else None
+    if ruleset is None:
+        raise ValueError('reviewed_ruleset_missing')
+    if not ruleset.get('reviewed'):
+        raise ValueError('reviewed_ruleset_required')
+    rule = next((item for item in ruleset.get('rules', [])
+                 if item.get('rule_id') == selected.get('rule_id')), None)
+    if (rule is None or not ruleset.get('reviewed') or not rule.get('enabled')
+            or rule.get('mode') != 'candidate'):
+        raise ValueError('confirmed_rule_missing_from_reference')
+    value = selected.get('observed_value')
+    lo, hi = selected.get('reference_range') or [None, None]
+    if value is None or (lo is None and hi is None):
+        raise ValueError('incomplete_numeric_evidence')
+    unit = rule.get('unit')
+    if not unit:
+        raise ValueError('reference_unit_missing')
+    return {
+        'pose': event.pose_id,
+        'target': selected['target'],
+        'event_type': selected['type'],
+        'feature_name': selected['feature_name'],
+        'observed_value': value,
+        'unit': unit,
+        'reference_range': [lo, hi],
+        'phase': (event.rule_evaluation or {}).get('phase'),
+        'duration_ms': selected['duration_ms'],
+        'minimum_keypoint_score': selected.get('min_keypoint_score'),
+        'safety_constraints': [
+            '不要诊断疾病或声称疼痛',
+            '不要求强行达到角度或锁死关节',
+            '建议仅限已确认的目标部位',
+            '感到不适时暂停练习',
+        ],
+    }
+
+
+def _validate_suggestion(suggestion, selected: dict) -> None:
+    """Reject unsupported target/type and unsafe or unbounded model replies."""
+    text = suggestion.text.strip()
+    forbidden = ('诊断', '治疗', '治愈', '必须锁死', '强行达到', '保证改善')
+    if (not text or suggestion.target != selected['target']
+            or suggestion.grounded_event_type != selected['type']
+            or any(token in text for token in forbidden)):
+        raise ValueError('llm_suggestion_failed_validation')
+
+
+def _fallback_correction(selected: dict) -> str | None:
+    messages = CORRECTION_MESSAGES.get((selected.get('type'), selected.get('target')))
+    return messages.get('full') if messages else None
 
 
 def validate(state: State):

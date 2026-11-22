@@ -31,7 +31,7 @@ export default function App(){
     finally{if(mounted.current)setBusy(false);}
   }
   async function finish(){
-    setBusy(true);live.current?.close();setFeedback('练习已结束。');
+    setBusy(true);live.current?.close();
     const current=run.current;current.controller.abort();current.generation++;
     const item:Summary={id:current.id,pose,seconds:Math.floor((Date.now()-current.started)/1000),feedbacks:current.count,ended:new Date().toISOString()};
     setActive(false);setSummary(item);setStatus('已结束练习，摄像头已关闭。');
