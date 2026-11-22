@@ -1,18 +1,17 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createLiveSession } from "./liveSession";
 import { type Analysis, type Feedback } from "./api";
-const points = Array.from({ length: 33 }, () => ({
-  x: 0.5,
-  y: 0.5,
-  z: 0,
-  visibility: 1,
-}));
 const event: Analysis = {
   session_id: "s",
   pose_id: "tadasana",
   timestamp_ms: 0,
   tracking_quality: "good",
   feedback_allowed: true,
+  analysis_mode: "reviewed_rules_133",
+  observations: [
+    { name: "left_elbow_angle_deg", value: 160, unit: "deg", valid: true },
+    { name: "right_elbow_angle_deg", value: 175, unit: "deg", valid: true },
+  ],
   deviations: [{ type: "shoulder_asymmetry", duration_ms: 1800 }],
 };
 const reply: Feedback = {
@@ -58,7 +57,7 @@ describe("133 点后端结果接入", () => {
     await work;
     expect(t.count).not.toHaveBeenCalled();
     expect(t.show).toHaveBeenLastCalledWith(
-      "已获得 133 点测量，参考规则尚未校准。",
+      "当前未触发持续偏差；这不代表整体动作完全标准。",
     );
   });
   it("视频暂停或拖动后，迟到提示不能显示", async () => {
@@ -111,7 +110,41 @@ describe("持续纠错事件", () => {
     });
     expect(t.transport.feedback).not.toHaveBeenCalled();
     expect(t.show).toHaveBeenLastCalledWith(
-      "正在确认偏差是否持续，请保持自然呼吸。",
+      "肘部角度偏离参考范围，正在确认是否持续。",
     );
+  });
+});
+
+describe("测量不可评估时的提示", () => {
+  it.each([
+    ["source_model_missing_or_mismatch", "当前模型不符合已配置的山式规则。"],
+    ["front_view_required", "请正对摄像头练习山式。"],
+    [
+      "required_measurement_invalid",
+      "请调整摄像头，让双肩、手肘和手腕完整入镜。",
+    ],
+  ])("优先显示候选规则的具体原因：%s", async (reason, text) => {
+    const t = setup();
+    await t.session.observe({
+      ...event,
+      feedback_allowed: false,
+      deviations: [],
+      observations: [],
+      rule_evaluation: {
+        pending_count: 0,
+        phase: "arms_up_hold",
+        scope: "enabled_phase_rules_only_not_full_posture",
+        rule_results: [
+          {
+            mode: "candidate",
+            status: "not_assessable",
+            feature_name: "left_elbow_angle_deg",
+            reason,
+          },
+        ],
+      },
+    });
+    expect(t.show).toHaveBeenLastCalledWith(text);
+    expect(t.transport.feedback).not.toHaveBeenCalled();
   });
 });

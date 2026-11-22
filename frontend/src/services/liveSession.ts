@@ -1,4 +1,4 @@
-﻿import { api, parseFeedback, type Analysis } from "./api";
+import { api, parseFeedback, type Analysis } from "./api";
 
 // One instance per practice. Async completions may only update their own generation.
 export function createLiveSession(
@@ -52,10 +52,12 @@ export function createLiveSession(
       );
     }
     if (!signature) {
-      const reasons = event.reason_codes || [];
-      const ruleReasons = event.rule_evaluation?.rule_results
-        ?.filter((rule) => rule.mode === "candidate" && rule.reason)
-        .map((rule) => rule.reason);
+      const reasons = new Set([
+        ...(event.reason_codes || []),
+        ...(event.rule_evaluation?.rule_results
+          ?.filter((rule) => rule.mode === "candidate" && rule.reason)
+          .map((rule) => rule.reason) || []),
+      ]);
       const hasElbowEvidence = (event.observations || []).some(
         (item) =>
           (item.name === "left_elbow_angle_deg" ||
@@ -63,27 +65,27 @@ export function createLiveSession(
           item.valid,
       );
       show(
-        reasons.includes("phase_mismatch_arms_down")
+        reasons.has("phase_mismatch_arms_down")
           ? "画面与举臂阶段不一致，请核对阶段或举臂位置。"
-          : reasons.includes("inference_frame_expired")
+          : reasons.has("inference_frame_expired")
             ? "图像分析已过期，正在等待新画面。"
-            : reasons.includes("frame_gap_reset")
+            : reasons.has("frame_gap_reset")
               ? "画面分析间隔较长，已重新积累持续证据。"
-              : reasons.includes("rules_require_manual_review")
+              : reasons.has("rules_require_manual_review")
                 ? "当前动作规则尚未审核，仅显示测量。"
-                : (event.rule_evaluation?.pending_count || 0) > 0
-                  ? "肘部角度偏离参考范围，正在确认是否持续。"
-                  : event.analysis_mode === "reviewed_rules_133"
-                    ? "当前未触发持续偏差；这不代表整体动作完全标准。"
-                    : reasons.includes("explicit_supported_phase_required")
+                : reasons.has("source_model_missing_or_mismatch")
+                  ? "当前模型不符合已配置的山式规则。"
+                  : reasons.has("front_view_required")
+                    ? "请正对摄像头练习山式。"
+                    : reasons.has("explicit_supported_phase_required")
                       ? "请选择实际动作阶段；山式纠错支持双臂举起保持。"
-                      : !hasElbowEvidence ||
-                          ruleReasons?.includes("required_measurement_invalid")
+                      : reasons.has("required_measurement_invalid") ||
+                          !hasElbowEvidence
                         ? "请调整摄像头，让双肩、手肘和手腕完整入镜。"
-                        : ruleReasons?.includes("source_model_missing_or_mismatch")
-                          ? "当前模型不符合已配置的山式规则。"
-                          : ruleReasons?.includes("front_view_required")
-                            ? "请正对摄像头练习山式。"
+                        : (event.rule_evaluation?.pending_count || 0) > 0
+                          ? "肘部角度偏离参考范围，正在确认是否持续。"
+                          : event.analysis_mode === "reviewed_rules_133"
+                            ? "当前未触发持续偏差；这不代表整体动作完全标准。"
                             : "已获得角度测量，等待持续偏差确认。",
       );
       return;
