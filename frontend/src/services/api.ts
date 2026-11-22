@@ -63,10 +63,9 @@ export type Summary = {
   pose: Pose;
   seconds: number;
   feedbacks: number;
-  ended: string;
 };
 
-// Shared backend contracts; simulated history stays browser-local.
+// Shared backend contracts.
 async function request<T>(
   path: string,
   body: unknown,
@@ -152,26 +151,4 @@ export function parseFeedback(value: Feedback): Feedback {
   )
     throw new Error("反馈格式不符合约定。");
   return value;
-}
-export function readHistory(): Summary[] {
-  try {
-    const value: unknown = JSON.parse(
-      localStorage.getItem("yoga-demo-history") || "[]",
-    );
-    return Array.isArray(value)
-      ? value
-          .filter(
-            (x): x is Summary =>
-              x &&
-              typeof x.id === "string" &&
-              typeof x.seconds === "number" &&
-              typeof x.feedbacks === "number" &&
-              typeof x.ended === "string" &&
-              ["tadasana", "ardhakati_chakrasana"].includes(x.pose),
-          )
-          .slice(0, 10)
-      : [];
-  } catch {
-    return [];
-  }
 }

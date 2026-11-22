@@ -7,7 +7,6 @@ const mock = vi.hoisted(() => ({
   sessions: vi.fn().mockResolvedValue({ items: [] }),
 }));
 vi.mock("./services/api", () => ({
-  readHistory: () => [],
   api: {
     createSession: mock.create,
     finishSession: mock.finish,
@@ -29,9 +28,7 @@ afterEach(() => {
 });
 it("视频练习创建和结束会话，阶段在练习中可选择", async () => {
   const screen = render(<App />);
-  fireEvent.change(screen.getByLabelText("运行方式"), {
-    target: { value: "live" },
-  });
+  expect(screen.queryByLabelText("运行方式")).toBeNull();
   fireEvent.change(screen.getByLabelText("图像来源"), {
     target: { value: "video" },
   });

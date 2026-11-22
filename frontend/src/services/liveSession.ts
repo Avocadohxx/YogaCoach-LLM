@@ -2,7 +2,7 @@ import { api, parseFeedback, type Analysis } from "./api";
 
 // One instance per practice. Async completions may only update their own generation.
 export function createLiveSession(
-  show: (text: string) => void,
+  show: (text: string, isAdvice?: boolean) => void,
   counted: () => void,
   transport: Pick<typeof api, "feedback"> = api,
 ) {
@@ -98,7 +98,7 @@ export function createLiveSession(
       const result = parseFeedback(await transport.feedback(event, signal));
       if (closed || generation !== token || evidenceVersion !== version) return;
       if (Date.now() - now >= 8000) return;
-      if (result.text) show(result.text);
+      if (result.text) show(result.text, result.should_speak);
       if (result.should_speak) counted();
     } catch (error) {
       if (!closed && generation === token && !signal.aborted)

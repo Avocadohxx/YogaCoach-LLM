@@ -120,14 +120,6 @@ button:disabled {
   background: #eaf1e3;
   border-color: #7a9c63;
 }
-.mode {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 13px;
-  margin-bottom: 15px;
-}
 .placeholder,
 .camera {
   aspect-ratio: 4/3;
@@ -194,12 +186,6 @@ button:disabled {
   font-size: 11px;
   color: #7a847d;
 }
-.scenarios {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 12px 0;
-}
 aside {
   display: flex;
   flex-direction: column;
@@ -209,10 +195,21 @@ aside {
   background: #e4ecd9;
   border: 0;
 }
-.feedback h2 {
+.feedback h3 {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #607c67;
+  margin: 0;
+}
+.feedback-current {
+  border-top: 1px solid #c9d5bd;
+  padding-top: 18px;
+}
+.feedback .feedback-text {
+  color: #233e36;
   font-size: 23px;
   line-height: 1.65;
-  margin-top: 20px;
+  margin: 12px 0;
 }
 .card p {
   overflow-wrap: anywhere;
@@ -238,8 +235,5 @@ footer {
   }
   .brand span {
     display: none;
-  }
-  .mode {
-    flex-wrap: wrap;
   }
 }

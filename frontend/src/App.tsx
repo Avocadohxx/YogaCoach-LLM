@@ -3,12 +3,10 @@ import Source133 from "./components/Source133";
 import MemoryPanel from "./components/MemoryPanel";
 import {
   api,
-  readHistory,
   type Pose,
   type Analysis,
   type Phase133,
   type Variant133,
-  type Summary,
 } from "./services/api";
 import { usePracticeSession } from "./hooks/usePracticeSession";
 const names: Record<Pose, string> = {
@@ -16,12 +14,40 @@ const names: Record<Pose, string> = {
   ardhakati_chakrasana: "站立侧弯式",
 };
 export default function App() {
-  const [pose, setPose] = useState<Pose>("tadasana"),
-    [mode, setMode] = useState<"demo" | "live">("demo");
-  const [status, setStatus] = useState("准备好后，开始一次练习。"),
-    [feedback, setFeedback] = useState("把注意力放回身体，慢慢开始。");
-  const [history, setHistory] = useState(readHistory),
-    [health, setHealth] = useState("尚未检查");
+  const [pose, setPose] = useState<Pose>("tadasana");
+  const [status, setStatus] = useState("准备好后，开始一次练习。");
+  const [feedback, setFeedbackState] = useState({
+    text: "把注意力放回身体，慢慢开始。",
+    latestAdvice: "",
+    previousAdvice: "",
+    sessionId: "",
+  });
+  function setFeedback(text: string, isAdvice = false) {
+    const sessionId = run.current.id;
+    setFeedbackState((previous) => {
+      const sameSession = previous.sessionId === sessionId;
+      if (
+        sameSession &&
+        previous.text === text &&
+        (!isAdvice || previous.latestAdvice === text)
+      )
+        return previous;
+      const latestAdvice = sameSession ? previous.latestAdvice : "";
+      const previousAdvice = sameSession ? previous.previousAdvice : "";
+      return {
+        text,
+        latestAdvice: isAdvice ? text : latestAdvice,
+        previousAdvice:
+          isAdvice && text !== latestAdvice ? latestAdvice : previousAdvice,
+        sessionId,
+      };
+    });
+  }
+  const previousAdvice =
+    feedback.text === feedback.latestAdvice
+      ? feedback.previousAdvice
+      : feedback.latestAdvice;
+  const [health, setHealth] = useState("尚未检查");
   const [serverSummary, setServerSummary] = useState("");
   const [phase, setPhase] = useState<Phase133>("prepare");
   const [inputSource, setInputSource] = useState<"camera" | "video">("camera");
@@ -36,19 +62,18 @@ export default function App() {
   const [supported, setSupported] = useState<string[]>([]);
   useEffect(() => {
     let valid = true;
-    if (mode === "live")
-      void api
-        .ready()
-        .then((r) => {
-          if (valid) setSupported(r.rules?.[pose]?.correction_phases || []);
-        })
-        .catch(() => {
-          if (valid) setSupported([]);
-        });
+    void api
+      .ready()
+      .then((r) => {
+        if (valid) setSupported(r.rules?.[pose]?.correction_phases || []);
+      })
+      .catch(() => {
+        if (valid) setSupported([]);
+      });
     return () => {
       valid = false;
     };
-  }, [pose, mode]);
+  }, [pose]);
   function phaseLabel(name: string, value: string) {
     return name + (supported.includes(value) ? "（可纠错）" : "（仅测量）");
   }
@@ -65,33 +90,11 @@ export default function App() {
     clearSummary,
   } = usePracticeSession({
     pose,
-    mode,
-    history,
-    setHistory,
     setFeedback,
     setStatus,
     setServerSummary,
     setAnalysis,
   });
-  function simulate(kind: "difference" | "hidden" | "normal") {
-    setStatus(
-      kind === "hidden"
-        ? "模拟：关键点被遮挡"
-        : kind === "normal"
-          ? "模拟：未发现目标差异"
-          : "模拟：持续发现双肩高度差异",
-    );
-    if (kind === "normal") {
-      setFeedback("本次模拟不发送提醒。");
-      return;
-    }
-    setFeedback(
-      kind === "hidden"
-        ? "请调整摄像头位置，让全身进入画面后再继续。"
-        : "模拟反馈：观察两侧肩部位置，在舒适范围内放松。",
-    );
-    run.current.count++;
-  }
   return (
     <main>
       <header>
@@ -139,65 +142,48 @@ export default function App() {
               </button>
             ))}
           </div>
-          <label className="mode">
-            运行方式{" "}
-            <select
-              disabled={active || busy}
-              value={mode}
-              onChange={(e) => setMode(e.target.value as "demo" | "live")}
-            >
-              <option value="demo">模拟练习（不调用模型）</option>
-              <option value="live">133 点：摄像头 / 上传视频</option>
-            </select>
-          </label>
-          {active && (
-            <p className="note">
-              切换运行方式前，请先结束当前练习。练习阶段可以随时切换。
-            </p>
-          )}
-          {mode === "live" && (
-            <div className="choices">
-              {!active && (
-                <label>
-                  图像来源{" "}
-                  <select
-                    disabled={active || busy}
-                    value={inputSource}
-                    onChange={(e) =>
-                      setInputSource(e.target.value as "camera" | "video")
-                    }
-                  >
-                    <option value="camera">摄像头</option>
-                    <option value="video">本地视频</option>
-                  </select>
-                </label>
-              )}
+          {active && <p className="note">练习阶段可以随时切换。</p>}
+          <div className="choices">
+            {!active && (
               <label>
-                练习阶段{" "}
+                图像来源{" "}
                 <select
-                  disabled={busy}
-                  value={phase}
-                  onChange={(e) => {
-                    live.current?.invalidate("阶段已切换，重新积累证据。");
-                    setPhase(e.target.value as Phase133);
-                  }}
+                  disabled={active || busy}
+                  value={inputSource}
+                  onChange={(e) =>
+                    setInputSource(e.target.value as "camera" | "video")
+                  }
                 >
-                  <option value="prepare">准备中（不纠错）</option>
-                  <option value="arms_up_hold">
-                    {phaseLabel("双臂举起并保持", "arms_up_hold")}
-                  </option>
-                  <option value="arms_down_hold">双臂自然下垂（仅测量）</option>
-                  {pose === "ardhakati_chakrasana" && (
-                    <option value="side_bend_hold">
-                      {phaseLabel("侧弯保持", "side_bend_hold")}
-                    </option>
-                  )}
-                  <option value="transition">动作切换中（不纠错）</option>
+                  <option value="camera">摄像头</option>
+                  <option value="video">本地视频</option>
                 </select>
               </label>
-            </div>
-          )}
-          {mode === "live" && pose === "ardhakati_chakrasana" && (
+            )}
+            <label>
+              练习阶段{" "}
+              <select
+                disabled={busy}
+                value={phase}
+                onChange={(e) => {
+                  live.current?.invalidate("阶段已切换，重新积累证据。");
+                  setPhase(e.target.value as Phase133);
+                }}
+              >
+                <option value="prepare">准备中（不纠错）</option>
+                <option value="arms_up_hold">
+                  {phaseLabel("双臂举起并保持", "arms_up_hold")}
+                </option>
+                <option value="arms_down_hold">双臂自然下垂（仅测量）</option>
+                {pose === "ardhakati_chakrasana" && (
+                  <option value="side_bend_hold">
+                    {phaseLabel("侧弯保持", "side_bend_hold")}
+                  </option>
+                )}
+                <option value="transition">动作切换中（不纠错）</option>
+              </select>
+            </label>
+          </div>
+          {pose === "ardhakati_chakrasana" && (
             <div className="choices">
               <label>
                 举臂方式{" "}
@@ -249,7 +235,7 @@ export default function App() {
               </label>
             </div>
           )}
-          {active && mode === "live" ? (
+          {active ? (
             <Source133
               movementVariant={movementVariant}
               raisedArm={raisedArm}
@@ -271,26 +257,13 @@ export default function App() {
           ) : (
             <div className="placeholder">
               <span className="pose-symbol">♧</span>
-              <h3>{active ? "模拟练习已开始" : "给身体留出完整的画面"}</h3>
-              <p>
-                {mode === "demo"
-                  ? "模拟模式帮助检查操作流程，不评价你的动作。"
-                  : "正面拍摄，保持全身入镜，并摆正摄像头。"}
-              </p>
+              <h3>给身体留出完整的画面</h3>
+              <p>正面拍摄，保持全身入镜，并摆正摄像头。</p>
             </div>
           )}
           <p className="status" role="status">
             ● {status}
           </p>
-          {active && mode === "demo" && (
-            <div className="scenarios">
-              <button onClick={() => simulate("normal")}>没有差异</button>
-              <button onClick={() => simulate("difference")}>
-                模拟肩部差异
-              </button>
-              <button onClick={() => simulate("hidden")}>模拟遮挡</button>
-            </div>
-          )}
           <button
             disabled={busy}
             className="primary"
@@ -303,19 +276,19 @@ export default function App() {
           </p>
         </section>
         <aside>
-          <MemoryPanel
-            onDeleted={() => {
-              clearSummary();
-              setAnalysis(null);
-              setFeedback("服务器记录已清除。");
-            }}
-            active={active || busy}
-            refreshKey={(summary?.id || "") + serverSummary}
-          />
           <section className="card feedback">
-            <span className="eyebrow">本次提醒</span>
-            <h2 aria-live="polite">{feedback}</h2>
-            {mode === "live" && analysis && (
+            <h2>实时建议</h2>
+            <div className="feedback-previous">
+              <h3>上一条建议</h3>
+              <p>{previousAdvice || "暂无上一条建议。"}</p>
+            </div>
+            <div className="feedback-current">
+              <h3>本次提醒</h3>
+              <p className="feedback-text" aria-live="polite">
+                {feedback.text}
+              </p>
+            </div>
+            {analysis && (
               <p>
                 {(
                   ["left_elbow_angle_deg", "right_elbow_angle_deg"] as const
@@ -335,12 +308,22 @@ export default function App() {
                 })}
               </p>
             )}
-            <p>
-              {mode === "demo"
-                ? "此处展示固定模拟文本，没有调用 LLM。"
-                : "图像帧发送到本机后端，使用 RTMW 提取 133 点；不上传到 LLM。"}
-            </p>
+            <p>图像帧发送到本机后端，使用 RTMW 提取 133 点；不上传到 LLM。</p>
           </section>
+          <MemoryPanel
+            onDeleted={() => {
+              clearSummary();
+              setAnalysis(null);
+              setFeedbackState({
+                text: "服务器记录已清除。",
+                latestAdvice: "",
+                previousAdvice: "",
+                sessionId: run.current.id,
+              });
+            }}
+            active={active || busy}
+            refreshKey={(summary?.id || "") + serverSummary}
+          />
           <section className="card">
             <h2>连接状态</h2>
             <p>网页 5173 → 后端 8000</p>
@@ -386,32 +369,6 @@ export default function App() {
               <p>显示提醒 {summary.feedbacks} 次。此记录不代表动作改善。</p>
             </section>
           )}
-          <section className="card">
-            <h2>模拟练习记录</h2>
-            {history.length ? (
-              history.map((x) => (
-                <p key={x.id}>
-                  {names[x.pose]} · {x.seconds} 秒 ·{" "}
-                  {new Date(x.ended).toLocaleDateString()}
-                </p>
-              ))
-            ) : (
-              <p>还没有记录，完成一次模拟练习后会保存在此浏览器。</p>
-            )}
-            <button
-              disabled={!history.length}
-              onClick={() => {
-                try {
-                  localStorage.removeItem("yoga-demo-history");
-                  setHistory([]);
-                } catch {
-                  setStatus("浏览器拒绝清除记录，请检查存储权限。");
-                }
-              }}
-            >
-              清除模拟记录
-            </button>
-          </section>
         </aside>
       </div>
       <footer>
