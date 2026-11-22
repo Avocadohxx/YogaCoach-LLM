@@ -1,5 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import Source133 from "./components/Source133";
+import VoiceControls from "./components/VoiceControls";
+import { useVoiceCoach } from "./hooks/useVoiceCoach";
 import MemoryPanel from "./components/MemoryPanel";
 import {
   api,
@@ -23,6 +25,8 @@ export default function App() {
     sessionId: "",
   });
   function setFeedback(text: string, isAdvice = false) {
+    if (isAdvice) voice.speak(text);
+    else voice.cancel();
     const sessionId = run.current.id;
     setFeedbackState((previous) => {
       const sameSession = previous.sessionId === sessionId;
@@ -95,6 +99,18 @@ export default function App() {
     setServerSummary,
     setAnalysis,
   });
+  const voice = useVoiceCoach(active, busy, pose, (command) => {
+    if (command === "finish") {
+      voice.stop();
+      void finish();
+    } else changePhase(command);
+  });
+  function changePhase(next: Phase133) {
+    if (busy || next === phase) return;
+    voice.cancel();
+    live.current?.invalidate("阶段已切换，重新积累证据。");
+    setPhase(next);
+  }
   return (
     <main>
       <header>
@@ -112,6 +128,7 @@ export default function App() {
         </h1>
         <p>选择一种练习，观察身体的位置。每次只关注一个小变化。</p>
       </section>
+      <VoiceControls disabled={!active || busy} {...voice} />
       <div className="layout">
         <section className="workspace">
           <div className="section-title">
@@ -165,8 +182,7 @@ export default function App() {
                 disabled={busy}
                 value={phase}
                 onChange={(e) => {
-                  live.current?.invalidate("阶段已切换，重新积累证据。");
-                  setPhase(e.target.value as Phase133);
+                  changePhase(e.target.value as Phase133);
                 }}
               >
                 <option value="prepare">准备中（不纠错）</option>
@@ -267,7 +283,14 @@ export default function App() {
           <button
             disabled={busy}
             className="primary"
-            onClick={active ? finish : start}
+            onClick={
+              active
+                ? () => {
+                    voice.stop();
+                    void finish();
+                  }
+                : start
+            }
           >
             {active ? "结束并查看记录" : "开始练习"} <span>→</span>
           </button>
