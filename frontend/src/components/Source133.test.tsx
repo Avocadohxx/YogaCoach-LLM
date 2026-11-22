@@ -12,6 +12,7 @@ it("摄像头切换到本地文件会释放轨道并清空srcObject", async () =
     clearRect: vi.fn(),
   } as unknown as CanvasRenderingContext2D);
   const stop = vi.fn();
+  const onCaptureReady = vi.fn();
   const stream = { getTracks: () => [{ stop, addEventListener: vi.fn() }] };
   Object.defineProperty(navigator, "mediaDevices", {
     configurable: true,
@@ -40,10 +41,14 @@ it("摄像头切换到本地文件会释放轨道并清空srcObject", async () =
       onAnalysis={vi.fn()}
       onStatus={vi.fn()}
       onLost={vi.fn()}
+      onCaptureReady={onCaptureReady}
     />,
   );
   const video = screen.container.querySelector("video")!;
   await waitFor(() => expect(video.srcObject).toBe(stream));
+  await waitFor(() =>
+    expect(onCaptureReady).toHaveBeenCalledWith(expect.any(Function)),
+  );
   fireEvent.change(screen.getByRole("combobox"), {
     target: { value: "video" },
   });
@@ -54,5 +59,6 @@ it("摄像头切换到本地文件会释放轨道并清空srcObject", async () =
   expect(video.srcObject).toBeNull();
   expect(stop).toHaveBeenCalled();
   screen.unmount();
+  expect(onCaptureReady).toHaveBeenLastCalledWith(null);
   expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:test-video");
 });

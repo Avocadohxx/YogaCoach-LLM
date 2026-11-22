@@ -22,7 +22,7 @@ from typing import Iterator
 REPO_ROOT = Path(__file__).resolve().parent.parent
 _DEFAULT_DB = REPO_ROOT / "data" / "yogacoach.db"
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS schema_meta (
@@ -72,6 +72,21 @@ CREATE TABLE IF NOT EXISTS user_preferences (
     UNIQUE(user_id, preference_key)
 );
 
+CREATE TABLE IF NOT EXISTS event_snapshots (
+    snapshot_id TEXT PRIMARY KEY,
+    session_id TEXT NOT NULL,
+    pose_id TEXT,
+    event_type TEXT,
+    side TEXT,
+    severity TEXT,
+    confidence REAL,
+    timestamp_ms INTEGER,
+    feedback_text TEXT,
+    relative_path TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    FOREIGN KEY (session_id) REFERENCES sessions(session_id) ON DELETE CASCADE
+);
+
 CREATE INDEX IF NOT EXISTS idx_sessions_user_started
     ON sessions(user_id, started_at DESC);
 CREATE INDEX IF NOT EXISTS idx_sessions_pose
@@ -82,6 +97,8 @@ CREATE INDEX IF NOT EXISTS idx_feedback_session
     ON feedback_logs(session_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_preferences_user
     ON user_preferences(user_id);
+CREATE INDEX IF NOT EXISTS idx_snapshots_session_time
+    ON event_snapshots(session_id, timestamp_ms);
 """
 
 _init_lock = threading.Lock()
@@ -137,7 +154,8 @@ def init_db(db_path: str | Path | None = None) -> None:
         with connection(path) as conn:
             conn.executescript(_SCHEMA)
             conn.execute(
-                "INSERT OR IGNORE INTO schema_meta(key,value) VALUES('schema_version',?)",
+                """INSERT INTO schema_meta(key,value) VALUES('schema_version',?)
+                   ON CONFLICT(key) DO UPDATE SET value=excluded.value""",
                 (str(SCHEMA_VERSION),),
             )
         if key != ":memory:":

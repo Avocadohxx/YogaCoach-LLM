@@ -13,10 +13,12 @@ export default function MemoryPanel({
   active,
   refreshKey,
   onDeleted,
+  onOpenSession,
 }: {
   active: boolean;
   refreshKey: string;
   onDeleted?: () => void;
+  onOpenSession?: (sessionId: string) => void;
 }) {
   const [length, setLength] = useState("normal"),
     [message, setMessage] = useState(""),
@@ -105,6 +107,12 @@ export default function MemoryPanel({
           >
             {poseNames[s.pose_id] || s.pose_id} · {s.ended_at || "未结束"}
           </summary>
+          <button
+            disabled={!onOpenSession}
+            onClick={() => onOpenSession?.(s.session_id)}
+          >
+            查看训练详情、建议与错误截图
+          </button>
           <p>{s.summary}</p>
           {(events[s.session_id] || []).map((e) => (
             <p key={e.event_id}>

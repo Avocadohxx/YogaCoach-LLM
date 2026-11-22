@@ -1,10 +1,20 @@
-import { api, parseFeedback, type Analysis } from "./api";
+import { api, parseFeedback, type Analysis, type Pose } from "./api";
 
 // One instance per practice. Async completions may only update their own generation.
+type LiveTransport = Pick<typeof api, "feedback"> &
+  Partial<Pick<typeof api, "saveSnapshot" | "updateSnapshotFeedback">>;
+type HistoryCapture = {
+  sessionId: string;
+  pose: Pose;
+  capture: () => Promise<Blob | null>;
+  onPersistenceError: (message: string | null) => void;
+};
+
 export function createLiveSession(
   show: (text: string, isAdvice?: boolean) => void,
   counted: () => void,
-  transport: Pick<typeof api, "feedback"> = api,
+  transport: LiveTransport = api,
+  history?: HistoryCapture,
 ) {
   let generation = 0,
     closed = false,
@@ -13,6 +23,49 @@ export function createLiveSession(
     lastFeedback = -Infinity;
   let evidence = "",
     evidenceVersion = 0;
+  let evidenceSnapshot:
+    | {
+        signature: string;
+        promise: Promise<{ snapshot_id: string } | null>;
+      }
+    | null = null;
+  const pendingWrites = new Set<Promise<unknown>>();
+  const persistenceErrors = new Map<string, string>();
+  function trackWrite<T>(promise: Promise<T>) {
+    pendingWrites.add(promise);
+    void promise.finally(() => pendingWrites.delete(promise)).catch(() => {});
+    return promise;
+  }
+  function reportPersistenceError(kind: string, error: unknown) {
+    persistenceErrors.set(
+      kind,
+      `${kind}失败：${error instanceof Error ? error.message : String(error)}`,
+    );
+    history?.onPersistenceError([...persistenceErrors.values()].join("；"));
+  }
+  function clearPersistenceError(kind: string) {
+    if (persistenceErrors.delete(kind))
+      history?.onPersistenceError(
+        [...persistenceErrors.values()].join("；") || null,
+      );
+  }
+  async function persist<T>(
+    kind: string,
+    promise: Promise<T>,
+  ): Promise<T | undefined> {
+    try {
+      const result = await trackWrite(promise);
+      clearPersistenceError(kind);
+      return result;
+    } catch (error) {
+      reportPersistenceError(kind, error);
+      return undefined;
+    }
+  }
+  async function flush() {
+    while (pendingWrites.size)
+      await Promise.allSettled([...pendingWrites]);
+  }
   function invalidate(text: string) {
     if (closed) return;
     generation++;
@@ -20,6 +73,7 @@ export function createLiveSession(
     controller = new AbortController();
     feedbackBusy = false;
     evidence = "";
+    evidenceSnapshot = null;
     evidenceVersion++;
     lastFeedback = -Infinity;
     show(text);
@@ -34,7 +88,11 @@ export function createLiveSession(
     const now = Date.now(),
       token = generation,
       signal = controller.signal;
-    const signature = event.feedback_allowed
+    const trustedEvidence =
+      event.feedback_allowed &&
+      event.tracking_quality === "good" &&
+      event.deviations.length > 0;
+    const signature = trustedEvidence
       ? event.deviations
           .map((x) => (x.event_id || x.type) + ":" + (x.side || ""))
           .sort()
@@ -42,14 +100,39 @@ export function createLiveSession(
       : ["partial", "poor"].includes(event.tracking_quality)
         ? "camera_hint"
         : "";
+    const isNewEvidence = Boolean(signature && signature !== evidence);
     if (signature !== evidence) {
       evidence = signature;
       evidenceVersion++;
+      if (!signature) evidenceSnapshot = null;
       show(
         signature
           ? "正在获取当前画面的提醒…"
           : "已获得 133 点测量，参考规则尚未校准。",
       );
+    }
+    if (isNewEvidence && trustedEvidence && history && transport.saveSnapshot) {
+      const snapshotPromise = persist(
+        "错误截图保存",
+        Promise.resolve()
+          .then(() => history.capture())
+          .then((blob) => {
+            if (!blob) throw new Error("无法读取当前摄像头画面");
+            return transport.saveSnapshot!(
+              history.sessionId,
+              blob,
+              {
+                pose_id: event.pose_id,
+                event_type: event.deviations.map((item) => item.type).join(", "),
+                side: event.deviations[0]?.side,
+                timestamp_ms: event.timestamp_ms,
+              },
+            );
+          }),
+      ).then((result) =>
+        result ? { snapshot_id: result.snapshot_id } : null,
+      );
+      evidenceSnapshot = { signature, promise: snapshotPromise };
     }
     if (!signature) {
       const reasons = new Set([
@@ -99,7 +182,23 @@ export function createLiveSession(
       if (closed || generation !== token || evidenceVersion !== version) return;
       if (Date.now() - now >= 8000) return;
       if (result.text) show(result.text, result.should_speak);
-      if (result.should_speak) counted();
+      if (result.should_speak) {
+        counted();
+        if (history && transport.updateSnapshotFeedback) {
+          const snapshot =
+            evidenceSnapshot?.signature === signature
+              ? await evidenceSnapshot.promise
+              : null;
+          if (snapshot)
+            await persist(
+              "截图建议关联",
+              transport.updateSnapshotFeedback(
+                snapshot.snapshot_id,
+                result.text,
+              ),
+            );
+        }
+      }
     } catch (error) {
       if (!closed && generation === token && !signal.aborted)
         invalidate(error instanceof Error ? error.message : "反馈请求失败。");
@@ -107,5 +206,5 @@ export function createLiveSession(
       if (generation === token) feedbackBusy = false;
     }
   }
-  return { observe, invalidate, close };
+  return { observe, invalidate, close, flush };
 }

@@ -1,8 +1,10 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Source133 from "./components/Source133";
 import VoiceControls from "./components/VoiceControls";
 import { useVoiceCoach } from "./hooks/useVoiceCoach";
 import MemoryPanel from "./components/MemoryPanel";
+import HistoryDetail from "./HistoryDetail";
+import HistoryIndex from "./HistoryIndex";
 import {
   api,
   type Pose,
@@ -16,6 +18,7 @@ const names: Record<Pose, string> = {
   ardhakati_chakrasana: "站立侧弯式",
 };
 export default function App() {
+  const [route, setRoute] = useState(window.location.hash || "#/");
   const [pose, setPose] = useState<Pose>("tadasana");
   const [status, setStatus] = useState("准备好后，开始一次练习。");
   const [feedback, setFeedbackState] = useState({
@@ -53,6 +56,8 @@ export default function App() {
       : feedback.latestAdvice;
   const [health, setHealth] = useState("尚未检查");
   const [serverSummary, setServerSummary] = useState("");
+  const [persistenceWarning, setPersistenceWarning] = useState("");
+  const captureRef = useRef<(() => Promise<Blob | null>) | null>(null);
   const [phase, setPhase] = useState<Phase133>("prepare");
   const [inputSource, setInputSource] = useState<"camera" | "video">("camera");
   const [movementVariant, setMovementVariant] = useState<Variant133>("unknown"),
@@ -64,6 +69,11 @@ export default function App() {
     >("unknown");
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [supported, setSupported] = useState<string[]>([]);
+  useEffect(() => {
+    const changed = () => setRoute(window.location.hash || "#/");
+    window.addEventListener("hashchange", changed);
+    return () => window.removeEventListener("hashchange", changed);
+  }, []);
   useEffect(() => {
     let valid = true;
     void api
@@ -98,6 +108,10 @@ export default function App() {
     setStatus,
     setServerSummary,
     setAnalysis,
+    capture: () =>
+      captureRef.current?.() ?? Promise.resolve(null),
+    setPersistenceWarning: (message) =>
+      setPersistenceWarning(message || ""),
   });
   const voice = useVoiceCoach(active, busy, pose, (command) => {
     if (command === "finish") {
@@ -111,13 +125,36 @@ export default function App() {
     live.current?.invalidate("阶段已切换，重新积累证据。");
     setPhase(next);
   }
+  const detailMatch = route.match(/^#\/history\/([^/]+)$/);
+  if (route === "#/history")
+    return (
+      <HistoryIndex
+        onBack={() => {
+          window.location.hash = "#/";
+        }}
+        onOpenSession={(sessionId) => {
+          window.location.hash = `#/history/${encodeURIComponent(sessionId)}`;
+        }}
+      />
+    );
+  if (detailMatch)
+    return (
+      <HistoryDetail
+        sessionId={decodeURIComponent(detailMatch[1])}
+        onBack={() => {
+          window.location.hash = "#/";
+        }}
+      />
+    );
   return (
     <main>
       <header>
-        <a className="brand" href="#">
+        <a className="brand" href="#/">
           ◌ YogaCoach<span>练习空间</span>
         </a>
-        <span className="badge">联调版本 v2 · E</span>
+        <a className="badge history-nav" href="#/history">
+          训练历史
+        </a>
       </header>
       <section className="intro">
         <span className="eyebrow">留一点时间，照顾自己</span>
@@ -265,6 +302,9 @@ export default function App() {
                 void live.current?.observe(event);
               }}
               onStatus={setStatus}
+              onCaptureReady={(capture) => {
+                captureRef.current = capture;
+              }}
               onLost={() => {
                 setAnalysis(null);
                 live.current?.invalidate("画面已变化，等待新的 133 点结果。");
@@ -280,6 +320,11 @@ export default function App() {
           <p className="status" role="status">
             ● {status}
           </p>
+          {persistenceWarning && (
+            <p className="persistence-warning" role="alert">
+              {persistenceWarning}。请结束前确认本地历史已保存。
+            </p>
+          )}
           <button
             disabled={busy}
             className="primary"
@@ -334,6 +379,9 @@ export default function App() {
             <p>图像帧发送到本机后端，使用 RTMW 提取 133 点；不上传到 LLM。</p>
           </section>
           <MemoryPanel
+            onOpenSession={(sessionId) => {
+              window.location.hash = `#/history/${encodeURIComponent(sessionId)}`;
+            }}
             onDeleted={() => {
               clearSummary();
               setAnalysis(null);

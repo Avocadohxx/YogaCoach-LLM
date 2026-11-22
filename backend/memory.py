@@ -177,7 +177,10 @@ def get_recent_sessions(
 
 
 def delete_session(session_id: str) -> bool:
-    """Delete a session and its events/feedback (FK cascade)."""
+    """Delete a session and its events, feedback, and evidence images."""
+    from .history_storage import delete_session_snapshot_files
+
+    delete_session_snapshot_files(session_id)
     init_db()
     with connection() as conn:
         cursor = conn.execute("DELETE FROM sessions WHERE session_id=?", (session_id,))
@@ -185,8 +188,19 @@ def delete_session(session_id: str) -> bool:
 
 
 def delete_user_data(user_id: str = "default") -> dict[str, int]:
-    """Erase every session (+events/feedback) and preference of a user."""
+    """Erase every session, event, feedback, preference, and evidence image."""
+    from .history_storage import delete_session_snapshot_files
+
     init_db()
+    with connection() as conn:
+        session_ids = [
+            row[0]
+            for row in conn.execute(
+                "SELECT session_id FROM sessions WHERE user_id=?", (user_id,)
+            ).fetchall()
+        ]
+    for session_id in session_ids:
+        delete_session_snapshot_files(session_id)
     with connection() as conn:
         s = conn.execute("DELETE FROM sessions WHERE user_id=?", (user_id,)).rowcount
         p = conn.execute(

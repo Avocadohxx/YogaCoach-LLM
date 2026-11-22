@@ -7,6 +7,8 @@ type Options = {
   setStatus: (text: string) => void;
   setServerSummary: (text: string) => void;
   setAnalysis: (value: Analysis | null) => void;
+  capture: () => Promise<Blob | null>;
+  setPersistenceWarning: (message: string | null) => void;
 };
 export function usePracticeSession({
   pose,
@@ -14,6 +16,8 @@ export function usePracticeSession({
   setStatus,
   setServerSummary,
   setAnalysis,
+  capture,
+  setPersistenceWarning,
 }: Options) {
   const [active, setActive] = useState(false),
     [busy, setBusy] = useState(false),
@@ -47,6 +51,7 @@ export function usePracticeSession({
   }, [active]);
   async function start() {
     setBusy(true);
+    setPersistenceWarning(null);
     setServerSummary("");
     setAnalysis(null);
     const id = crypto.randomUUID(),
@@ -59,9 +64,19 @@ export function usePracticeSession({
       if (!mounted.current) return;
       live.current?.close();
       run.current = { id, started, count: 0 };
-      live.current = createLiveSession(setFeedback, () => {
-        run.current.count++;
-      });
+      live.current = createLiveSession(
+        setFeedback,
+        () => {
+          run.current.count++;
+        },
+        api,
+        {
+          sessionId: id,
+          pose,
+          capture,
+          onPersistenceError: setPersistenceWarning,
+        },
+      );
       setSeconds(0);
       setSummary(null);
       setFeedback("等待新的观察结果…");
@@ -76,7 +91,8 @@ export function usePracticeSession({
   }
   async function finish() {
     setBusy(true);
-    live.current?.close();
+    const currentLive = live.current;
+    currentLive?.close();
     const current = run.current;
     const item: Summary = {
       id: current.id,
@@ -88,6 +104,7 @@ export function usePracticeSession({
     setSummary(item);
     setStatus("已结束练习，摄像头已关闭。");
     try {
+      await currentLive?.flush();
       const result = await api.finishSession(current.id);
       if (!mounted.current) return;
       setServerSummary(result.summary || "没有可用的总结。");

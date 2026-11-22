@@ -148,3 +148,87 @@ describe("测量不可评估时的提示", () => {
     expect(t.transport.feedback).not.toHaveBeenCalled();
   });
 });
+
+describe("训练历史截图", () => {
+  it("建议限频时保留新截图，并在后续建议返回后关联", async () => {
+    vi.useFakeTimers();
+    const show = vi.fn(),
+      count = vi.fn(),
+      onPersistenceError = vi.fn();
+    let snapshotNumber = 0;
+    const transport = {
+      feedback: vi.fn().mockResolvedValue(reply),
+      saveSnapshot: vi.fn().mockImplementation(async () => ({
+        ok: true,
+        snapshot_id: `snap-${++snapshotNumber}`,
+        image_url: "/image",
+      })),
+      updateSnapshotFeedback: vi
+        .fn()
+        .mockResolvedValue({ ok: true, snapshot_id: "snap-1" }),
+    };
+    const capture = vi
+      .fn()
+      .mockResolvedValue(new Blob(["jpeg"], { type: "image/jpeg" }));
+    const session = createLiveSession(show, count, transport, {
+      sessionId: "s",
+      pose: "tadasana",
+      capture,
+      onPersistenceError,
+    });
+    const first = {
+      ...event,
+      deviations: [{ ...event.deviations[0], event_id: "episode-1" }],
+    };
+    const second = {
+      ...first,
+      timestamp_ms: 250,
+      deviations: [{ ...event.deviations[0], event_id: "episode-2" }],
+    };
+
+    await session.observe(first);
+    vi.advanceTimersByTime(250);
+    await session.observe(second);
+    vi.advanceTimersByTime(10000);
+    await session.observe(second);
+    await session.flush();
+
+    expect(capture).toHaveBeenCalledTimes(2);
+    expect(transport.updateSnapshotFeedback).toHaveBeenNthCalledWith(
+      2,
+      "snap-2",
+      reply.text,
+    );
+    session.close();
+  });
+
+  it("截图写入失败时通知页面", async () => {
+    const show = vi.fn(),
+      count = vi.fn(),
+      onPersistenceError = vi.fn();
+    const session = createLiveSession(
+      show,
+      count,
+      {
+        feedback: vi.fn().mockResolvedValue(reply),
+        saveSnapshot: vi
+          .fn()
+          .mockRejectedValue(new Error("disk unavailable")),
+      },
+      {
+        sessionId: "s",
+        pose: "tadasana",
+        capture: async () => new Blob(["jpeg"], { type: "image/jpeg" }),
+        onPersistenceError,
+      },
+    );
+
+    await session.observe(event);
+    await session.flush();
+
+    expect(onPersistenceError).toHaveBeenCalledWith(
+      "错误截图保存失败：disk unavailable",
+    );
+    session.close();
+  });
+});

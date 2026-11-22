@@ -18,4 +18,27 @@ describe("边界处理", () => {
     );
     await expect(api.health()).rejects.toThrow("404");
   });
+  it("上传截图时让浏览器生成 multipart boundary", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: true,
+        snapshot_id: "snap-1",
+        image_url: "/image",
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await api.saveSnapshot(
+      "session-1",
+      new Blob(["jpeg"], { type: "image/jpeg" }),
+      {
+        pose_id: "tadasana",
+        event_type: "elbow_bend",
+        timestamp_ms: 1200,
+      },
+    );
+    const [, options] = fetchMock.mock.calls[0];
+    expect(options.headers).toBeUndefined();
+    expect(options.body).toBeInstanceOf(FormData);
+  });
 });
