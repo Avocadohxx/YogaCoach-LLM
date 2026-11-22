@@ -1,6 +1,6 @@
 # 主链路关键点格式：COCO-WholeBody 133
 
-当前主方案为 RTMW/DWPose 的 133 点，浏览器 MediaPipe 33 点仅保留历史兼容代码，不是当前感知入口。
+当前主方案为 RTMW/DWPose 的 133 点，旧 33 点后端输入兼容保留，不在当前前端感知路径中；旧 MediaPipe 前端已清理。
 
 - `keypoints`：133 个 `[x,y]`，单位为输入图像像素。
 - `scores`：133 个原始模型分数，可超过 1，不称为 visibility 或概率。

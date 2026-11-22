@@ -5,7 +5,8 @@ import cv2
 import numpy as np
 from fastapi import APIRouter, HTTPException, Query, Request
 from starlette.concurrency import run_in_threadpool
-from backend import inference_133
+from backend import inference_133, memory
+from backend.load_control import admission
 from backend.evidence import store
 from backend.online_rules_133 import online_rules
 from backend.pose_analyzer_133 import analyze_frame_133
@@ -55,9 +56,18 @@ async def infer_frame(request: Request, session_id: str = Query(min_length=1, ma
         raise HTTPException(422, '双臂举起不能指定单侧举臂。')
     if request.headers.get('content-type', '').split(';')[0] != 'image/jpeg':
         raise HTTPException(415, '请提交 image/jpeg 图像帧。')
+    session = memory.get_session(session_id)
+    if session is None or session['ended_at'] is not None or session['pose_id'] != pose_id:
+        raise HTTPException(409, '请先创建对应动作的有效练习会话。')
     data = bytearray()
     async for chunk in request.stream():
         data.extend(chunk)
         if len(data) > MAX_BYTES:
             raise HTTPException(413, '图像帧超过 2MB。')
-    return await run_in_threadpool(process, bytes(data), session_id, pose_id, frame_seq, timestamp_ms, phase, camera_view, stream_id, movement_variant, raised_arm_side, bend_direction, received_at)
+    if not admission.acquire(blocking=False):
+        raise HTTPException(429, '分析服务忙，请稍后重试。', headers={'Retry-After':'1'})
+    try:
+        return await run_in_threadpool(process, bytes(data), session_id, pose_id, frame_seq, timestamp_ms, phase, camera_view, stream_id, movement_variant, raised_arm_side, bend_direction, received_at)
+
+    finally:
+        admission.release()

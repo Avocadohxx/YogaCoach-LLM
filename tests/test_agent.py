@@ -37,7 +37,7 @@ def test_measurement_session_finishes_without_invented_deviations(tmp_path, monk
     }).status_code == 200
     event = client.post('/api/analyze', json=frame).json()
     stored = client.post(f'/api/memory/sessions/{session_id}/analysis', json=event)
-    assert stored.status_code == 200
+    assert stored.status_code == 403  # production records are server-owned
     finished = client.post(f'/api/memory/sessions/{session_id}/finish', json={
         'ended_at': '2026-11-19T12:01:00Z',
     })

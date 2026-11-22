@@ -1,0 +1,8 @@
+{
+  "scope": "local_testclient_repeated_image_prepare_phase_not_browser_fps_or_accuracy",
+  "samples": 8,
+  "cold_ms": 822.2735839663073,
+  "warm_p50_ms": 264.5308750215918,
+  "warm_p95_ms": 303.5972499055788,
+  "warm_p99_ms": 303.5972499055788
+}

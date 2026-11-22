@@ -5,6 +5,8 @@ from pathlib import Path
 from threading import RLock
 from time import monotonic
 import os
+import hashlib
+import json
 
 from backend import memory
 from backend.pose_analyzer_133 import analyze_frame_133
@@ -54,24 +56,25 @@ class OnlineRules:
                 event.reason_codes.append('active_matching_session_required')
                 self.reset(frame.session_id)
                 return event
-            config_path = os.getenv('POSE133_TADASANA_RULES_PATH', str(ROOT / 'knowledge/tadasana_rules_B.json')) if frame.pose_id == 'tadasana' else os.getenv('POSE133_ARDHAKATI_RULES_PATH', str(ROOT / 'knowledge/ardhakati_chakrasana_rules.json'))
             try:
-                rules = (load_tadasana if frame.pose_id == 'tadasana' else load_ardhakati)(config_path)
+                from backend.rule_config import active_rules
+                rules, manifest = active_rules(frame.pose_id)
             except (OSError, ValueError):
                 event.reason_codes.append('rules_unavailable')
                 self.reset(frame.session_id)
                 return event
             previous = self._sessions.get(frame.session_id)
-            if previous and (frame.frame_seq <= previous['seq'] or frame.timestamp_ms <= previous['timestamp']):
+            if previous and (frame.frame_seq <= previous['seq'] or (frame.stream_id == previous['context'][1] and frame.timestamp_ms <= previous['timestamp'])):
                 event.reason_codes.append('out_of_order_frame')
                 return event
             max_gap = min((r['temporal']['max_gap_ms'] for r in rules['rules'] if r['enabled'] and r['mode']=='candidate'), default=500)
             if previous and frame.timestamp_ms - previous['timestamp'] > max_gap:
                 event.reason_codes.append('frame_gap_reset')
-            context = (frame.pose_id, frame.stream_id, frame.phase, frame.movement_variant, frame.raised_arm_side, frame.bend_direction, source_model)
+            fingerprint = hashlib.sha256(json.dumps(rules,sort_keys=True).encode()).hexdigest()
+            context = (frame.pose_id, frame.stream_id, frame.phase, frame.movement_variant, frame.raised_arm_side, frame.bend_direction, source_model, fingerprint)
             if previous is None or previous['context'] != context:
                 if previous and 'comparison' in previous:
-                    self._interrupt(frame.session_id, previous, frame.timestamp_ms)
+                    self._interrupt(frame.session_id, previous, max(frame.timestamp_ms, previous['timestamp'] + 1))
                 previous = dict(tracker=TadasanaEventTracker() if frame.pose_id == 'tadasana' else ArdhakatiEventTracker(), context=context)
             previous.update(seq=frame.frame_seq, timestamp=frame.timestamp_ms, seen=now)
             self._sessions[frame.session_id] = previous
@@ -81,11 +84,19 @@ class OnlineRules:
                 if 'comparison' in evicted:
                     self._interrupt(evicted_sid, evicted, evicted['timestamp'] + 1)
             features = extract_features_133(frame.model_dump())
+            if frame.pose_id=='tadasana' and frame.phase=='arms_up_hold':
+                arms=[features['features'][s+'_arm_torso_angle_deg'] for s in ('left','right')]
+                # Existing descriptive arms-down bucket; reject a declaration
+                # mismatch, never use it to certify a correct hold phase.
+                if all(x['valid'] and x['value']<30 for x in arms):
+                    event.reason_codes.append('phase_mismatch_arms_down')
+                    self.reset(frame.session_id)
+                    return event
             args = dict(phase=frame.phase if frame.phase != 'hold' else 'unknown', camera_view=frame.camera_view,
                         source_model=source_model, phase_source='user_declared', ruleset=rules)
             if frame.pose_id == 'tadasana':
                 # Initial online scope is the explicitly selected raised-arm variant.
-                if frame.phase != 'arms_up_hold':
+                if frame.phase not in manifest['online_phases']:
                     args['phase'] = 'unknown'
                 comparison = compare_tadasana_frame(features, **args)
             else:
@@ -101,7 +112,7 @@ class OnlineRules:
             for lifecycle in tracked['new_events']:
                 if lifecycle['status'] in {'recovered', 'interrupted'}:
                     memory.update_rule_episode(frame.session_id, lifecycle)
-            summary = dict(rule_version=rules['version'], reviewed=rules['reviewed'],
+            summary = dict(rule_version=rules['version'], rule_sha256=fingerprint, reviewed=rules['reviewed'],
                 review_record=rules['review_record'], phase=frame.phase, stream_id=frame.stream_id,
                 source_model=source_model, assessment_coverage=comparison['assessment_coverage'],
                 rule_results=comparison['rule_results'], new_events=tracked['new_events'],
@@ -141,7 +152,7 @@ class OnlineRules:
                     dev = next((d for d in event.deviations if d.event_id == item['event_id']), None)
                     if dev:
                         memory.save_pose_event(frame.session_id, {**dev.model_dump(), 'timestamp_ms': frame.timestamp_ms,
-                            'start_timestamp_ms': item['start_timestamp_ms'], 'phase': frame.phase, 'source_model': source_model})
+                            'start_timestamp_ms': item['start_timestamp_ms'], 'phase': frame.phase, 'source_model': source_model, 'server_generated': True})
             return event
 
 

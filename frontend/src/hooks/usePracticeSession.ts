@@ -1,0 +1,152 @@
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import {
+  api,
+  type Pose,
+  type Analysis,
+  type Summary,
+  type StoredSession,
+} from "../services/api";
+import { createLiveSession } from "../services/liveSession";
+type Options = {
+  pose: Pose;
+  mode: "demo" | "live";
+  history: Summary[];
+  setHistory: Dispatch<SetStateAction<Summary[]>>;
+  setFeedback: (text: string) => void;
+  setStatus: (text: string) => void;
+  setServerSummary: (text: string) => void;
+  setAnalysis: (value: Analysis | null) => void;
+};
+export function usePracticeSession({
+  pose,
+  mode,
+  history,
+  setHistory,
+  setFeedback,
+  setStatus,
+  setServerSummary,
+  setAnalysis,
+}: Options) {
+  const [active, setActive] = useState(false),
+    [busy, setBusy] = useState(false),
+    [seconds, setSeconds] = useState(0),
+    [summary, setSummary] = useState<Summary | null>(null);
+  const mounted = useRef(true);
+  const run = useRef({ id: "", started: 0, count: 0 });
+  const live = useRef<ReturnType<typeof createLiveSession> | null>(null);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      live.current?.close();
+    };
+  }, []);
+  useEffect(() => {
+    if (!active) return;
+    const timer = setInterval(
+      () => setSeconds(Math.floor((Date.now() - run.current.started) / 1000)),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [active]);
+  useEffect(() => {
+    if (!active || mode !== "live") return;
+    const id = run.current.id;
+    const timer = setInterval(() => {
+      void api.heartbeat(id).catch(() => {});
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [active, mode]);
+  async function start() {
+    setBusy(true);
+    setServerSummary("");
+    setAnalysis(null);
+    const id = crypto.randomUUID(),
+      started = Date.now();
+    try {
+      if (mode === "live") {
+        const ready = await api.ready();
+        if (!ready.model.available)
+          throw new Error("模型未就绪，请先完成 Git LFS 下载。");
+        await api.createSession(id, pose);
+      }
+      if (!mounted.current) return;
+      live.current?.close();
+      run.current = { id, started, count: 0 };
+      live.current = createLiveSession(setFeedback, () => {
+        run.current.count++;
+      });
+      setSeconds(0);
+      setSummary(null);
+      setFeedback("等待新的观察结果…");
+      setStatus(
+        mode === "demo"
+          ? "模拟模式：点击场景按钮查看页面变化。"
+          : "会话已创建，准备摄像头…",
+      );
+      setActive(true);
+    } catch (error) {
+      if (mounted.current)
+        setStatus(error instanceof Error ? error.message : "创建会话失败。");
+    } finally {
+      if (mounted.current) setBusy(false);
+    }
+  }
+  async function finish() {
+    setBusy(true);
+    live.current?.close();
+    setFeedback("练习已结束。");
+    const current = run.current;
+    const item: Summary = {
+      id: current.id,
+      pose,
+      seconds: Math.floor((Date.now() - current.started) / 1000),
+      feedbacks: current.count,
+      ended: new Date().toISOString(),
+    };
+    setActive(false);
+    setSummary(item);
+    setStatus("已结束练习，摄像头已关闭。");
+    try {
+      if (mode === "demo") {
+        const items = [item, ...history].slice(0, 10);
+        localStorage.setItem("yoga-demo-history", JSON.stringify(items));
+        setHistory(items);
+      } else {
+        const result = await api.finishSession(current.id);
+        if (!mounted.current) return;
+        setServerSummary(result.summary || "没有可用的总结。");
+        setStatus("会话已保存到服务器。");
+      }
+    } catch (error) {
+      if (mounted.current)
+        setStatus(
+          "记录保存或读取失败：" +
+            (error instanceof Error ? error.message : "请检查后端。"),
+        );
+    } finally {
+      if (mounted.current) setBusy(false);
+    }
+  }
+
+  return {
+    active,
+    busy,
+    seconds,
+    summary,
+    run,
+    live,
+    start,
+    finish,
+    clearSummary() {
+      setSummary(null);
+      setServerSummary("");
+    },
+  };
+}

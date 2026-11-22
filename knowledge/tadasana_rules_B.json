@@ -15,18 +15,20 @@
   "scope": "front-view 2D geometric observations; raised-arm variant needs explicit phase",
   "provenance": {
     "correct": {
-      "source_file": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/tadasana_rtmw_original_correct_full/keypoints_133.jsonl",
+      "source_file": "data/reference/tadasana_rtmw_original_correct_full/keypoints_133.jsonl",
       "source_sha256": "e6b029d1848f88968b7b7df6f6bcb00a51fbeea0a21ce7dbc46735b7af0cb44e",
       "features_jsonl_sha256": "99b02ee8a94e8868adff0c36010d2bd8198154f7fdaa7d2c04deda54c6d12654",
       "frames": 2132,
-      "label_scope": "filename only; not per-frame correctness"
+      "label_scope": "filename only; not per-frame correctness",
+      "original_source_file": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/tadasana_rtmw_original_correct_full/keypoints_133.jsonl"
     },
     "incorrect": {
-      "source_file": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/tadasana_rtmw_original_incorrect_full/keypoints_133.jsonl",
+      "source_file": "data/reference/tadasana_rtmw_original_incorrect_full/keypoints_133.jsonl",
       "source_sha256": "13482ec38dd265847af2b3bdbeb90b3a0cace2df01c2ca7add78f20405579db2",
       "features_jsonl_sha256": "a4b9c637119377ea417e5b7596c37fae250bd5f75648717aef6e7b96606d0ad8",
       "frames": 1899,
-      "label_scope": "filename only; not per-frame correctness"
+      "label_scope": "filename only; not per-frame correctness",
+      "original_source_file": "/Users/tzc/Downloads/YogaCoach-LLM-main/data/reference/tadasana_rtmw_original_incorrect_full/keypoints_133.jsonl"
     }
   },
   "rules": [

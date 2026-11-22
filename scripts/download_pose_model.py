@@ -1,51 +1,18 @@
-"""Download pinned Google Pose Landmarker asset without committing binaries."""
-import argparse
-import hashlib
-import json
-import os
+"""Get the production RTMW weight via Git LFS and verify its recorded SHA256."""
+import hashlib,json,subprocess
 from pathlib import Path
-import tempfile
-import urllib.request
-import zipfile
+ROOT=Path(__file__).resolve().parents[1]
+MODEL=ROOT/'data/models/rtmw_x_384.onnx'
+EXPECTED='b2dd00cce207d3c1503e35cc77a82ecd7092dcbdfe4a3c692ec4cdc3cf40c804'
 
-URL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task'
-TARGET = Path(__file__).resolve().parents[1] / 'frontend/public/models/pose_landmarker_lite.task'
+def valid():
+    if not MODEL.is_file() or MODEL.stat().st_size<1024:return False
+    h=hashlib.sha256()
+    with MODEL.open('rb') as f:
+        for block in iter(lambda:f.read(1024*1024),b''):h.update(block)
+    return h.hexdigest()==EXPECTED
 
-
-def validate(path, expected=None):
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
-    if expected and digest != expected.lower():
-        raise ValueError('SHA256 does not match expected value')
-    with zipfile.ZipFile(path) as bundle:
-        if bundle.testzip() is not None or len([n for n in bundle.namelist() if n.endswith('.tflite')]) < 2:
-            raise ValueError('Invalid Pose Landmarker task bundle')
-    return digest
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--sha256', help='Optional externally verified digest')
-    args = parser.parse_args()
-    TARGET.parent.mkdir(parents=True, exist_ok=True)
-    if TARGET.exists():
-        digest = validate(TARGET, args.sha256)
-    else:
-        name = None
-        try:
-            with tempfile.NamedTemporaryFile(dir=TARGET.parent, delete=False) as out:
-                name = Path(out.name)
-                with urllib.request.urlopen(URL, timeout=45) as source:
-                    while chunk := source.read(65536):
-                        out.write(chunk)
-                        if out.tell() > 32 * 1024 * 1024:
-                            raise ValueError('Unexpected model size')
-            digest = validate(name, args.sha256)
-            os.replace(name, TARGET)
-        finally:
-            if name is not None:
-                name.unlink(missing_ok=True)
-    print(json.dumps({'path': str(TARGET), 'source': URL, 'sha256': digest}, indent=2))
-
-
-if __name__ == '__main__':
-    main()
+if not valid():
+    subprocess.run(['git','lfs','pull','--include=data/models/rtmw_x_384.onnx','--exclude='],cwd=ROOT,check=True)
+if not valid():raise SystemExit('Model missing or SHA256 mismatch; no alternate weight was silently substituted.')
+print(json.dumps({'model':MODEL.name,'sha256':EXPECTED,'bytes':MODEL.stat().st_size}))

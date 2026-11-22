@@ -541,3 +541,10 @@ class EvaluateTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+import pytest
+@pytest.fixture(autouse=True)
+def fixture_import_policy(request,monkeypatch):
+    if request.cls is MemoryApiTests:
+        monkeypatch.setenv('YOGACOACH_ALLOW_TEST_WRITES','1')

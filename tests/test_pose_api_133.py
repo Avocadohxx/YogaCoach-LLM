@@ -50,3 +50,11 @@ def test_jpeg_endpoint_runs_133_adapter(monkeypatch):
 def test_invalid_media(body,content_type,code):
     response=client.post('/api/pose/frame?session_id=s&frame_seq=0&timestamp_ms=0',content=body,headers={'Content-Type':content_type})
     assert response.status_code == code
+
+
+@pytest.fixture(autouse=True)
+def isolated_active_sessions(tmp_path,monkeypatch):
+    from backend import memory
+    monkeypatch.setenv('YOGACOACH_DB_PATH',str(tmp_path/'image-api.db'))
+    memory.create_session('s','tadasana')
+    memory.create_session('test133','tadasana')

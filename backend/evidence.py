@@ -10,6 +10,7 @@ class EvidenceStore:
         self.ttl, self.capacity = ttl, capacity
         self._items = OrderedDict()
         self._cooldown = OrderedDict()
+        self._latest = {}
         self._lock = Lock()
 
     def record(self, event: AnalysisResult):
@@ -18,8 +19,12 @@ class EvidenceStore:
             # Repeated sequence numbers cannot replace evidence already issued.
             if key not in self._items:
                 self._items[key] = (monotonic(), event.model_dump())
+                previous=self._latest.get(event.session_id)
+                if previous is None or event.frame_seq>previous[0]:
+                    self._latest[event.session_id]=(event.frame_seq,self._items[key][1])
             while len(self._items) > self.capacity:
-                self._items.popitem(last=False)
+                old,_ = self._items.popitem(last=False)
+                if self._latest.get(old[0],(None,))[0]==old[1]:self._latest.pop(old[0],None)
 
     def trusted(self, event: AnalysisResult, event_id: str | None = None) -> bool:
         with self._lock:
@@ -27,11 +32,10 @@ class EvidenceStore:
             if item is None or monotonic() - item[0] > self.ttl or item[1] != event.model_dump():
                 return False
             # A newer valid image withdraws an older camera hint.
-            newer = [value for (sid, seq), value in self._items.items()
-                     if sid == event.session_id and seq > event.frame_seq]
-            if not newer:
+            newest=self._latest.get(event.session_id)
+            if newest is None or newest[0]<=event.frame_seq:
                 return True
-            latest = max(newer, key=lambda x: x[0])[1]
+            latest=newest[1]
             if event.deviations:
                 current_ids = {d['event_id'] for d in latest['deviations']} if latest['feedback_allowed'] else set()
                 return latest['tracking_quality'] == 'good' and (event_id in current_ids if event_id else bool({d.event_id for d in event.deviations} & current_ids))

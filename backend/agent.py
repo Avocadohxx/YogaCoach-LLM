@@ -48,6 +48,8 @@ def decide(state: State):
                       and not store.correction_spoken(event.session_id, d.event_id)]
         if not candidates:
             return {'feedback': Feedback(reason='episode_already_reported', tools_used=tools)}
+        prior=state['context'].get('prior_focus',[])
+        candidates.sort(key=lambda d: not any(x['type']==d.type and x['side']==d.side for x in prior))
         return {'selected': candidates[0].model_dump()}
     if event.tracking_quality == 'good':
         return {'feedback': Feedback(text='当前测量未触发新的持续偏差提醒。' if event.analysis_mode == 'reviewed_rules_133' else '已获取姿态测量；当前阶段或规则尚不能提供纠错。', reason='no_confirmed_deviation' if event.analysis_mode == 'reviewed_rules_133' else 'uncalibrated', tools_used=tools)}
@@ -72,8 +74,11 @@ def compose(state: State):
         # Provider errors can contain credentials or response bodies: do not log them.
         message_id = 'short' if preference == 'short' else 'full'
         logger.info('LLM selector unavailable; using camera template')
+    text=messages[message_id]
+    if selected and any(x['type']==selected['type'] and x['side']==selected['side'] for x in state['context'].get('prior_focus',[])):
+        text='这次继续留意上次关注的位置。'+text
     return {'feedback': Feedback(should_speak=True, feedback_type='correction' if selected else 'camera_hint',
-        text=messages[message_id], mode=mode, reason=reason,
+        text=text, mode=mode, reason=reason,
         event_id=selected['event_id'] if selected else None, target=selected['target'] if selected else None,
         grounded_event_type=selected['type'] if selected else None,
         tools_used=['analysis_snapshot', 'reference_for', 'context_for'])}
