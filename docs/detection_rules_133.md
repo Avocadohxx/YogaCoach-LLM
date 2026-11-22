@@ -8,7 +8,7 @@
 
 同目录metadata确认：COCO-WholeBody 133，原图像素，DWPose模型原始scores，固定全图单人ROI，无检测器。selection标明源文件名correct，但并非逐帧真值，尚无选定的保持区间，需人工审核。
 
-因此不把它伪装成MediaPipe33点：不补z、不把scores改名为visibility、不二次乘图像宽高；原`schemas.py`、`pose_analyzer.py`和`/api/analyze`保持原33点接口。新增模块供离线分析或后续独立适配调用。
+因此不把它伪装成MediaPipe33点：不补z、不把scores改名为visibility、不二次乘图像宽高；旧 33 点测量保留兼容；当前 schemas.py 与 /api/analyze 已支持独立 133 点输入，正式图像纠错走 /api/pose/frame。本节保留离线数据来源和测量定义，不把离线结果当作在线效果验收。
 
 scores实测可超过1（本文件最大约1.07585），保留原值；不是[0,1]概率，也不是可见性。暂用min_score=0.5作可配置工程筛选，未证明适合全部人或动作，不沿用MediaPipe的0.75。
 

@@ -176,7 +176,7 @@ def test_default_correction_rules_match_online_ruleset(practice, monkeypatch):
     agent.store.record(event)
     from backend.tools import reference_for
     reference = reference_for('tadasana')
-    assert reference['rules_file'] == 'tadasana_rules_B.json'
+    assert reference['rules_file'].endswith('tadasana_rules_B.json')
     payload = agent._correction_evidence(deviation.model_dump(), event, reference)
     assert payload['reference_range'] == [168.0, 180.0]
     assert payload['observed_value'] == 151.2

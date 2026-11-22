@@ -104,3 +104,10 @@ class MemoryApiTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# This module exercises explicit fixture imports, not production ingestion.
+import pytest
+@pytest.fixture(autouse=True)
+def allow_fixture_imports(monkeypatch):
+    monkeypatch.setenv('YOGACOACH_ALLOW_TEST_WRITES','1')

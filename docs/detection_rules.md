@@ -1,5 +1,7 @@
 # 检测规则说明
 
+> 范围：本文保留旧 33 点兼容测量说明。当前前端使用 133 点，在线入口与审核范围以 README、rules_manifest.json 和 docs/正式纠错实现与验收.md 为准。
+
 > 负责人：B
 
 ## Day 1 已实现：测量，不作动作结论
@@ -38,4 +40,4 @@
 
 ## 2026-11-18：新增DWPose 133点离线特征模块
 
-A新增的`keypoints_133.jsonl`采用COCO-WholeBody133、原图像素和原始scores，不能输入上述33点MediaPipe接口。新增`backend/pose_features_133.py`独立计算肩高差、躯干角、左右肘角、左右上臂—躯干夹角、脚踝横距/二维肩宽。具体公式、运行命令及实际测量统计见`docs/detection_rules_133.md`。原在线API、公共Schema和33点算法未变，后续接入前端/Agent时需明确数据源和协议。
+A新增的`keypoints_133.jsonl`采用COCO-WholeBody133、原图像素和原始scores，不能输入上述33点MediaPipe接口。新增`backend/pose_features_133.py`独立计算肩高差、躯干角、左右肘角、左右上臂—躯干夹角、脚踝横距/二维肩宽。具体公式、运行命令及实际测量统计见`docs/detection_rules_133.md`。当前 /api/analyze 已兼容 133 点测量，正式图像纠错走 /api/pose/frame；33 点算法仅保留兼容。

@@ -11,6 +11,10 @@ from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel, Field
 
 from . import memory
+import os
+from backend.evidence import store
+from backend.schemas import AnalysisResult
+from backend.session_activity import touch, incomplete
 from .online_rules_133 import online_rules
 
 router = APIRouter(prefix="/api/memory", tags=["memory"])
@@ -56,6 +60,23 @@ def _not_found_or_bad(exc: Exception) -> HTTPException:
     return HTTPException(status_code=code, detail=str(exc))
 
 
+def require_test_write():
+    if os.getenv('YOGACOACH_ALLOW_TEST_WRITES') != '1':
+        raise HTTPException(403, '正式事件与反馈仅由服务端写入。')
+
+
+@router.get('/incomplete-sessions')
+def incomplete_sessions():
+    return {'items': incomplete()}
+
+
+@router.post('/sessions/{session_id}/heartbeat')
+def heartbeat(session_id: str):
+    try: touch(session_id)
+    except ValueError as exc: raise HTTPException(409,str(exc)) from exc
+    return {'ok':True}
+
+
 # ---- sessions -------------------------------------------------------------
 @router.post("/sessions")
 def post_session(body: SessionBody):
@@ -68,6 +89,8 @@ def post_session(body: SessionBody):
         )
     except (ValueError, TypeError) as exc:
         raise _bad_request(exc) from exc
+    try: touch(body.session_id)
+    except ValueError as exc: raise HTTPException(409,str(exc)) from exc
     return {"ok": True, "session_id": body.session_id}
 
 
@@ -126,7 +149,8 @@ def list_pose_events(session_id: str):
 
 @router.post("/sessions/{session_id}/events")
 def post_pose_event(session_id: str, body: PoseEventBody):
-    """Store ONE deviation record exactly as given (no merging)."""
+    """Test-only import; real events are written by the inference service."""
+    require_test_write()
     try:
         event_id = memory.save_pose_event(session_id, body.event)
     except (ValueError, TypeError) as exc:
@@ -138,6 +162,7 @@ def post_pose_event(session_id: str, body: PoseEventBody):
 def post_analysis_event(session_id: str, event: dict[str, Any] = Body(...)):
     """Store a whole B→C analysis event (``deviations`` array is fanned out,
     untrusted events skipped, repeated deviations merged)."""
+    require_test_write()
     if event.get("session_id") not in (None, session_id):
         raise HTTPException(status_code=400, detail="session_id in body does not match the path")
     try:
@@ -158,6 +183,7 @@ def list_feedback(session_id: str, n: int = 5):
 
 @router.post("/sessions/{session_id}/feedback")
 def put_feedback(session_id: str, body: FeedbackBody):
+    require_test_write()
     try:
         feedback_id = memory.log_feedback(session_id, body.event_type, body.feedback_text)
     except ValueError as exc:

@@ -8,16 +8,17 @@ from backend import memory
 def reference_for(pose_id: str) -> dict:
     if pose_id not in {"tadasana", "ardhakati_chakrasana"}:
         raise ValueError("unsupported pose")
-    root = Path(__file__).resolve().parents[1] / "knowledge"
+    project_root = Path(__file__).resolve().parents[1]
+    root = project_root / "knowledge"
     path = root / f"{pose_id}.json"
     reference = json.loads(path.read_text(encoding="utf-8"))
-    # Runtime candidate rules live in separate, versioned rule files.
-    if pose_id == "tadasana":
-        override = os.getenv("POSE133_TADASANA_RULES_PATH")
-        reference["rules_file"] = str(Path(override).resolve()) if override else "tadasana_rules_B.json"
-    else:
-        override = os.getenv("POSE133_ARDHAKATI_RULES_PATH")
-        reference["rules_file"] = str(Path(override).resolve()) if override else "ardhakati_chakrasana_rules.json"
+    # Read the same manifest/environment override as the online evaluator.
+    manifest = json.loads((root / "rules_manifest.json").read_text(encoding="utf-8"))
+    entry = manifest[pose_id]
+    rule_path = Path(os.getenv(entry["environment"], str(project_root / entry["path"])))
+    if not rule_path.is_absolute():
+        rule_path = project_root / rule_path
+    reference["rules_file"] = str(rule_path.resolve())
     return reference
 
 
@@ -25,4 +26,13 @@ def context_for(session_id: str, pose_id: str) -> dict:
     session = memory.get_session(session_id)
     if session is None or session["pose_id"] != pose_id or session["ended_at"] is not None:
         raise ValueError("Unknown session or pose mismatch")
-    return memory.get_memory_context(pose_id, session_id, session["user_id"])
+    context = memory.get_memory_context(pose_id, session_id, session["user_id"])
+    # Only server rule episodes from completed matching practices are eligible.
+    # User-written summaries never become evidence of a measured deviation.
+    context['prior_focus'] = []
+    for previous in context['recent_sessions']:
+        for event in memory.get_pose_events(previous['session_id']):
+            payload=event.get('payload') or {}
+            if payload.get('server_generated') is True and payload.get('rule_version') and payload.get('source_model'):
+                context['prior_focus'].append({'type':event['event_type'],'side':event['side']})
+    return context

@@ -44,6 +44,8 @@ def decide(state: State):
                       and not store.correction_spoken(event.session_id, d.event_id)]
         if not candidates:
             return {'feedback': Feedback(reason='episode_already_reported', tools_used=tools)}
+        prior=state['context'].get('prior_focus',[])
+        candidates.sort(key=lambda d: not any(x['type']==d.type and x['side']==d.side for x in prior))
         return {'selected': candidates[0].model_dump()}
     if event.tracking_quality == 'good':
         return {'feedback': Feedback(text='当前测量未触发新的持续偏差提醒。' if event.analysis_mode == 'reviewed_rules_133' else '已获取姿态测量；当前阶段或规则尚不能提供纠错。', reason='no_confirmed_deviation' if event.analysis_mode == 'reviewed_rules_133' else 'uncalibrated', tools_used=tools)}
@@ -58,6 +60,12 @@ def compose(state: State):
     selected = state.get('selected')
     messages = CORRECTION_MESSAGES[(selected['type'], selected['target'])] if selected else CAMERA_MESSAGES
     message_id, mode, reason = ('short' if preference == 'short' else 'full'), 'template', 'llm_unavailable'
+    prior_focus = state['context'].get('prior_focus', [])
+    continue_focus = bool(selected and any(
+        item['type'] == selected['type'] and item['side'] == selected['side']
+        for item in prior_focus
+    ))
+    prefix = '这次继续留意上次关注的位置。' if continue_focus else ''
     try:
         if selected:
             try:
@@ -72,14 +80,14 @@ def compose(state: State):
                 if fallback is None:
                     return {'feedback': Feedback(reason='llm_unavailable_no_safe_template')}
                 return {'feedback': Feedback(
-                    should_speak=True, feedback_type='correction', text=fallback,
+                    should_speak=True, feedback_type='correction', text=prefix + fallback,
                     mode='template', reason='llm_unavailable_or_invalid',
                     event_id=selected['event_id'], target=selected['target'],
                     grounded_event_type=selected['type'],
                     tools_used=['analysis_snapshot', 'reference_for', 'context_for'],
                 )}
             return {'feedback': Feedback(
-                should_speak=True, feedback_type='correction', text=suggestion.text,
+                should_speak=True, feedback_type='correction', text=prefix + suggestion.text,
                 mode='llm', reason='confirmed_rule_deviation', event_id=selected['event_id'],
                 target=selected['target'], grounded_event_type=selected['type'],
                 tools_used=['analysis_snapshot', 'reference_for', 'context_for'],
@@ -92,10 +100,13 @@ def compose(state: State):
     except Exception:
         # Provider errors can contain credentials or response bodies: do not log them.
         message_id = 'short' if preference == 'short' else 'full'
-        logger.info('LLM generation/selection unavailable or invalid; using safe template')
-    return {'feedback': Feedback(should_speak=True, feedback_type='camera_hint',
-        text=messages[message_id], mode=mode, reason=reason,
-        event_id=None, target=None, grounded_event_type=None,
+        logger.info('LLM selector unavailable; using camera template')
+    text=messages[message_id]
+    text = prefix + text
+    return {'feedback': Feedback(should_speak=True, feedback_type='correction' if selected else 'camera_hint',
+        text=text, mode=mode, reason=reason,
+        event_id=selected['event_id'] if selected else None, target=selected['target'] if selected else None,
+        grounded_event_type=selected['type'] if selected else None,
         tools_used=['analysis_snapshot', 'reference_for', 'context_for'])}
 
 

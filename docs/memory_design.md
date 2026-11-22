@@ -1,5 +1,7 @@
 # 记忆设计（D）
 
+> 当前生产写入：正式事件与反馈由后端负责，客户端原始导入默认禁用；YOGACOACH_ALLOW_TEST_WRITES 只用于隔离测试。前端先创建会话；异常离开通过心跳标记中断，不伪造结束。
+
 > 负责人：D。代码：`backend/database.py`、`backend/memory.py`、`backend/routes_memory.py`。
 > 测试：`tests/test_memory*.py`。所有数字（压缩比、耗时）来自 `experiments/results/memory_layer_check.md`，可用脚本复现。
 
@@ -173,7 +175,7 @@ def feedback_route(event: dict):                 # event = B→C 分析事件
     return result
 ```
 
-- `save_analysis_event` 在会话不存在时会按事件里的 `session_id` / `pose_id` 自动建会话，所以即使 E 还没接 `POST /sessions`，C 的流程也不会因为“未知会话”失败。
+- `save_analysis_event` 在会话不存在时会按事件里的 `session_id` / `pose_id` 自动建会话，这是内部兼容工具行为；真实图像入口仍要求先创建有效会话，不允许浏览器借此绕过写入校验。
 - 记忆只是上下文：C 的话术仍必须只基于**当前事件**；历史只能用来调整语气、避免重复。
 - 摘要：默认由 `finish` 自动生成。如果 C 想写自己的摘要，调用 `save_session_summary` 即可（`finish` 不会覆盖已有摘要）。
 - 若 C 的数据库依赖需要 HTTP 而不是 import：对应接口见 `docs/memory_design.md` §6。

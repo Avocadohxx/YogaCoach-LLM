@@ -1,0 +1,12 @@
+{
+  "tadasana": {
+    "path": "knowledge/tadasana_rules_B.json",
+    "environment": "POSE133_TADASANA_RULES_PATH",
+    "online_phases": ["arms_up_hold"]
+  },
+  "ardhakati_chakrasana": {
+    "path": "knowledge/ardhakati_chakrasana_rules.json",
+    "environment": "POSE133_ARDHAKATI_RULES_PATH",
+    "online_phases": ["arms_up_hold", "side_bend_hold"]
+  }
+}
