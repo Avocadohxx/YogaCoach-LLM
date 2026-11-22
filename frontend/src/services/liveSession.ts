@@ -23,12 +23,10 @@ export function createLiveSession(
     lastFeedback = -Infinity;
   let evidence = "",
     evidenceVersion = 0;
-  let evidenceSnapshot:
-    | {
-        signature: string;
-        promise: Promise<{ snapshot_id: string } | null>;
-      }
-    | null = null;
+  let evidenceSnapshot: {
+    signature: string;
+    promise: Promise<{ snapshot_id: string } | null>;
+  } | null = null;
   const pendingWrites = new Set<Promise<unknown>>();
   const persistenceErrors = new Map<string, string>();
   function trackWrite<T>(promise: Promise<T>) {
@@ -63,8 +61,7 @@ export function createLiveSession(
     }
   }
   async function flush() {
-    while (pendingWrites.size)
-      await Promise.allSettled([...pendingWrites]);
+    while (pendingWrites.size) await Promise.allSettled([...pendingWrites]);
   }
   function invalidate(text: string) {
     if (closed) return;
@@ -118,20 +115,14 @@ export function createLiveSession(
           .then(() => history.capture())
           .then((blob) => {
             if (!blob) throw new Error("无法读取当前摄像头画面");
-            return transport.saveSnapshot!(
-              history.sessionId,
-              blob,
-              {
-                pose_id: event.pose_id,
-                event_type: event.deviations.map((item) => item.type).join(", "),
-                side: event.deviations[0]?.side,
-                timestamp_ms: event.timestamp_ms,
-              },
-            );
+            return transport.saveSnapshot!(history.sessionId, blob, {
+              pose_id: event.pose_id,
+              event_type: event.deviations.map((item) => item.type).join(", "),
+              side: event.deviations[0]?.side,
+              timestamp_ms: event.timestamp_ms,
+            });
           }),
-      ).then((result) =>
-        result ? { snapshot_id: result.snapshot_id } : null,
-      );
+      ).then((result) => (result ? { snapshot_id: result.snapshot_id } : null));
       evidenceSnapshot = { signature, promise: snapshotPromise };
     }
     if (!signature) {

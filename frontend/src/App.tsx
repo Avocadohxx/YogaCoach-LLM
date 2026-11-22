@@ -108,10 +108,8 @@ export default function App() {
     setStatus,
     setServerSummary,
     setAnalysis,
-    capture: () =>
-      captureRef.current?.() ?? Promise.resolve(null),
-    setPersistenceWarning: (message) =>
-      setPersistenceWarning(message || ""),
+    capture: () => captureRef.current?.() ?? Promise.resolve(null),
+    setPersistenceWarning: (message) => setPersistenceWarning(message || ""),
   });
   const voice = useVoiceCoach(active, busy, pose, (command) => {
     if (command === "finish") {

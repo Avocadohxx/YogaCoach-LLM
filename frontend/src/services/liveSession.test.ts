@@ -211,9 +211,7 @@ describe("训练历史截图", () => {
       count,
       {
         feedback: vi.fn().mockResolvedValue(reply),
-        saveSnapshot: vi
-          .fn()
-          .mockRejectedValue(new Error("disk unavailable")),
+        saveSnapshot: vi.fn().mockRejectedValue(new Error("disk unavailable")),
       },
       {
         sessionId: "s",

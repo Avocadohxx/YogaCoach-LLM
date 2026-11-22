@@ -64,8 +64,6 @@ it("可以从历史记录进入某次训练详情", async () => {
     <MemoryPanel active={false} refreshKey="" onOpenSession={open} />,
   );
   fireEvent.click(await screen.findByText(/山式/));
-  fireEvent.click(
-    await screen.findByText("查看训练详情、建议与错误截图"),
-  );
+  fireEvent.click(await screen.findByText("查看训练详情、建议与错误截图"));
   expect(open).toHaveBeenCalledWith("session-1");
 });

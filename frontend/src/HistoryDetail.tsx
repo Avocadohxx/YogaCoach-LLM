@@ -158,9 +158,7 @@ export default function HistoryDetail({
                   </strong>
                   <span>{elapsed(shot.timestamp_ms)}</span>
                 </div>
-                {shot.side && (
-                  <p>{sideNames[shot.side] || shot.side}</p>
-                )}
+                {shot.side && <p>{sideNames[shot.side] || shot.side}</p>}
                 {shot.feedback_text && (
                   <div className="suggestion">
                     <span>对应建议</span>
@@ -193,9 +191,7 @@ export default function HistoryDetail({
                   <time>{elapsed(event.timestamp_ms)}</time>
                   <p>
                     {[
-                      event.side
-                        ? sideNames[event.side] || event.side
-                        : null,
+                      event.side ? sideNames[event.side] || event.side : null,
                       event.duration_ms
                         ? `持续 ${(event.duration_ms / 1000).toFixed(1)} 秒`
                         : null,

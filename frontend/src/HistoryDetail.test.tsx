@@ -61,9 +61,7 @@ it("显示训练总结、错误截图和建议时间线", async () => {
   const screen = render(
     <HistoryDetail sessionId="session-1" onBack={vi.fn()} />,
   );
-  await waitFor(() =>
-    expect(screen.getByText("本次训练总结")).toBeTruthy(),
-  );
+  await waitFor(() => expect(screen.getByText("本次训练总结")).toBeTruthy());
   expect(screen.getByText("系统给出提示 1 次。")).toBeTruthy();
   expect(screen.getByAltText("错误动作截图 1").getAttribute("src")).toBe(
     "/api/memory/snapshots/snap-1/image",

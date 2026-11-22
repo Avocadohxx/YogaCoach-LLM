@@ -17,9 +17,7 @@ type Props = {
   onAnalysis: (event: Analysis) => void;
   onStatus: (text: string) => void;
   onLost: () => void;
-  onCaptureReady?: (
-    capture: (() => Promise<Blob | null>) | null,
-  ) => void;
+  onCaptureReady?: (capture: (() => Promise<Blob | null>) | null) => void;
 };
 const bones = [
   [5, 6],
@@ -231,13 +229,7 @@ export default function Source133(props: Props) {
                 resolve(null);
                 return;
               }
-              context.drawImage(
-                currentVideo,
-                0,
-                0,
-                image.width,
-                image.height,
-              );
+              context.drawImage(currentVideo, 0, 0, image.width, image.height);
               context.drawImage(overlay, 0, 0, image.width, image.height);
               image.toBlob((blob) => resolve(blob), "image/jpeg", 0.84);
             });
