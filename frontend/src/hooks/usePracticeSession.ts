@@ -3,7 +3,7 @@ import { api, type Pose, type Analysis, type Summary } from "../services/api";
 import { createLiveSession } from "../services/liveSession";
 type Options = {
   pose: Pose;
-  setFeedback: (text: string) => void;
+  setFeedback: (text: string, isAdvice?: boolean) => void;
   setStatus: (text: string) => void;
   setServerSummary: (text: string) => void;
   setAnalysis: (value: Analysis | null) => void;

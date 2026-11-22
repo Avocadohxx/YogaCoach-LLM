@@ -1,6 +1,25 @@
 // @vitest-environment jsdom
 import { afterEach, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  waitFor,
+} from "@testing-library/react";
+const voiceMock = vi.hoisted(() => ({
+  text: (_text: string) => {},
+  start: vi.fn(),
+  stop: vi.fn(),
+  cancel: vi.fn(),
+  speak: vi.fn(),
+}));
+vi.mock("./services/speech", () => ({
+  createSpeech: (text: (text: string) => void) => {
+    voiceMock.text = text;
+    return voiceMock;
+  },
+}));
 const mock = vi.hoisted(() => ({
   create: vi.fn().mockResolvedValue({}),
   finish: vi.fn().mockResolvedValue({ summary: "事实总结" }),
@@ -22,6 +41,29 @@ vi.mock("./components/Source133", () => ({
   ),
 }));
 import App from "./App";
+
+it("语音切换阶段，拒绝否定口令并结束练习", async () => {
+  const screen = render(<App />);
+  expect(
+    (screen.getByRole("button", { name: "开启语音" }) as HTMLButtonElement)
+      .disabled,
+  ).toBe(true);
+  fireEvent.click(screen.getByRole("button", { name: /开始练习/ }));
+  await waitFor(() => expect(screen.getByTestId("source")).toBeTruthy());
+  fireEvent.click(screen.getByRole("button", { name: "开启语音" }));
+  expect(voiceMock.start).toHaveBeenCalledOnce();
+  act(() => voiceMock.text("教练开始举臂保持"));
+  expect((screen.getByLabelText("练习阶段") as HTMLSelectElement).value).toBe(
+    "arms_up_hold",
+  );
+  act(() => voiceMock.text("教练不要准备"));
+  expect((screen.getByLabelText("练习阶段") as HTMLSelectElement).value).toBe(
+    "arms_up_hold",
+  );
+  act(() => voiceMock.text("教练结束练习"));
+  await waitFor(() => expect(mock.finish).toHaveBeenCalledOnce());
+  expect(voiceMock.stop).toHaveBeenCalled();
+});
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
