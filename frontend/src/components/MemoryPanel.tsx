@@ -48,7 +48,11 @@ export default function MemoryPanel({
     else failures.push("训练记录");
     if (o.status === "fulfilled") setOpen(o.value.items);
     else failures.push("未完成练习");
-    setMessage(failures.length ? `${failures.join("、")}暂不可用，请检查对应后端接口。` : "");
+    setMessage(
+      failures.length
+        ? `${failures.join("、")}暂不可用，请检查对应后端接口。`
+        : "",
+    );
   }
   useEffect(() => {
     void refresh();
