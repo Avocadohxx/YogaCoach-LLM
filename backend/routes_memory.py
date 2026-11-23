@@ -9,15 +9,20 @@ from typing import Any, Optional, Union
 
 from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel, Field
+import httpx
+from pydantic import ValidationError
 
 from . import memory
+from . import llm
 import os
+import logging
 from backend.evidence import store
 from backend.schemas import AnalysisResult
 from backend.session_activity import touch, incomplete
 from .online_rules_133 import online_rules
 
 router = APIRouter(prefix="/api/memory", tags=["memory"])
+logger = logging.getLogger(__name__)
 
 
 class SessionBody(BaseModel):
@@ -68,6 +73,50 @@ def require_test_write():
 @router.get('/incomplete-sessions')
 def incomplete_sessions():
     return {'items': incomplete()}
+
+
+@router.get('/progress-summary')
+def progress_summary(user_id: str = 'default', pose_id: Optional[str] = None):
+    """LLM summary over stored historical practices; intended for API validation."""
+    if not llm.configured():
+        raise HTTPException(status_code=503, detail='LLM 未配置：请检查后端启动时是否加载了 .env 中的 LLM_API_KEY、LLM_BASE_URL 和 LLM_MODEL。')
+    try:
+        snapshot = memory.get_progress_snapshot(user_id=user_id, pose_id=pose_id)
+        sessions = snapshot['sessions']
+        evidence = {
+            'pose_id': pose_id,
+            'practice_count': len(sessions),
+            'history': sessions,
+            'user_preferences': snapshot['preferences'],
+            'constraints': [
+                '只能比较相同 rule_id 与 rule_version 的数值',
+                '偏离参考范围的差值减小只代表该项测量改善',
+                '没有测量记录不代表动作正确',
+                '不对 monitor_only 或未校准数据作纠错判断',
+            ],
+        }
+        result = llm.generate_progress_summary(evidence)
+        return {
+            'ok': True,
+            'source': 'sqlite',
+            'practice_count': len(sessions),
+            'measurement_count': sum(len(s['confirmed_measurements']) for s in sessions),
+            'summary': result.model_dump(),
+        }
+    except httpx.HTTPStatusError as exc:
+        status = exc.response.status_code
+        logger.warning('Progress summary provider returned HTTP %s', status)
+        raise HTTPException(status_code=502, detail=f'LLM 服务返回 HTTP {status}；请核对模型名、API 权限和额度。') from exc
+    except (httpx.TimeoutException, httpx.ConnectError) as exc:
+        logger.warning('Progress summary provider connection failed (%s)', type(exc).__name__)
+        raise HTTPException(status_code=502, detail='后端无法连接 LLM 服务；请检查网络、代理和 BASE_URL。') from exc
+    except ValidationError as exc:
+        logger.warning('Progress summary response did not match the expected JSON schema')
+        raise HTTPException(status_code=502, detail='LLM 已响应，但返回 JSON 字段不符合总结格式。') from exc
+    except Exception as exc:
+        # Do not return provider error bodies, which may contain sensitive data.
+        logger.exception('Progress summary generation failed (%s)', type(exc).__name__)
+        raise HTTPException(status_code=502, detail='读取训练记录或调用 LLM 失败；请查看后端 traceback。') from exc
 
 
 @router.post('/sessions/{session_id}/heartbeat')

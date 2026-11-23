@@ -111,7 +111,7 @@ def compose(state: State):
 
 
 def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict) -> dict:
-    """Build a minimal LLM payload from server-validated measurements/rules."""
+    """Build grounded evidence with one correction target and contextual measures."""
     from pathlib import Path
     import json
     root = Path(__file__).resolve().parents[1]
@@ -145,8 +145,49 @@ def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict)
     unit = rule.get('unit')
     if not unit:
         raise ValueError('reference_unit_missing')
+    configured_rules = {item['rule_id']: item for item in ruleset.get('rules', [])}
+    evaluated_rules = {
+        item.get('rule_id'): item
+        for item in (event.rule_evaluation or {}).get('rule_results', [])
+        if isinstance(item, dict) and isinstance(item.get('rule_id'), str)
+    }
+    # Include only finite, server-validated measurements. Monitor-only values are
+    # explicitly marked as context so they cannot become independent corrections.
+    contextual_measurements = []
+    for observation in event.observations:
+        rule = next((item for item in configured_rules.values()
+                     if item.get('feature_name') == observation.name), None)
+        evaluated = evaluated_rules.get(rule.get('rule_id')) if rule else None
+        contextual_measurements.append({
+            'feature_name': observation.name,
+            'value': observation.value if observation.valid else None,
+            'unit': observation.unit,
+            'valid': observation.valid,
+            'invalid_reason': observation.reason,
+            'rule_mode': rule.get('mode') if rule else 'measurement_only',
+            'rule_enabled': rule.get('enabled', False) if rule else False,
+            'rule_transform': rule.get('transform') if rule else None,
+            'rule_status': evaluated.get('status') if evaluated else 'not_evaluated',
+            'comparison_value': evaluated.get('comparison_value') if evaluated else None,
+            'reference_range': rule.get('reference_range') if rule else None,
+            'use_for_correction': bool(rule and rule.get('enabled')
+                                       and rule.get('mode') == 'candidate'
+                                       and evaluated and evaluated.get('status') == 'deviation'),
+        })
+
     return {
         'pose': event.pose_id,
+        'confirmed_deviation': {
+            'rule_id': selected['rule_id'],
+            'target': selected['target'],
+            'event_type': selected['type'],
+            'feature_name': selected['feature_name'],
+            'observed_value': value,
+            'unit': unit,
+            'reference_range': [lo, hi],
+            'duration_ms': selected['duration_ms'],
+        },
+        # Keep top-level fields for compatibility with existing provider prompts.
         'target': selected['target'],
         'event_type': selected['type'],
         'feature_name': selected['feature_name'],
@@ -156,10 +197,23 @@ def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict)
         'phase': (event.rule_evaluation or {}).get('phase'),
         'duration_ms': selected['duration_ms'],
         'minimum_keypoint_score': selected.get('min_keypoint_score'),
+        'rule_provenance': {
+            'rule_version': ruleset.get('version'),
+            'rules_reviewed': (event.rule_evaluation or {}).get('reviewed'),
+            'review_record': ruleset.get('review_record'),
+            'execution_mode': 'reviewed_rules' if ruleset.get('reviewed') else 'exploratory_preview',
+            'phase_reviewed': (event.rule_evaluation or {}).get('phase_reviewed'),
+            'phase_source': (event.rule_evaluation or {}).get('phase_source'),
+            'camera_view_verified': (event.rule_evaluation or {}).get('camera_view_verified'),
+            'scope': (event.rule_evaluation or {}).get('scope'),
+        },
+        'context_measurements': contextual_measurements,
         'safety_constraints': [
             '不要诊断疾病或声称疼痛',
             '不要求强行达到角度或锁死关节',
-            '建议仅限已确认的目标部位',
+            '只能针对 confirmed_deviation.target 给出纠错；其他观测值只能作为背景',
+            'rule_mode=monitor_only 或 use_for_correction=false 的测量不得称为偏差或据此提出纠正',
+            '保留规则审核、阶段确认和二维测量的限制，不推断全身姿态',
             '感到不适时暂停练习',
         ],
     }

@@ -127,7 +127,9 @@ class OnlineRules:
                 if lifecycle['status'] in {'recovered', 'interrupted'}:
                     memory.update_rule_episode(frame.session_id, lifecycle)
             summary = dict(rule_version=rules['version'], rule_sha256=fingerprint, reviewed=rules['reviewed'],
-                review_record=rules['review_record'], phase=frame.phase, stream_id=frame.stream_id,
+                review_record=rules['review_record'], phase=frame.phase, phase_source='user_declared',
+                phase_reviewed=False, execution_mode='reviewed_rules' if rules['reviewed'] else 'exploratory_preview',
+                camera_view_verified=False, stream_id=frame.stream_id,
                 source_model=source_model, assessment_coverage=comparison['assessment_coverage'],
                 rule_results=comparison['rule_results'], new_events=tracked['new_events'],
                 pending_count=len(tracked['pending_events']), scope='enabled_phase_rules_only_not_full_posture')

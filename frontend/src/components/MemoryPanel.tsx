@@ -35,18 +35,20 @@ export default function MemoryPanel({
     >
   >({});
   async function refresh() {
-    try {
-      const [p, s, o] = await Promise.all([
-        api.preferences(),
-        api.sessions(),
-        api.incomplete(),
-      ]);
-      setLength(p.preferences.feedback_length || "normal");
-      setSessions(s.items);
-      setOpen(o.items);
-    } catch {
-      setMessage("记忆服务暂不可用，请检查后端。");
-    }
+    const [p, s, o] = await Promise.allSettled([
+      api.preferences(),
+      api.sessions(),
+      api.incomplete(),
+    ]);
+    const failures: string[] = [];
+    if (p.status === "fulfilled")
+      setLength(p.value.preferences.feedback_length || "normal");
+    else failures.push("偏好");
+    if (s.status === "fulfilled") setSessions(s.value.items);
+    else failures.push("训练记录");
+    if (o.status === "fulfilled") setOpen(o.value.items);
+    else failures.push("未完成练习");
+    setMessage(failures.length ? `${failures.join("、")}暂不可用，请检查对应后端接口。` : "");
   }
   useEffect(() => {
     void refresh();
