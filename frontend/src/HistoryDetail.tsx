@@ -264,7 +264,8 @@ export default function HistoryDetail({
             <strong>结合历史训练的总结</strong>
             {progress && (
               <span>
-                {progress.practice_count} 次训练 · {progress.measurement_count} 条有效测量 · {progress.cached ? "已缓存" : "刚生成"}
+                {progress.practice_count} 次训练 · {progress.measurement_count}{" "}
+                条有效测量 · {progress.cached ? "已缓存" : "刚生成"}
               </span>
             )}
             <button
@@ -277,7 +278,9 @@ export default function HistoryDetail({
                   .progressSummary(sessionId, session.pose_id, true)
                   .then(setProgress)
                   .catch((reason) =>
-                    setProgressError(reason instanceof Error ? reason.message : "请求失败"),
+                    setProgressError(
+                      reason instanceof Error ? reason.message : "请求失败",
+                    ),
                   )
                   .finally(() => setProgressLoading(false));
               }}
@@ -310,10 +313,14 @@ export default function HistoryDetail({
             </div>
           ) : progress ? (
             <>
-              <p className={`progress-encouragement trend-${progress.summary.trend}`}>
+              <p
+                className={`progress-encouragement trend-${progress.summary.trend}`}
+              >
                 {progress.summary.encouragement}
               </p>
-              <p className="progress-summary-text">{progress.summary.summary}</p>
+              <p className="progress-summary-text">
+                {progress.summary.summary}
+              </p>
               <ul>
                 {progress.summary.suggestions.map((suggestion, index) => (
                   <li key={`${index}-${suggestion}`}>{suggestion}</li>
@@ -323,7 +330,8 @@ export default function HistoryDetail({
                 {progress.cached
                   ? "这是本次训练保存的历史总结，重新打开不会再次调用 LLM。"
                   : "本次总结刚生成并已保存到训练记录。"}
-                {progress.measurement_count === 0 && " 当前没有可比较的有效测量；未记录不代表动作标准。"}
+                {progress.measurement_count === 0 &&
+                  " 当前没有可比较的有效测量；未记录不代表动作标准。"}
               </small>
             </>
           ) : null}
