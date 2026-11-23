@@ -8,7 +8,9 @@ export type Phase133 =
   | "side_bend_hold"
   | "return_upright";
 export type Variant133 =
-  "unknown" | "both_arms_overhead" | "single_arm_overhead";
+  | "unknown"
+  | "both_arms_overhead"
+  | "single_arm_overhead";
 export type Analysis = {
   session_id: string;
   pose_id: Pose;
@@ -98,8 +100,7 @@ export type ProgressSummary = {
   practice_count: number;
   measurement_count: number;
   summary: {
-    trend:
-      "improving" | "maintaining" | "needs_attention" | "insufficient_data";
+    trend: "improving" | "maintaining" | "needs_attention" | "insufficient_data";
     encouragement: string;
     summary: string;
     suggestions: string[];
