@@ -2,6 +2,8 @@
 # Install: python -m pip install -r requirements.txt
 
 # Direct project dependencies
+# SQLite access uses Python's built-in sqlite3 module; the sqlite3 CLI is an
+# optional local inspection tool and is intentionally not a pip dependency.
 fastapi==0.165.0
 uvicorn[standard]==0.54.0
 pydantic==2.14.4

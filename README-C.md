@@ -30,9 +30,35 @@
 
 未记录到可信偏差时，总结仍会明确说明“未记录到姿态偏差片段”，并保留本次总体提示；这不表示动作完全标准。旧的已保存总结不会自动重算，新格式从重启后结束的新练习开始生效。
 
+### 跨次训练趋势总结（后端验证接口）
+
+- 每次训练结束时，后端先将本次会话标记结束，再读取该用户截至本次的全部同动作记录（例如第 13 次总结使用第 1–13 次数据，第 14 次使用第 1–14 次数据）、确认事件、反馈和偏好，请求 LLM 并将总结和训练/测量条数缓存到本次 `sessions.progress_summary_json`。旧记录首次补生成时也按该记录的数据库 rowid 截断，排除之后的训练。
+- 训练详情页只读取该条记录缓存，不会因打开页面再次调用 LLM。“重新生成 AI 建议”是内部测试按钮，显式点击才会重新调用，并覆盖当前记录缓存。`GET /api/memory/progress-summary?user_id=default&pose_id=tadasana&session_id=<训练ID>` 读取缓存；增加 `&force=true` 可强制重新生成。省略 `session_id` 是不缓存的临时调用，每次请求都会调用 LLM。
+- `sessions` 提供每次练习信息，`pose_events.payload_json` 中的 `observed_value`、`reference_range`、`rule_id`、`rule_version` 用于计算偏离参考范围的距离；`feedback_logs` 与 `user_preferences` 补充用户收到过的提示和显式偏好。
+- 只比较相同规则和版本。记录缺少测量值时不会伪造趋势；无记录不等于动作正确，监测规则不被当作已确认错误。
+- API 错误区分配置缺失（503）、服务商 HTTP 错误、连接失败和返回 JSON 不符合约定（502）。服务商错误详情在后端日志中查看；响应不会回显密钥或上游原始错误正文。
+
+手动调用（同一 `session_id` 重复请求会返回缓存；省略 session_id 仍是未缓存的临时验证调用）：
+
+```powershell
+Invoke-RestMethod "http://127.0.0.1:8000/api/memory/progress-summary?user_id=default&pose_id=tadasana"
+```
+
+在项目根目录 `.env` 设置 `DATABASE_PATH=./data/yoga.db` 后启动后端；相对路径以仓库根目录解析。修改 Python 后端代码后需重启 Uvicorn。`/api/ready` 的 `llm.configured=true` 仅表示配置项存在；仍需验证服务商请求、额度和返回格式。
+
+SQLite CLI 是**可选的数据库查看工具**，不是 YogaCoach 启动依赖，不要加到 Python `requirements.txt`。Python 自带 `sqlite3` 模块，应用会自动建表。CLI 可用来核查数据库：
+
+```powershell
+sqlite3 --version
+sqlite3 data/yoga.db ".tables"
+sqlite3 data/yoga.db "SELECT user_id, pose_id, COUNT(*) FROM sessions GROUP BY user_id, pose_id;"
+```
+
 ## LLM 的输入边界
 
-确认偏差后才请求 LLM。传入内容包括动作、目标部位、偏差类型、实测值、单位、规则范围、阶段和持续时间等。**摄像头图像、原始 133 点关键点、会话 ID 和历史记忆不会发送给 LLM。**
+确认偏差后才请求 LLM。传入内容包括已确认的纠错目标、实测值、单位、规则范围、阶段、持续时间，以及同一时刻有效的肩高差/躯干长度比、躯干倾角、左右肘角、上臂角和踝距等测量值。每项背景测量都带有规则模式、评估状态和是否允许纠错的标记。
+
+按 [山式规则说明](knowledge/tadasana_rules.md)，当前只有左右肘角属于可触发持续纠错事件的候选规则；肩高差、躯干倾斜、脚距和上臂角仍是 `monitor_only`。这些值会作为上下文交给 LLM，但不能单独触发建议，也不能被说成已确认的错误。要让它们产生实时纠错，需由规则维护者完成数据与阶段审核，再把相应规则改为候选规则并记录依据。**摄像头图像、原始 133 点关键点、会话 ID 和历史记忆不会发送给 LLM。**
 
 在浏览器开发者工具的 Network 面板中查看 `/api/agent/feedback`：
 

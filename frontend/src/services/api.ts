@@ -93,6 +93,23 @@ export type SessionDetail = {
   snapshots: Snapshot[];
   feedback: FeedbackLog[];
 };
+export type ProgressSummary = {
+  ok: boolean;
+  source: string;
+  cached: boolean;
+  practice_count: number;
+  measurement_count: number;
+  summary: {
+    trend:
+      | "improving"
+      | "maintaining"
+      | "needs_attention"
+      | "insufficient_data";
+    encouragement: string;
+    summary: string;
+    suggestions: string[];
+  };
+};
 export type Summary = {
   id: string;
   pose: Pose;
@@ -106,6 +123,7 @@ async function request<T>(
   body: unknown,
   signal?: AbortSignal,
   method?: string,
+  timeoutMs = 15000,
 ): Promise<T> {
   const response = await fetch(path, {
     method: method ?? (body === undefined ? "GET" : "POST"),
@@ -121,13 +139,21 @@ async function request<T>(
           : JSON.stringify(body),
     signal: AbortSignal.any([
       signal ?? new AbortController().signal,
-      AbortSignal.timeout(15000),
+      AbortSignal.timeout(timeoutMs),
     ]),
   });
-  if (!response.ok)
+  if (!response.ok) {
+    let detail = "";
+    try {
+      const payload = (await response.json()) as { detail?: unknown };
+      if (typeof payload.detail === "string") detail = payload.detail;
+    } catch {
+      // Keep a useful status message if the backend did not return JSON.
+    }
     throw new Error(
-      `接口 ${path} 返回 ${response.status}，请检查后端是否实现。`,
+      detail || `接口 ${path} 返回 ${response.status}，请检查后端是否实现。`,
     );
+  }
   return response.json();
 }
 export const api = {
@@ -174,6 +200,14 @@ export const api = {
     request<SessionDetail>(
       `/api/memory/sessions/${encodeURIComponent(id)}/detail`,
       undefined,
+    ),
+  progressSummary: (sessionId: string, pose: Pose, force = false) =>
+    request<ProgressSummary>(
+      `/api/memory/progress-summary?user_id=default&pose_id=${encodeURIComponent(pose)}&session_id=${encodeURIComponent(sessionId)}${force ? "&force=true" : ""}`,
+      undefined,
+      undefined,
+      undefined,
+      30000,
     ),
   createSession: (id: string, pose: Pose) =>
     request("/api/memory/sessions", {

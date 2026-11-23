@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
-const sessionDetail = vi.hoisted(() =>
-  vi.fn().mockResolvedValue({
+const { sessionDetail, progressSummary } = vi.hoisted(() => ({
+  sessionDetail: vi.fn().mockResolvedValue({
     session: {
       session_id: "session-1",
       pose_id: "tadasana",
@@ -46,9 +46,22 @@ const sessionDetail = vi.hoisted(() =>
       },
     ],
   }),
-);
+  progressSummary: vi.fn().mockResolvedValue({
+    ok: true,
+    source: "sqlite",
+    cached: false,
+    practice_count: 1,
+    measurement_count: 1,
+    summary: {
+      trend: "insufficient_data",
+      encouragement: "坚持练习，循序渐进。",
+      summary: "目前只有一次有效测量，暂时不能判断趋势。",
+      suggestions: ["继续在舒适范围内练习。"],
+    },
+  }),
+}));
 vi.mock("./services/api", () => ({
-  api: { sessionDetail },
+  api: { sessionDetail, progressSummary },
 }));
 import HistoryDetail from "./HistoryDetail";
 

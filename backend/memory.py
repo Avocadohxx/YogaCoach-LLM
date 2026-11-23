@@ -105,6 +105,17 @@ def get_session(session_id: str) -> dict[str, Any] | None:
     return dict(row) if row else None
 
 
+def save_progress_summary(session_id: str, summary: dict[str, Any]) -> None:
+    init_db()
+    with connection() as conn:
+        cursor = conn.execute(
+            "UPDATE sessions SET progress_summary_json=? WHERE session_id=?",
+            (json.dumps(summary, ensure_ascii=False), session_id),
+        )
+        if cursor.rowcount == 0:
+            raise ValueError(f"Unknown session_id: {session_id}")
+
+
 def finish_session(
     session_id: str,
     ended_at: str | None = None,
@@ -398,6 +409,66 @@ def get_pose_events(session_id: str) -> list[dict[str, Any]]:
                 item["payload"] = None
         result.append(item)
     return result
+
+
+def get_progress_snapshot(user_id: str = "default", pose_id: str | None = None,
+                         through_session_id: str | None = None) -> dict[str, Any]:
+    """Return compact, ID-free historical training evidence for C's LLM summary."""
+    init_db()
+    with connection() as conn:
+        sql = """SELECT session_id,pose_id,started_at,ended_at,summary
+                 FROM sessions WHERE user_id=? AND ended_at IS NOT NULL"""
+        params: list[Any] = [user_id]
+        if pose_id:
+            sql += " AND pose_id=?"
+            params.append(pose_id)
+        if through_session_id:
+            sql += " AND rowid <= (SELECT rowid FROM sessions WHERE session_id=? AND user_id=?)"
+            params.extend([through_session_id, user_id])
+        sql += " ORDER BY COALESCE(ended_at,started_at,created_at) ASC,rowid ASC"
+        sessions = [dict(row) for row in conn.execute(sql, params).fetchall()]
+        details = []
+        for session in sessions:
+            events = conn.execute(
+                """SELECT event_type,side,duration_ms,payload_json FROM pose_events
+                   WHERE session_id=? ORDER BY rowid""", (session["session_id"],)
+            ).fetchall()
+            feedback = conn.execute(
+                """SELECT event_type,feedback_text FROM feedback_logs
+                   WHERE session_id=? ORDER BY rowid""", (session["session_id"],)
+            ).fetchall()
+            numeric_events = []
+            for row in events:
+                try:
+                    payload = json.loads(row["payload_json"] or "{}")
+                except (TypeError, json.JSONDecodeError):
+                    continue
+                observed = payload.get("observed_value")
+                bounds = payload.get("reference_range")
+                if (not payload.get("rule_id") or not payload.get("feature_name")
+                        or not isinstance(observed, (int, float)) or isinstance(observed, bool)
+                        or not isinstance(bounds, list) or len(bounds) != 2):
+                    continue
+                low, high = bounds
+                if not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in bounds):
+                    continue
+                numeric_events.append({
+                    "event_type": row["event_type"], "target": payload.get("target") or row["side"],
+                    "rule_id": payload["rule_id"], "rule_version": payload.get("rule_version"),
+                    "feature_name": payload["feature_name"], "observed_value": round(float(observed), 2),
+                    "unit": "deg" if str(payload["feature_name"]).endswith("_deg") else payload.get("unit"),
+                    "reference_range": [low, high],
+                    "deviation_from_range": round(max(float(low) - float(observed), 0, float(observed) - float(high)), 2),
+                    "duration_ms": row["duration_ms"],
+                    "lifecycle_status": payload.get("lifecycle_status", "confirmed"),
+                })
+            details.append({
+                "pose_id": session["pose_id"], "started_at": session["started_at"],
+                "ended_at": session["ended_at"], "stored_summary": session["summary"],
+                "confirmed_measurements": numeric_events,
+                "feedback": [{"type": f["event_type"], "text": f["feedback_text"][:240]} for f in feedback],
+            })
+    return {"sessions": details, "preferences": get_user_preferences(user_id)}
 
 
 # ---------------------------------------------------------------------------

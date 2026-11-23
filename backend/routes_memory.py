@@ -6,19 +6,25 @@ session_id 由 E 的前端生成（crypto.randomUUID），B 的 /api/analyze 也
 接口约定详见 docs/memory_design.md 第 10 节。
 """
 from typing import Any, Optional, Union
+import json
 
 from fastapi import APIRouter, Body, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
+import httpx
+from pydantic import ValidationError
 
 from . import history_storage, memory
+from . import llm
 import os
+import logging
 from backend.evidence import store
 from backend.schemas import AnalysisResult
 from backend.session_activity import touch, incomplete
 from .online_rules_133 import online_rules
 
 router = APIRouter(prefix="/api/memory", tags=["memory"])
+logger = logging.getLogger(__name__)
 
 
 class SessionBody(BaseModel):
@@ -69,6 +75,83 @@ def require_test_write():
 @router.get('/incomplete-sessions')
 def incomplete_sessions():
     return {'items': incomplete()}
+
+
+@router.get('/progress-summary')
+def progress_summary(user_id: str = 'default', pose_id: Optional[str] = None,
+                     session_id: Optional[str] = None, force: bool = False):
+    """Return this session's cached LLM progress summary, generating it once."""
+    try:
+        target_session = None
+        if session_id:
+            target_session = memory.get_session(session_id)
+            if target_session is None:
+                raise HTTPException(status_code=404, detail='训练记录不存在。')
+            if target_session['user_id'] != user_id:
+                raise HTTPException(status_code=404, detail='训练记录不存在。')
+            if pose_id and target_session['pose_id'] != pose_id:
+                raise HTTPException(status_code=400, detail='动作与训练记录不匹配。')
+            if target_session.get('progress_summary_json') and not force:
+                cached = json.loads(target_session['progress_summary_json'])
+                envelope = cached if 'progress_summary' in cached else {
+                    'progress_summary': cached, 'practice_count': None, 'measurement_count': None,
+                }
+                return {
+                    'ok': True, 'source': 'sqlite', 'cached': True,
+                    'practice_count': envelope.get('practice_count'),
+                    'measurement_count': envelope.get('measurement_count'),
+                    'summary': envelope['progress_summary'],
+                }
+            pose_id = target_session['pose_id']
+        if not llm.configured():
+            raise HTTPException(status_code=503, detail='LLM 未配置：请检查后端启动时是否加载了 .env 中的 LLM_API_KEY、LLM_BASE_URL 和 LLM_MODEL。')
+        snapshot = memory.get_progress_snapshot(
+            user_id=user_id, pose_id=pose_id, through_session_id=session_id,
+        )
+        sessions = snapshot['sessions']
+        evidence = {
+            'pose_id': pose_id,
+            'practice_count': len(sessions),
+            'history': sessions,
+            'user_preferences': snapshot['preferences'],
+            'constraints': [
+                '只能比较相同 rule_id 与 rule_version 的数值',
+                '偏离参考范围的差值减小只代表该项测量改善',
+                '没有测量记录不代表动作正确',
+                '不对 monitor_only 或未校准数据作纠错判断',
+            ],
+        }
+        result = llm.generate_progress_summary(evidence)
+        summary = result.model_dump()
+        measurement_count = sum(len(s['confirmed_measurements']) for s in sessions)
+        cache = {'progress_summary': summary, 'practice_count': len(sessions),
+                 'measurement_count': measurement_count}
+        if session_id:
+            memory.save_progress_summary(session_id, cache)
+        return {
+            'ok': True,
+            'source': 'sqlite',
+            'cached': False,
+            'practice_count': len(sessions),
+            'measurement_count': measurement_count,
+            'summary': summary,
+        }
+    except HTTPException:
+        raise
+    except httpx.HTTPStatusError as exc:
+        status = exc.response.status_code
+        logger.warning('Progress summary provider returned HTTP %s', status)
+        raise HTTPException(status_code=502, detail=f'LLM 服务返回 HTTP {status}；请核对模型名、API 权限和额度。') from exc
+    except (httpx.TimeoutException, httpx.ConnectError) as exc:
+        logger.warning('Progress summary provider connection failed (%s)', type(exc).__name__)
+        raise HTTPException(status_code=502, detail='后端无法连接 LLM 服务；请检查网络、代理和 BASE_URL。') from exc
+    except ValidationError as exc:
+        logger.warning('Progress summary response did not match the expected JSON schema')
+        raise HTTPException(status_code=502, detail='LLM 已响应，但返回 JSON 字段不符合总结格式。') from exc
+    except Exception as exc:
+        # Do not return provider error bodies, which may contain sensitive data.
+        logger.exception('Progress summary generation failed (%s)', type(exc).__name__)
+        raise HTTPException(status_code=502, detail='读取训练记录或调用 LLM 失败；请查看后端 traceback。') from exc
 
 
 @router.post('/sessions/{session_id}/heartbeat')
@@ -141,7 +224,38 @@ def post_finish_session(session_id: str, body: Optional[FinishBody] = None):
         )
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
-    return {"ok": True, "session_id": session_id, "summary": summary}
+    progress = None
+    progress_error = None
+    session = memory.get_session(session_id)
+    if session and not session.get('progress_summary_json') and llm.configured():
+        try:
+            snapshot = memory.get_progress_snapshot(
+                session['user_id'], session['pose_id'], through_session_id=session_id,
+            )
+            evidence = {
+                'pose_id': session['pose_id'],
+                'practice_count': len(snapshot['sessions']),
+                'history': snapshot['sessions'],
+                'user_preferences': snapshot['preferences'],
+                'constraints': [
+                    '只能比较相同 rule_id 与 rule_version 的数值',
+                    '偏离参考范围的差值减小只代表该项测量改善',
+                    '没有测量记录不代表动作正确',
+                    '不对 monitor_only 或未校准数据作纠错判断',
+                ],
+            }
+            summary_result = llm.generate_progress_summary(evidence).model_dump()
+            measurement_count = sum(len(s['confirmed_measurements']) for s in snapshot['sessions'])
+            progress = {'progress_summary': summary_result,
+                        'practice_count': len(snapshot['sessions']),
+                        'measurement_count': measurement_count}
+            memory.save_progress_summary(session_id, progress)
+            progress = summary_result
+        except Exception as exc:
+            logger.exception('Progress summary generation failed after session finish (%s)', type(exc).__name__)
+            progress_error = '本次训练已保存，但历史趋势总结暂时生成失败；详情页可重试。'
+    return {"ok": True, "session_id": session_id, "summary": summary,
+            "progress_summary": progress, "progress_summary_error": progress_error}
 
 
 @router.post("/sessions/{session_id}/summary")
