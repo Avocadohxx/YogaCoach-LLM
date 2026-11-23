@@ -32,12 +32,13 @@
 
 ### 跨次训练趋势总结（后端验证接口）
 
-- 新增 `GET /api/memory/progress-summary?user_id=default&pose_id=tadasana`。接口从 SQLite 读取该用户已结束的练习、已保存的规则事件、历史反馈和明确设置的偏好，再请求 LLM 返回 JSON；当前不会把结果写回数据库，也没有接入前端页面。
+- 每次训练结束时，后端先将本次会话标记结束，再读取该用户截至本次的全部同动作记录（例如第 13 次总结使用第 1–13 次数据，第 14 次使用第 1–14 次数据）、确认事件、反馈和偏好，请求 LLM 并将总结和训练/测量条数缓存到本次 `sessions.progress_summary_json`。旧记录首次补生成时也按该记录的数据库 rowid 截断，排除之后的训练。
+- 训练详情页只读取该条记录缓存，不会因打开页面再次调用 LLM。“重新生成 AI 建议”是内部测试按钮，显式点击才会重新调用，并覆盖当前记录缓存。`GET /api/memory/progress-summary?user_id=default&pose_id=tadasana&session_id=<训练ID>` 读取缓存；增加 `&force=true` 可强制重新生成。省略 `session_id` 是不缓存的临时调用，每次请求都会调用 LLM。
 - `sessions` 提供每次练习信息，`pose_events.payload_json` 中的 `observed_value`、`reference_range`、`rule_id`、`rule_version` 用于计算偏离参考范围的距离；`feedback_logs` 与 `user_preferences` 补充用户收到过的提示和显式偏好。
 - 只比较相同规则和版本。记录缺少测量值时不会伪造趋势；无记录不等于动作正确，监测规则不被当作已确认错误。
 - API 错误区分配置缺失（503）、服务商 HTTP 错误、连接失败和返回 JSON 不符合约定（502）。服务商错误详情在后端日志中查看；响应不会回显密钥或上游原始错误正文。
 
-手动调用：
+手动调用（同一 `session_id` 重复请求会返回缓存；省略 session_id 仍是未缓存的临时验证调用）：
 
 ```powershell
 Invoke-RestMethod "http://127.0.0.1:8000/api/memory/progress-summary?user_id=default&pose_id=tadasana"

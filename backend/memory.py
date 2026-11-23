@@ -105,6 +105,17 @@ def get_session(session_id: str) -> dict[str, Any] | None:
     return dict(row) if row else None
 
 
+def save_progress_summary(session_id: str, summary: dict[str, Any]) -> None:
+    init_db()
+    with connection() as conn:
+        cursor = conn.execute(
+            "UPDATE sessions SET progress_summary_json=? WHERE session_id=?",
+            (json.dumps(summary, ensure_ascii=False), session_id),
+        )
+        if cursor.rowcount == 0:
+            raise ValueError(f"Unknown session_id: {session_id}")
+
+
 def finish_session(
     session_id: str,
     ended_at: str | None = None,
@@ -400,7 +411,8 @@ def get_pose_events(session_id: str) -> list[dict[str, Any]]:
     return result
 
 
-def get_progress_snapshot(user_id: str = "default", pose_id: str | None = None) -> dict[str, Any]:
+def get_progress_snapshot(user_id: str = "default", pose_id: str | None = None,
+                         through_session_id: str | None = None) -> dict[str, Any]:
     """Return compact, ID-free historical training evidence for C's LLM summary."""
     init_db()
     with connection() as conn:
@@ -410,6 +422,9 @@ def get_progress_snapshot(user_id: str = "default", pose_id: str | None = None) 
         if pose_id:
             sql += " AND pose_id=?"
             params.append(pose_id)
+        if through_session_id:
+            sql += " AND rowid <= (SELECT rowid FROM sessions WHERE session_id=? AND user_id=?)"
+            params.extend([through_session_id, user_id])
         sql += " ORDER BY COALESCE(ended_at,started_at,created_at) ASC,rowid ASC"
         sessions = [dict(row) for row in conn.execute(sql, params).fetchall()]
         details = []

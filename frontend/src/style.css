@@ -428,6 +428,66 @@ footer {
 .suggestion-list small {
   color: #718273;
 }
+.progress-coach {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border: 1px solid #dce7d8;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f5f8f0, #fbfcf8);
+}
+.progress-coach-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 14px;
+  color: #315744;
+}
+.progress-coach-heading span,
+.progress-coach small,
+.progress-coach-status {
+  color: #718273;
+  font-size: 12px;
+}
+.progress-regenerate {
+  padding: 7px 11px;
+  border: 1px solid #cbd9c7;
+  border-radius: 9px;
+  background: #fff;
+  color: #315744;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.progress-regenerate:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+.progress-encouragement {
+  margin: 16px 0 8px;
+  color: #315744;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+.progress-encouragement.trend-needs_attention {
+  color: #745a3e;
+}
+.progress-summary-text {
+  margin: 8px 0;
+  line-height: 1.75;
+}
+.progress-coach ul {
+  margin: 8px 0 12px;
+  padding-left: 20px;
+  line-height: 1.75;
+}
+.progress-coach small {
+  display: block;
+  line-height: 1.6;
+}
 .history-page footer {
   padding: 25px 0;
 }

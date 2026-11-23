@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { api, type Pose, type SessionDetail } from "./services/api";
+import {
+  api,
+  type Pose,
+  type ProgressSummary,
+  type SessionDetail,
+} from "./services/api";
 
 const poseNames: Record<Pose, string> = {
   tadasana: "山式",
@@ -37,6 +42,9 @@ export default function HistoryDetail({
   const [detail, setDetail] = useState<SessionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [progress, setProgress] = useState<ProgressSummary | null>(null);
+  const [progressLoading, setProgressLoading] = useState(false);
+  const [progressError, setProgressError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -45,7 +53,28 @@ export default function HistoryDetail({
     api
       .sessionDetail(sessionId)
       .then((value) => {
-        if (!cancelled) setDetail(value);
+        if (!cancelled) {
+          setDetail(value);
+          setProgress(null);
+          setProgressError("");
+          setProgressLoading(true);
+          void api
+            .progressSummary(sessionId, value.session.pose_id)
+            .then((result) => {
+              if (!cancelled) setProgress(result);
+            })
+            .catch((reason) => {
+              if (!cancelled)
+                setProgressError(
+                  reason instanceof Error
+                    ? reason.message
+                    : "暂时无法生成历史训练总结。",
+                );
+            })
+            .finally(() => {
+              if (!cancelled) setProgressLoading(false);
+            });
+        }
       })
       .catch((reason) => {
         if (!cancelled)
@@ -230,6 +259,75 @@ export default function HistoryDetail({
             ))}
           </div>
         )}
+        <div className="progress-coach" aria-live="polite">
+          <div className="progress-coach-heading">
+            <strong>结合历史训练的总结</strong>
+            {progress && (
+              <span>
+                {progress.practice_count} 次训练 · {progress.measurement_count} 条有效测量 · {progress.cached ? "已缓存" : "刚生成"}
+              </span>
+            )}
+            <button
+              className="progress-regenerate"
+              disabled={progressLoading}
+              onClick={() => {
+                setProgressError("");
+                setProgressLoading(true);
+                void api
+                  .progressSummary(sessionId, session.pose_id, true)
+                  .then(setProgress)
+                  .catch((reason) =>
+                    setProgressError(reason instanceof Error ? reason.message : "请求失败"),
+                  )
+                  .finally(() => setProgressLoading(false));
+              }}
+            >
+              {progressLoading ? "生成中…" : "重新生成 AI 建议"}
+            </button>
+          </div>
+          {progressLoading ? (
+            <p className="progress-coach-status">正在结合历史记录整理建议…</p>
+          ) : progressError ? (
+            <div className="history-empty" role="status">
+              <p>暂时无法生成总结：{progressError}</p>
+              <button
+                onClick={() => {
+                  setProgressError("");
+                  setProgressLoading(true);
+                  void api
+                    .progressSummary(sessionId, session.pose_id)
+                    .then(setProgress)
+                    .catch((reason) =>
+                      setProgressError(
+                        reason instanceof Error ? reason.message : "请求失败",
+                      ),
+                    )
+                    .finally(() => setProgressLoading(false));
+                }}
+              >
+                重试生成
+              </button>
+            </div>
+          ) : progress ? (
+            <>
+              <p className={`progress-encouragement trend-${progress.summary.trend}`}>
+                {progress.summary.encouragement}
+              </p>
+              <p className="progress-summary-text">{progress.summary.summary}</p>
+              <ul>
+                {progress.summary.suggestions.map((suggestion, index) => (
+                  <li key={`${index}-${suggestion}`}>{suggestion}</li>
+                ))}
+              </ul>
+              <small>
+                {progress.cached
+                  ? "这是本次训练保存的历史总结，重新打开不会再次调用 LLM。"
+                  : "本次总结刚生成并已保存到训练记录。"}
+                {progress.measurement_count === 0 && " 当前没有可比较的有效测量；未记录不代表动作标准。"}
+              </small>
+            </>
+          ) : null}
+        </div>
       </section>
       <footer>训练记录仅用于动作学习与回顾，不构成医疗诊断。</footer>
     </main>

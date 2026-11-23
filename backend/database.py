@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     started_at TEXT,
     ended_at TEXT,
     summary TEXT,
+    progress_summary_json TEXT,
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
@@ -153,6 +154,9 @@ def init_db(db_path: str | Path | None = None) -> None:
     with _init_lock:
         with connection(path) as conn:
             conn.executescript(_SCHEMA)
+            columns = {row[1] for row in conn.execute("PRAGMA table_info(sessions)")}
+            if "progress_summary_json" not in columns:
+                conn.execute("ALTER TABLE sessions ADD COLUMN progress_summary_json TEXT")
             conn.execute(
                 """INSERT INTO schema_meta(key,value) VALUES('schema_version',?)
                    ON CONFLICT(key) DO UPDATE SET value=excluded.value""",
