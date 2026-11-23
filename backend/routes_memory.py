@@ -7,12 +7,13 @@ session_id 由 E 的前端生成（crypto.randomUUID），B 的 /api/analyze 也
 """
 from typing import Any, Optional, Union
 
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, File, Form, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 import httpx
 from pydantic import ValidationError
 
-from . import memory
+from . import history_storage, memory
 from . import llm
 import os
 import logging
@@ -159,6 +160,19 @@ def get_session(session_id: str):
     return session
 
 
+@router.get("/sessions/{session_id}/detail")
+def get_session_detail(session_id: str):
+    session = memory.get_session(session_id)
+    if session is None:
+        raise HTTPException(status_code=404, detail=f"Unknown session_id: {session_id}")
+    return {
+        "session": session,
+        "events": memory.get_pose_events(session_id),
+        "snapshots": history_storage.list_snapshots(session_id),
+        "feedback": memory.get_recent_feedback(session_id, 100),
+    }
+
+
 @router.delete("/sessions/{session_id}")
 def remove_session(session_id: str):
     if not memory.delete_session(session_id):
@@ -219,6 +233,78 @@ def post_analysis_event(session_id: str, event: dict[str, Any] = Body(...)):
     except (ValueError, TypeError) as exc:
         raise _bad_request(exc) from exc
     return {"ok": True, **result}
+
+
+@router.post("/sessions/{session_id}/snapshots")
+async def upload_error_snapshot(
+    session_id: str,
+    image: UploadFile = File(...),
+    pose_id: Optional[str] = Form(None),
+    event_type: Optional[str] = Form(None),
+    side: Optional[str] = Form(None),
+    severity: Optional[str] = Form(None),
+    confidence: Optional[float] = Form(None),
+    timestamp_ms: Optional[int] = Form(None),
+):
+    try:
+        content_type = (image.content_type or "").split(";")[0].strip().lower()
+        if content_type not in history_storage.ALLOWED_TYPES:
+            raise HTTPException(
+                status_code=415,
+                detail="Only JPEG, PNG, and WEBP images are accepted",
+            )
+        data = await image.read(history_storage.MAX_IMAGE_BYTES + 1)
+        if len(data) > history_storage.MAX_IMAGE_BYTES:
+            raise HTTPException(status_code=413, detail="Image exceeds 5 MB")
+        result = history_storage.save_snapshot(
+            session_id=session_id,
+            image_bytes=data,
+            content_type=content_type,
+            pose_id=pose_id,
+            event_type=event_type,
+            side=side,
+            severity=severity,
+            confidence=confidence,
+            timestamp_ms=timestamp_ms,
+        )
+    except ValueError as exc:
+        code = 404 if "Unknown session_id" in str(exc) else 400
+        raise HTTPException(status_code=code, detail=str(exc)) from exc
+    finally:
+        await image.close()
+    return {"ok": True, **result}
+
+
+class SnapshotFeedbackBody(BaseModel):
+    feedback_text: str = Field(default="", max_length=3000)
+
+
+@router.post("/snapshots/{snapshot_id}/feedback")
+def put_snapshot_feedback(snapshot_id: str, body: SnapshotFeedbackBody):
+    if not history_storage.update_snapshot_feedback(
+        snapshot_id, body.feedback_text
+    ):
+        raise HTTPException(status_code=404, detail="Snapshot not found")
+    return {"ok": True, "snapshot_id": snapshot_id}
+
+
+@router.get("/snapshots/{snapshot_id}/image")
+def get_snapshot_image(snapshot_id: str):
+    item = history_storage.get_snapshot_file(snapshot_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Snapshot image not found")
+    path, _row = item
+    media_type = {
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".png": "image/png",
+        ".webp": "image/webp",
+    }.get(path.suffix.lower(), "application/octet-stream")
+    return FileResponse(
+        path,
+        media_type=media_type,
+        headers={"Cache-Control": "private, max-age=3600"},
+    )
 
 
 # ---- feedback log ---------------------------------------------------------

@@ -58,15 +58,49 @@ export type StoredSession = {
   ended_at: string | null;
   summary: string | null;
 };
+export type Snapshot = {
+  snapshot_id: string;
+  session_id: string;
+  pose_id: string | null;
+  event_type: string | null;
+  side: string | null;
+  severity: string | null;
+  confidence: number | null;
+  timestamp_ms: number | null;
+  feedback_text: string | null;
+  created_at: string;
+  image_url: string;
+};
+export type PoseEvent = {
+  event_id: string;
+  event_type: string;
+  side: string | null;
+  severity: string | null;
+  confidence: number | null;
+  timestamp_ms: number | null;
+  duration_ms: number | null;
+};
+export type FeedbackLog = {
+  feedback_id: string;
+  session_id: string;
+  event_type: string | null;
+  feedback_text: string;
+  created_at: string;
+};
+export type SessionDetail = {
+  session: StoredSession;
+  events: PoseEvent[];
+  snapshots: Snapshot[];
+  feedback: FeedbackLog[];
+};
 export type Summary = {
   id: string;
   pose: Pose;
   seconds: number;
   feedbacks: number;
-  ended: string;
 };
 
-// Shared backend contracts; simulated history stays browser-local.
+// Shared backend contracts.
 async function request<T>(
   path: string,
   body: unknown,
@@ -75,8 +109,16 @@ async function request<T>(
 ): Promise<T> {
   const response = await fetch(path, {
     method: method ?? (body === undefined ? "GET" : "POST"),
-    headers: { "Content-Type": "application/json" },
-    body: body === undefined ? undefined : JSON.stringify(body),
+    headers:
+      typeof FormData !== "undefined" && body instanceof FormData
+        ? undefined
+        : { "Content-Type": "application/json" },
+    body:
+      body === undefined
+        ? undefined
+        : typeof FormData !== "undefined" && body instanceof FormData
+          ? body
+          : JSON.stringify(body),
     signal: AbortSignal.any([
       signal ?? new AbortController().signal,
       AbortSignal.timeout(15000),
@@ -128,6 +170,11 @@ export const api = {
     request(`/api/memory/sessions/${encodeURIComponent(id)}/heartbeat`, {}),
   sessions: () =>
     request<{ items: StoredSession[] }>("/api/memory/sessions", undefined),
+  sessionDetail: (id: string) =>
+    request<SessionDetail>(
+      `/api/memory/sessions/${encodeURIComponent(id)}/detail`,
+      undefined,
+    ),
   createSession: (id: string, pose: Pose) =>
     request("/api/memory/sessions", {
       session_id: id,
@@ -143,6 +190,31 @@ export const api = {
     request<{ status: string; mode?: string }>("/api/health", undefined),
   feedback: (event: Analysis, signal: AbortSignal) =>
     request<Feedback>("/api/agent/feedback", event, signal),
+  saveSnapshot: (
+    sessionId: string,
+    blob: Blob,
+    meta: {
+      pose_id: Pose;
+      event_type: string;
+      side?: string;
+      timestamp_ms: number;
+    },
+  ) => {
+    const form = new FormData();
+    form.append("image", blob, `error-${meta.timestamp_ms}.jpg`);
+    Object.entries(meta).forEach(([key, value]) => {
+      if (value !== undefined) form.append(key, String(value));
+    });
+    return request<{ ok: boolean; snapshot_id: string; image_url: string }>(
+      `/api/memory/sessions/${encodeURIComponent(sessionId)}/snapshots`,
+      form,
+    );
+  },
+  updateSnapshotFeedback: (snapshotId: string, feedback_text: string) =>
+    request<{ ok: boolean; snapshot_id: string }>(
+      `/api/memory/snapshots/${encodeURIComponent(snapshotId)}/feedback`,
+      { feedback_text },
+    ),
 };
 export function parseFeedback(value: Feedback): Feedback {
   if (
@@ -152,26 +224,4 @@ export function parseFeedback(value: Feedback): Feedback {
   )
     throw new Error("反馈格式不符合约定。");
   return value;
-}
-export function readHistory(): Summary[] {
-  try {
-    const value: unknown = JSON.parse(
-      localStorage.getItem("yoga-demo-history") || "[]",
-    );
-    return Array.isArray(value)
-      ? value
-          .filter(
-            (x): x is Summary =>
-              x &&
-              typeof x.id === "string" &&
-              typeof x.seconds === "number" &&
-              typeof x.feedbacks === "number" &&
-              typeof x.ended === "string" &&
-              ["tadasana", "ardhakati_chakrasana"].includes(x.pose),
-          )
-          .slice(0, 10)
-      : [];
-  } catch {
-    return [];
-  }
 }

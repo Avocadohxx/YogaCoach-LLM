@@ -17,6 +17,7 @@ type Props = {
   onAnalysis: (event: Analysis) => void;
   onStatus: (text: string) => void;
   onLost: () => void;
+  onCaptureReady?: (capture: (() => Promise<Blob | null>) | null) => void;
 };
 const bones = [
   [5, 6],
@@ -204,6 +205,35 @@ export default function Source133(props: Props) {
         }
         await video.current!.play();
         if (valid()) {
+          const captureImage = () =>
+            new Promise<Blob | null>((resolve) => {
+              const currentVideo = video.current,
+                overlay = canvas.current;
+              if (
+                !currentVideo ||
+                !overlay ||
+                currentVideo.readyState < 2 ||
+                !currentVideo.videoWidth ||
+                !currentVideo.videoHeight ||
+                !overlay.width ||
+                !overlay.height
+              ) {
+                resolve(null);
+                return;
+              }
+              const image = document.createElement("canvas");
+              image.width = overlay.width;
+              image.height = overlay.height;
+              const context = image.getContext("2d");
+              if (!context) {
+                resolve(null);
+                return;
+              }
+              context.drawImage(currentVideo, 0, 0, image.width, image.height);
+              context.drawImage(overlay, 0, 0, image.width, image.height);
+              image.toBlob((blob) => resolve(blob), "image/jpeg", 0.84);
+            });
+          callbacks.current.onCaptureReady?.(captureImage);
           loop.current = createCaptureLoop({
             video: () => video.current!,
             capture,
@@ -226,6 +256,7 @@ export default function Source133(props: Props) {
     return () => {
       stopped = true;
       controller.abort();
+      callbacks.current.onCaptureReady?.(null);
       loop.current?.close();
       stream?.getTracks().forEach((t) => t.stop());
       if (url) URL.revokeObjectURL(url);

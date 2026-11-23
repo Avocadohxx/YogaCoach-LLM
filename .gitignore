@@ -11,6 +11,7 @@ __pycache__/
 # 数据库与个人练习记录
 *.db
 *.sqlite3
+data/evidence/
 
 # 前端
 node_modules/

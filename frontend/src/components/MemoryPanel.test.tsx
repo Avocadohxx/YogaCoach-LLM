@@ -4,11 +4,13 @@ import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 const mocks = vi.hoisted(() => ({
   remove: vi.fn().mockResolvedValue({}),
   preference: vi.fn().mockResolvedValue({}),
+  sessions: vi.fn().mockResolvedValue({ items: [] }),
 }));
 vi.mock("../services/api", () => ({
   api: {
     preferences: vi.fn().mockResolvedValue({ preferences: {} }),
-    sessions: vi.fn().mockResolvedValue({ items: [] }),
+    events: vi.fn().mockResolvedValue({ items: [] }),
+    sessions: mocks.sessions,
     incomplete: vi.fn().mockResolvedValue({ items: [] }),
     preference: mocks.preference,
     deleteData: mocks.remove,
@@ -44,4 +46,24 @@ it("开始练习后，已经打开的删除确认也被禁用", () => {
   );
   fireEvent.click(screen.getByText("确认删除"));
   expect(mocks.remove).not.toHaveBeenCalled();
+});
+it("可以从历史记录进入某次训练详情", async () => {
+  mocks.sessions.mockResolvedValueOnce({
+    items: [
+      {
+        session_id: "session-1",
+        pose_id: "tadasana",
+        started_at: "2026-11-22T09:00:00Z",
+        ended_at: "2026-11-22T09:05:00Z",
+        summary: "系统给出提示 1 次。",
+      },
+    ],
+  });
+  const open = vi.fn();
+  const screen = render(
+    <MemoryPanel active={false} refreshKey="" onOpenSession={open} />,
+  );
+  fireEvent.click(await screen.findByText(/山式/));
+  fireEvent.click(await screen.findByText("查看训练详情、建议与错误截图"));
+  expect(open).toHaveBeenCalledWith("session-1");
 });
