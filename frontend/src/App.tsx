@@ -273,9 +273,7 @@ export default function App() {
                   onChange={(e) =>
                     setBendDirection(
                       e.target.value as
-                        | "unknown"
-                        | "image_left"
-                        | "image_right",
+                        "unknown" | "image_left" | "image_right",
                     )
                   }
                 >
