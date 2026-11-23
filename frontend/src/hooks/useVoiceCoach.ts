@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
-import { createSpeech } from '../services/speech';
+import { useEffect, useRef, useState } from "react";
+import { createSpeech } from "../services/speech";
 import {
   parseVoiceCommand,
   type VoiceCommand,
-} from '../services/voiceCommands';
-import type { Pose } from '../services/api';
+} from "../services/voiceCommands";
+import type { Pose } from "../services/api";
 export function useVoiceCoach(
   active: boolean,
   busy: boolean,
   pose: Pose,
   execute: (command: VoiceCommand) => void,
 ) {
-  const [status, setStatus] = useState('语音已关闭。');
-  const [heard, setHeard] = useState('');
+  const [status, setStatus] = useState("语音已关闭。");
+  const [heard, setHeard] = useState("");
   const callbacks = useRef({ active, busy, pose, execute });
   callbacks.current = { active, busy, pose, execute };
   const service = useRef<ReturnType<typeof createSpeech> | null>(null);
@@ -23,7 +23,7 @@ export function useVoiceCoach(
       setHeard(text);
       const command = parseVoiceCommand(text, current.pose);
       if (command) current.execute(command);
-      else setStatus('未匹配口令，阶段未改变。请使用下方示例。');
+      else setStatus("未匹配口令，阶段未改变。请使用下方示例。");
     }, setStatus);
     service.current = speech;
     return () => {
@@ -34,7 +34,7 @@ export function useVoiceCoach(
   useEffect(() => {
     if (!active) {
       service.current?.stop();
-      setHeard('');
+      setHeard("");
     }
   }, [active]);
   return {

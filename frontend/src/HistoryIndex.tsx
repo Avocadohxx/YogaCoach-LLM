@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { api, type StoredSession } from './services/api';
+import { useEffect, useState } from "react";
+import { api, type StoredSession } from "./services/api";
 
 const poseNames: Record<string, string> = {
-  tadasana: '山式',
-  ardhakati_chakrasana: '站立侧弯式',
+  tadasana: "山式",
+  ardhakati_chakrasana: "站立侧弯式",
 };
 
 function dateText(value: string | null) {
-  return value ? new Date(value).toLocaleString() : '时间未知';
+  return value ? new Date(value).toLocaleString() : "时间未知";
 }
 
 export default function HistoryIndex({
@@ -19,12 +19,12 @@ export default function HistoryIndex({
 }) {
   const [sessions, setSessions] = useState<StoredSession[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    setError('');
+    setError("");
     api
       .sessions()
       .then((result) => {
@@ -33,7 +33,7 @@ export default function HistoryIndex({
       .catch((reason) => {
         if (!cancelled)
           setError(
-            reason instanceof Error ? reason.message : '无法读取训练历史',
+            reason instanceof Error ? reason.message : "无法读取训练历史",
           );
       })
       .finally(() => {
@@ -79,11 +79,11 @@ export default function HistoryIndex({
             {sessions.map((session) => (
               <article className="history-entry" key={session.session_id}>
                 <strong>
-                  {poseNames[session.pose_id] || session.pose_id || '瑜伽训练'}
+                  {poseNames[session.pose_id] || session.pose_id || "瑜伽训练"}
                 </strong>
                 <span>{dateText(session.ended_at || session.started_at)}</span>
                 <p className="history-summary-line">
-                  {session.summary || '本次训练暂无总结。'}
+                  {session.summary || "本次训练暂无总结。"}
                 </p>
                 <button onClick={() => onOpenSession(session.session_id)}>
                   查看建议与错误截图 →

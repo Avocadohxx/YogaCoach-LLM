@@ -1,14 +1,14 @@
-﻿export type Pose = 'tadasana' | 'ardhakati_chakrasana';
+﻿export type Pose = "tadasana" | "ardhakati_chakrasana";
 export type Phase133 =
-  | 'prepare'
-  | 'hold'
-  | 'transition'
-  | 'arms_down_hold'
-  | 'arms_up_hold'
-  | 'side_bend_hold'
-  | 'return_upright';
+  | "prepare"
+  | "hold"
+  | "transition"
+  | "arms_down_hold"
+  | "arms_up_hold"
+  | "side_bend_hold"
+  | "return_upright";
 export type Variant133 =
-  'unknown' | 'both_arms_overhead' | 'single_arm_overhead';
+  "unknown" | "both_arms_overhead" | "single_arm_overhead";
 export type Analysis = {
   session_id: string;
   pose_id: Pose;
@@ -44,7 +44,7 @@ export type Analysis = {
 };
 export type Feedback = {
   should_speak: boolean;
-  feedback_type: 'correction' | 'camera_hint' | 'none';
+  feedback_type: "correction" | "camera_hint" | "none";
   text: string;
   target?: string;
   grounded_event_type?: string;
@@ -99,7 +99,7 @@ export type ProgressSummary = {
   measurement_count: number;
   summary: {
     trend:
-      'improving' | 'maintaining' | 'needs_attention' | 'insufficient_data';
+      "improving" | "maintaining" | "needs_attention" | "insufficient_data";
     encouragement: string;
     summary: string;
     suggestions: string[];
@@ -121,15 +121,15 @@ async function request<T>(
   timeoutMs = 15000,
 ): Promise<T> {
   const response = await fetch(path, {
-    method: method ?? (body === undefined ? 'GET' : 'POST'),
+    method: method ?? (body === undefined ? "GET" : "POST"),
     headers:
-      typeof FormData !== 'undefined' && body instanceof FormData
+      typeof FormData !== "undefined" && body instanceof FormData
         ? undefined
-        : { 'Content-Type': 'application/json' },
+        : { "Content-Type": "application/json" },
     body:
       body === undefined
         ? undefined
-        : typeof FormData !== 'undefined' && body instanceof FormData
+        : typeof FormData !== "undefined" && body instanceof FormData
           ? body
           : JSON.stringify(body),
     signal: AbortSignal.any([
@@ -138,10 +138,10 @@ async function request<T>(
     ]),
   });
   if (!response.ok) {
-    let detail = '';
+    let detail = "";
     try {
       const payload = (await response.json()) as { detail?: unknown };
-      if (typeof payload.detail === 'string') detail = payload.detail;
+      if (typeof payload.detail === "string") detail = payload.detail;
     } catch {
       // Keep a useful status message if the backend did not return JSON.
     }
@@ -158,21 +158,21 @@ export const api = {
       model: { name: string; available: boolean; reason: string };
       rules: Record<string, { reviewed: boolean; correction_phases: string[] }>;
       llm: { configured: boolean };
-    }>('/api/ready', undefined),
+    }>("/api/ready", undefined),
   preferences: () =>
     request<{ preferences: Record<string, string> }>(
-      '/api/memory/preferences',
+      "/api/memory/preferences",
       undefined,
     ),
   preference: (value: string) =>
     request(
-      '/api/memory/preferences',
-      { preference_key: 'feedback_length', preference_value: value },
+      "/api/memory/preferences",
+      { preference_key: "feedback_length", preference_value: value },
       undefined,
-      'PUT',
+      "PUT",
     ),
   deleteData: () =>
-    request('/api/memory/user-data', undefined, undefined, 'DELETE'),
+    request("/api/memory/user-data", undefined, undefined, "DELETE"),
   events: (id: string) =>
     request<{
       items: {
@@ -184,13 +184,13 @@ export const api = {
     }>(`/api/memory/sessions/${encodeURIComponent(id)}/events`, undefined),
   incomplete: () =>
     request<{ items: (StoredSession & { state: string })[] }>(
-      '/api/memory/incomplete-sessions',
+      "/api/memory/incomplete-sessions",
       undefined,
     ),
   heartbeat: (id: string) =>
     request(`/api/memory/sessions/${encodeURIComponent(id)}/heartbeat`, {}),
   sessions: () =>
-    request<{ items: StoredSession[] }>('/api/memory/sessions', undefined),
+    request<{ items: StoredSession[] }>("/api/memory/sessions", undefined),
   sessionDetail: (id: string) =>
     request<SessionDetail>(
       `/api/memory/sessions/${encodeURIComponent(id)}/detail`,
@@ -198,14 +198,14 @@ export const api = {
     ),
   progressSummary: (sessionId: string, pose: Pose, force = false) =>
     request<ProgressSummary>(
-      `/api/memory/progress-summary?user_id=default&pose_id=${encodeURIComponent(pose)}&session_id=${encodeURIComponent(sessionId)}${force ? '&force=true' : ''}`,
+      `/api/memory/progress-summary?user_id=default&pose_id=${encodeURIComponent(pose)}&session_id=${encodeURIComponent(sessionId)}${force ? "&force=true" : ""}`,
       undefined,
       undefined,
       undefined,
       30000,
     ),
   createSession: (id: string, pose: Pose) =>
-    request('/api/memory/sessions', {
+    request("/api/memory/sessions", {
       session_id: id,
       pose_id: pose,
       started_at: new Date().toISOString(),
@@ -216,9 +216,9 @@ export const api = {
       { ended_at: new Date().toISOString() },
     ),
   health: () =>
-    request<{ status: string; mode?: string }>('/api/health', undefined),
+    request<{ status: string; mode?: string }>("/api/health", undefined),
   feedback: (event: Analysis, signal: AbortSignal) =>
-    request<Feedback>('/api/agent/feedback', event, signal),
+    request<Feedback>("/api/agent/feedback", event, signal),
   saveSnapshot: (
     sessionId: string,
     blob: Blob,
@@ -230,7 +230,7 @@ export const api = {
     },
   ) => {
     const form = new FormData();
-    form.append('image', blob, `error-${meta.timestamp_ms}.jpg`);
+    form.append("image", blob, `error-${meta.timestamp_ms}.jpg`);
     Object.entries(meta).forEach(([key, value]) => {
       if (value !== undefined) form.append(key, String(value));
     });
@@ -247,10 +247,10 @@ export const api = {
 };
 export function parseFeedback(value: Feedback): Feedback {
   if (
-    typeof value.should_speak !== 'boolean' ||
-    typeof value.text !== 'string' ||
-    !['correction', 'camera_hint', 'none'].includes(value.feedback_type)
+    typeof value.should_speak !== "boolean" ||
+    typeof value.text !== "string" ||
+    !["correction", "camera_hint", "none"].includes(value.feedback_type)
   )
-    throw new Error('反馈格式不符合约定。');
+    throw new Error("反馈格式不符合约定。");
   return value;
 }

@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  font-family: "Noto Sans SC", system-ui, sans-serif;
   color: #233e36;
   background: #f4f5ef;
   font-synthesis: none;
@@ -466,7 +466,7 @@ footer {
 .progress-encouragement {
   margin: 16px 0 8px;
   color: #315744;
-  font-family: Georgia, 'Noto Serif SC', serif;
+  font-family: Georgia, "Noto Serif SC", serif;
   font-size: 19px;
   font-weight: 600;
   line-height: 1.6;
