@@ -27,7 +27,7 @@ export function releaseVideo(video: HTMLVideoElement) {
   video.pause();
   (video.srcObject as MediaStream | null)?.getTracks().forEach((t) => t.stop());
   video.srcObject = null;
-  video.removeAttribute("src");
+  video.removeAttribute('src');
   video.load();
 }
 export function percentile(values: number[], q: number) {
@@ -57,7 +57,7 @@ export function createCaptureLoop(options: {
     frameCallback: number | undefined,
     lastPresented = -1;
   const source = options.video();
-  const hasCallback = typeof source.requestVideoFrameCallback === "function";
+  const hasCallback = typeof source.requestVideoFrameCallback === 'function';
   function watch(_now: number, metadata: VideoFrameCallbackMetadata) {
     if (stopped) return;
     decodedTime = metadata.mediaTime;
@@ -77,7 +77,7 @@ export function createCaptureLoop(options: {
       video.readyState >= 2
     ) {
       if (hasCallback) time = decodedTime;
-      else if (typeof video.getVideoPlaybackQuality === "function") {
+      else if (typeof video.getVideoPlaybackQuality === 'function') {
         const quality = video.getVideoPlaybackQuality();
         const presented =
           quality.totalVideoFrames - (quality.droppedVideoFrames || 0);
@@ -113,7 +113,7 @@ export function createCaptureLoop(options: {
       if (stopped) return;
       options.lost();
       failures++;
-      options.error(error instanceof Error ? error.message : "图像分析失败。");
+      options.error(error instanceof Error ? error.message : '图像分析失败。');
       // Stop after bounded retries; the component exposes an explicit retry.
       if (failures < 4 && !(error instanceof CaptureError && !error.retryable))
         schedule(
@@ -132,13 +132,13 @@ export function createCaptureLoop(options: {
         wall_interval_p95_ms: percentile(intervals, 0.95),
         request_p50_ms: percentile(latency, 0.5),
         request_p95_ms: percentile(latency, 0.95),
-        scope: "browser_capture_request_loop_not_detection_accuracy",
+        scope: 'browser_capture_request_loop_not_detection_accuracy',
       };
     },
     start() {
       if (hasCallback) frameCallback = source.requestVideoFrameCallback(watch);
-      else if (typeof source.getVideoPlaybackQuality !== "function") {
-        options.error("当前浏览器无法确认新视频帧，请使用较新版本浏览器。");
+      else if (typeof source.getVideoPlaybackQuality !== 'function') {
+        options.error('当前浏览器无法确认新视频帧，请使用较新版本浏览器。');
         return;
       }
       void tick();

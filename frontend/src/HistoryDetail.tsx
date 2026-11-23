@@ -1,35 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   api,
   type Pose,
   type ProgressSummary,
   type SessionDetail,
-} from "./services/api";
+} from './services/api';
 
 const poseNames: Record<Pose, string> = {
-  tadasana: "山式",
-  ardhakati_chakrasana: "站立侧弯式",
+  tadasana: '山式',
+  ardhakati_chakrasana: '站立侧弯式',
 };
 const eventNames: Record<string, string> = {
-  elbow_bend: "持续肘部弯曲",
-  upper_arm_alignment: "上臂位置偏差",
-  bend_direction_mismatch: "侧弯方向不一致",
+  elbow_bend: '持续肘部弯曲',
+  upper_arm_alignment: '上臂位置偏差',
+  bend_direction_mismatch: '侧弯方向不一致',
 };
 const sideNames: Record<string, string> = {
-  left: "左侧",
-  right: "右侧",
-  left_higher: "左侧偏高",
-  right_higher: "右侧偏高",
+  left: '左侧',
+  right: '右侧',
+  left_higher: '左侧偏高',
+  right_higher: '右侧偏高',
 };
 
 function dateText(value: string | null) {
-  return value ? new Date(value).toLocaleString() : "时间未知";
+  return value ? new Date(value).toLocaleString() : '时间未知';
 }
 
 function elapsed(timestamp: number | null) {
-  if (timestamp === null) return "时间未知";
+  if (timestamp === null) return '时间未知';
   const seconds = Math.max(0, Math.floor(timestamp / 1000));
-  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
 export default function HistoryDetail({
@@ -41,22 +41,22 @@ export default function HistoryDetail({
 }) {
   const [detail, setDetail] = useState<SessionDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [progress, setProgress] = useState<ProgressSummary | null>(null);
   const [progressLoading, setProgressLoading] = useState(false);
-  const [progressError, setProgressError] = useState("");
+  const [progressError, setProgressError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    setError("");
+    setError('');
     api
       .sessionDetail(sessionId)
       .then((value) => {
         if (!cancelled) {
           setDetail(value);
           setProgress(null);
-          setProgressError("");
+          setProgressError('');
           setProgressLoading(true);
           void api
             .progressSummary(sessionId, value.session.pose_id)
@@ -68,7 +68,7 @@ export default function HistoryDetail({
                 setProgressError(
                   reason instanceof Error
                     ? reason.message
-                    : "暂时无法生成历史训练总结。",
+                    : '暂时无法生成历史训练总结。',
                 );
             })
             .finally(() => {
@@ -79,7 +79,7 @@ export default function HistoryDetail({
       .catch((reason) => {
         if (!cancelled)
           setError(
-            reason instanceof Error ? reason.message : "无法读取训练记录",
+            reason instanceof Error ? reason.message : '无法读取训练记录',
           );
       })
       .finally(() => {
@@ -103,7 +103,7 @@ export default function HistoryDetail({
         <button onClick={onBack}>← 返回历史记录</button>
         <section className="history-empty">
           <h2>无法打开训练记录</h2>
-          <p>{error || "记录不存在或已被删除。"}</p>
+          <p>{error || '记录不存在或已被删除。'}</p>
         </section>
       </main>
     );
@@ -129,14 +129,14 @@ export default function HistoryDetail({
       </header>
       <section className="history-hero">
         <span className="eyebrow">TRAINING REVIEW</span>
-        <h1>{poseNames[session.pose_id] || session.pose_id || "瑜伽训练"}</h1>
+        <h1>{poseNames[session.pose_id] || session.pose_id || '瑜伽训练'}</h1>
         <p>{dateText(session.started_at)}</p>
         <div className="history-stats">
           <div>
             <strong>
               {duration === null
-                ? "—"
-                : `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`}
+                ? '—'
+                : `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, '0')}`}
             </strong>
             <span>训练时长</span>
           </div>
@@ -181,9 +181,9 @@ export default function HistoryDetail({
                 <div className="snapshot-meta">
                   <strong>
                     {shot.event_type
-                      ?.split(",")
+                      ?.split(',')
                       .map((type) => eventNames[type.trim()] || type.trim())
-                      .join("、") || "动作偏差"}
+                      .join('、') || '动作偏差'}
                   </strong>
                   <span>{elapsed(shot.timestamp_ms)}</span>
                 </div>
@@ -226,7 +226,7 @@ export default function HistoryDetail({
                         : null,
                     ]
                       .filter(Boolean)
-                      .join(" · ")}
+                      .join(' · ')}
                   </p>
                 </div>
               </article>
@@ -264,28 +264,28 @@ export default function HistoryDetail({
             <strong>结合历史训练的总结</strong>
             {progress && (
               <span>
-                {progress.practice_count} 次训练 · {progress.measurement_count}{" "}
-                条有效测量 · {progress.cached ? "已缓存" : "刚生成"}
+                {progress.practice_count} 次训练 · {progress.measurement_count}{' '}
+                条有效测量 · {progress.cached ? '已缓存' : '刚生成'}
               </span>
             )}
             <button
               className="progress-regenerate"
               disabled={progressLoading}
               onClick={() => {
-                setProgressError("");
+                setProgressError('');
                 setProgressLoading(true);
                 void api
                   .progressSummary(sessionId, session.pose_id, true)
                   .then(setProgress)
                   .catch((reason) =>
                     setProgressError(
-                      reason instanceof Error ? reason.message : "请求失败",
+                      reason instanceof Error ? reason.message : '请求失败',
                     ),
                   )
                   .finally(() => setProgressLoading(false));
               }}
             >
-              {progressLoading ? "生成中…" : "重新生成 AI 建议"}
+              {progressLoading ? '生成中…' : '重新生成 AI 建议'}
             </button>
           </div>
           {progressLoading ? (
@@ -295,14 +295,14 @@ export default function HistoryDetail({
               <p>暂时无法生成总结：{progressError}</p>
               <button
                 onClick={() => {
-                  setProgressError("");
+                  setProgressError('');
                   setProgressLoading(true);
                   void api
                     .progressSummary(sessionId, session.pose_id)
                     .then(setProgress)
                     .catch((reason) =>
                       setProgressError(
-                        reason instanceof Error ? reason.message : "请求失败",
+                        reason instanceof Error ? reason.message : '请求失败',
                       ),
                     )
                     .finally(() => setProgressLoading(false));
@@ -328,10 +328,10 @@ export default function HistoryDetail({
               </ul>
               <small>
                 {progress.cached
-                  ? "这是本次训练保存的历史总结，重新打开不会再次调用 LLM。"
-                  : "本次总结刚生成并已保存到训练记录。"}
+                  ? '这是本次训练保存的历史总结，重新打开不会再次调用 LLM。'
+                  : '本次总结刚生成并已保存到训练记录。'}
                 {progress.measurement_count === 0 &&
-                  " 当前没有可比较的有效测量；未记录不代表动作标准。"}
+                  ' 当前没有可比较的有效测量；未记录不代表动作标准。'}
               </small>
             </>
           ) : null}

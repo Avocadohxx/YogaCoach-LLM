@@ -1,8 +1,8 @@
-import { api, parseFeedback, type Analysis, type Pose } from "./api";
+import { api, parseFeedback, type Analysis, type Pose } from './api';
 
 // One instance per practice. Async completions may only update their own generation.
-type LiveTransport = Pick<typeof api, "feedback"> &
-  Partial<Pick<typeof api, "saveSnapshot" | "updateSnapshotFeedback">>;
+type LiveTransport = Pick<typeof api, 'feedback'> &
+  Partial<Pick<typeof api, 'saveSnapshot' | 'updateSnapshotFeedback'>>;
 type HistoryCapture = {
   sessionId: string;
   pose: Pose;
@@ -21,7 +21,7 @@ export function createLiveSession(
     controller = new AbortController();
   let feedbackBusy = false,
     lastFeedback = -Infinity;
-  let evidence = "",
+  let evidence = '',
     evidenceVersion = 0;
   let evidenceSnapshot: {
     signature: string;
@@ -39,12 +39,12 @@ export function createLiveSession(
       kind,
       `${kind}失败：${error instanceof Error ? error.message : String(error)}`,
     );
-    history?.onPersistenceError([...persistenceErrors.values()].join("；"));
+    history?.onPersistenceError([...persistenceErrors.values()].join('；'));
   }
   function clearPersistenceError(kind: string) {
     if (persistenceErrors.delete(kind))
       history?.onPersistenceError(
-        [...persistenceErrors.values()].join("；") || null,
+        [...persistenceErrors.values()].join('；') || null,
       );
   }
   async function persist<T>(
@@ -69,7 +69,7 @@ export function createLiveSession(
     controller.abort();
     controller = new AbortController();
     feedbackBusy = false;
-    evidence = "";
+    evidence = '';
     evidenceSnapshot = null;
     evidenceVersion++;
     lastFeedback = -Infinity;
@@ -87,16 +87,16 @@ export function createLiveSession(
       signal = controller.signal;
     const trustedEvidence =
       event.feedback_allowed &&
-      event.tracking_quality === "good" &&
+      event.tracking_quality === 'good' &&
       event.deviations.length > 0;
     const signature = trustedEvidence
       ? event.deviations
-          .map((x) => (x.event_id || x.type) + ":" + (x.side || ""))
+          .map((x) => (x.event_id || x.type) + ':' + (x.side || ''))
           .sort()
-          .join("|")
-      : ["partial", "poor"].includes(event.tracking_quality)
-        ? "camera_hint"
-        : "";
+          .join('|')
+      : ['partial', 'poor'].includes(event.tracking_quality)
+        ? 'camera_hint'
+        : '';
     const isNewEvidence = Boolean(signature && signature !== evidence);
     if (signature !== evidence) {
       evidence = signature;
@@ -104,20 +104,20 @@ export function createLiveSession(
       if (!signature) evidenceSnapshot = null;
       show(
         signature
-          ? "正在获取当前画面的提醒…"
-          : "已获得 133 点测量，参考规则尚未校准。",
+          ? '正在获取当前画面的提醒…'
+          : '已获得 133 点测量，参考规则尚未校准。',
       );
     }
     if (isNewEvidence && trustedEvidence && history && transport.saveSnapshot) {
       const snapshotPromise = persist(
-        "错误截图保存",
+        '错误截图保存',
         Promise.resolve()
           .then(() => history.capture())
           .then((blob) => {
-            if (!blob) throw new Error("无法读取当前摄像头画面");
+            if (!blob) throw new Error('无法读取当前摄像头画面');
             return transport.saveSnapshot!(history.sessionId, blob, {
               pose_id: event.pose_id,
-              event_type: event.deviations.map((item) => item.type).join(", "),
+              event_type: event.deviations.map((item) => item.type).join(', '),
               side: event.deviations[0]?.side,
               timestamp_ms: event.timestamp_ms,
             });
@@ -129,38 +129,38 @@ export function createLiveSession(
       const reasons = new Set([
         ...(event.reason_codes || []),
         ...(event.rule_evaluation?.rule_results
-          ?.filter((rule) => rule.mode === "candidate" && rule.reason)
+          ?.filter((rule) => rule.mode === 'candidate' && rule.reason)
           .map((rule) => rule.reason) || []),
       ]);
       const hasElbowEvidence = (event.observations || []).some(
         (item) =>
-          (item.name === "left_elbow_angle_deg" ||
-            item.name === "right_elbow_angle_deg") &&
+          (item.name === 'left_elbow_angle_deg' ||
+            item.name === 'right_elbow_angle_deg') &&
           item.valid,
       );
       show(
-        reasons.has("phase_mismatch_arms_down")
-          ? "画面与举臂阶段不一致，请核对阶段或举臂位置。"
-          : reasons.has("inference_frame_expired")
-            ? "图像分析已过期，正在等待新画面。"
-            : reasons.has("frame_gap_reset")
-              ? "画面分析间隔较长，已重新积累持续证据。"
-              : reasons.has("rules_require_manual_review")
-                ? "当前动作规则尚未审核，仅显示测量。"
-                : reasons.has("source_model_missing_or_mismatch")
-                  ? "当前模型不符合已配置的山式规则。"
-                  : reasons.has("front_view_required")
-                    ? "请正对摄像头练习山式。"
-                    : reasons.has("explicit_supported_phase_required")
-                      ? "请选择实际动作阶段；山式纠错支持双臂举起保持。"
-                      : reasons.has("required_measurement_invalid") ||
+        reasons.has('phase_mismatch_arms_down')
+          ? '画面与举臂阶段不一致，请核对阶段或举臂位置。'
+          : reasons.has('inference_frame_expired')
+            ? '图像分析已过期，正在等待新画面。'
+            : reasons.has('frame_gap_reset')
+              ? '画面分析间隔较长，已重新积累持续证据。'
+              : reasons.has('rules_require_manual_review')
+                ? '当前动作规则尚未审核，仅显示测量。'
+                : reasons.has('source_model_missing_or_mismatch')
+                  ? '当前模型不符合已配置的山式规则。'
+                  : reasons.has('front_view_required')
+                    ? '请正对摄像头练习山式。'
+                    : reasons.has('explicit_supported_phase_required')
+                      ? '请选择实际动作阶段；山式纠错支持双臂举起保持。'
+                      : reasons.has('required_measurement_invalid') ||
                           !hasElbowEvidence
-                        ? "请调整摄像头，让双肩、手肘和手腕完整入镜。"
+                        ? '请调整摄像头，让双肩、手肘和手腕完整入镜。'
                         : (event.rule_evaluation?.pending_count || 0) > 0
-                          ? "肘部角度偏离参考范围，正在确认是否持续。"
-                          : event.analysis_mode === "reviewed_rules_133"
-                            ? "当前未触发持续偏差；这不代表整体动作完全标准。"
-                            : "已获得角度测量，等待持续偏差确认。",
+                          ? '肘部角度偏离参考范围，正在确认是否持续。'
+                          : event.analysis_mode === 'reviewed_rules_133'
+                            ? '当前未触发持续偏差；这不代表整体动作完全标准。'
+                            : '已获得角度测量，等待持续偏差确认。',
       );
       return;
     }
@@ -182,7 +182,7 @@ export function createLiveSession(
               : null;
           if (snapshot)
             await persist(
-              "截图建议关联",
+              '截图建议关联',
               transport.updateSnapshotFeedback(
                 snapshot.snapshot_id,
                 result.text,
@@ -192,7 +192,7 @@ export function createLiveSession(
       }
     } catch (error) {
       if (!closed && generation === token && !signal.aborted)
-        invalidate(error instanceof Error ? error.message : "反馈请求失败。");
+        invalidate(error instanceof Error ? error.message : '反馈请求失败。');
     } finally {
       if (generation === token) feedbackBusy = false;
     }

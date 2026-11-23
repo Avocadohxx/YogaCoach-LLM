@@ -1,31 +1,31 @@
-import { useEffect, useRef, useState } from "react";
-import Source133 from "./components/Source133";
-import VoiceControls from "./components/VoiceControls";
-import { useVoiceCoach } from "./hooks/useVoiceCoach";
-import MemoryPanel from "./components/MemoryPanel";
-import HistoryDetail from "./HistoryDetail";
-import HistoryIndex from "./HistoryIndex";
+import { useEffect, useRef, useState } from 'react';
+import Source133 from './components/Source133';
+import VoiceControls from './components/VoiceControls';
+import { useVoiceCoach } from './hooks/useVoiceCoach';
+import MemoryPanel from './components/MemoryPanel';
+import HistoryDetail from './HistoryDetail';
+import HistoryIndex from './HistoryIndex';
 import {
   api,
   type Pose,
   type Analysis,
   type Phase133,
   type Variant133,
-} from "./services/api";
-import { usePracticeSession } from "./hooks/usePracticeSession";
+} from './services/api';
+import { usePracticeSession } from './hooks/usePracticeSession';
 const names: Record<Pose, string> = {
-  tadasana: "山式",
-  ardhakati_chakrasana: "站立侧弯式",
+  tadasana: '山式',
+  ardhakati_chakrasana: '站立侧弯式',
 };
 export default function App() {
-  const [route, setRoute] = useState(window.location.hash || "#/");
-  const [pose, setPose] = useState<Pose>("tadasana");
-  const [status, setStatus] = useState("准备好后，开始一次练习。");
+  const [route, setRoute] = useState(window.location.hash || '#/');
+  const [pose, setPose] = useState<Pose>('tadasana');
+  const [status, setStatus] = useState('准备好后，开始一次练习。');
   const [feedback, setFeedbackState] = useState({
-    text: "把注意力放回身体，慢慢开始。",
-    latestAdvice: "",
-    previousAdvice: "",
-    sessionId: "",
+    text: '把注意力放回身体，慢慢开始。',
+    latestAdvice: '',
+    previousAdvice: '',
+    sessionId: '',
   });
   function setFeedback(text: string, isAdvice = false) {
     if (isAdvice) voice.speak(text);
@@ -39,8 +39,8 @@ export default function App() {
         (!isAdvice || previous.latestAdvice === text)
       )
         return previous;
-      const latestAdvice = sameSession ? previous.latestAdvice : "";
-      const previousAdvice = sameSession ? previous.previousAdvice : "";
+      const latestAdvice = sameSession ? previous.latestAdvice : '';
+      const previousAdvice = sameSession ? previous.previousAdvice : '';
       return {
         text,
         latestAdvice: isAdvice ? text : latestAdvice,
@@ -54,25 +54,25 @@ export default function App() {
     feedback.text === feedback.latestAdvice
       ? feedback.previousAdvice
       : feedback.latestAdvice;
-  const [health, setHealth] = useState("尚未检查");
-  const [serverSummary, setServerSummary] = useState("");
-  const [persistenceWarning, setPersistenceWarning] = useState("");
+  const [health, setHealth] = useState('尚未检查');
+  const [serverSummary, setServerSummary] = useState('');
+  const [persistenceWarning, setPersistenceWarning] = useState('');
   const captureRef = useRef<(() => Promise<Blob | null>) | null>(null);
-  const [phase, setPhase] = useState<Phase133>("prepare");
-  const [inputSource, setInputSource] = useState<"camera" | "video">("camera");
-  const [movementVariant, setMovementVariant] = useState<Variant133>("unknown"),
-    [raisedArm, setRaisedArm] = useState<"unknown" | "left" | "right">(
-      "unknown",
+  const [phase, setPhase] = useState<Phase133>('prepare');
+  const [inputSource, setInputSource] = useState<'camera' | 'video'>('camera');
+  const [movementVariant, setMovementVariant] = useState<Variant133>('unknown'),
+    [raisedArm, setRaisedArm] = useState<'unknown' | 'left' | 'right'>(
+      'unknown',
     ),
     [bendDirection, setBendDirection] = useState<
-      "unknown" | "image_left" | "image_right"
-    >("unknown");
+      'unknown' | 'image_left' | 'image_right'
+    >('unknown');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [supported, setSupported] = useState<string[]>([]);
   useEffect(() => {
-    const changed = () => setRoute(window.location.hash || "#/");
-    window.addEventListener("hashchange", changed);
-    return () => window.removeEventListener("hashchange", changed);
+    const changed = () => setRoute(window.location.hash || '#/');
+    window.addEventListener('hashchange', changed);
+    return () => window.removeEventListener('hashchange', changed);
   }, []);
   useEffect(() => {
     let valid = true;
@@ -89,7 +89,7 @@ export default function App() {
     };
   }, [pose]);
   function phaseLabel(name: string, value: string) {
-    return name + (supported.includes(value) ? "（可纠错）" : "（仅测量）");
+    return name + (supported.includes(value) ? '（可纠错）' : '（仅测量）');
   }
 
   const {
@@ -109,10 +109,10 @@ export default function App() {
     setServerSummary,
     setAnalysis,
     capture: () => captureRef.current?.() ?? Promise.resolve(null),
-    setPersistenceWarning: (message) => setPersistenceWarning(message || ""),
+    setPersistenceWarning: (message) => setPersistenceWarning(message || ''),
   });
   const voice = useVoiceCoach(active, busy, pose, (command) => {
-    if (command === "finish") {
+    if (command === 'finish') {
       voice.stop();
       void finish();
     } else changePhase(command);
@@ -120,15 +120,15 @@ export default function App() {
   function changePhase(next: Phase133) {
     if (busy || next === phase) return;
     voice.cancel();
-    live.current?.invalidate("阶段已切换，重新积累证据。");
+    live.current?.invalidate('阶段已切换，重新积累证据。');
     setPhase(next);
   }
   const detailMatch = route.match(/^#\/history\/([^/]+)$/);
-  if (route === "#/history")
+  if (route === '#/history')
     return (
       <HistoryIndex
         onBack={() => {
-          window.location.hash = "#/";
+          window.location.hash = '#/';
         }}
         onOpenSession={(sessionId) => {
           window.location.hash = `#/history/${encodeURIComponent(sessionId)}`;
@@ -140,7 +140,7 @@ export default function App() {
       <HistoryDetail
         sessionId={decodeURIComponent(detailMatch[1])}
         onBack={() => {
-          window.location.hash = "#/";
+          window.location.hash = '#/';
         }}
       />
     );
@@ -170,8 +170,8 @@ export default function App() {
             <h2>开始练习</h2>
             <span>
               {active
-                ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`
-                : "01 / 准备"}
+                ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+                : '01 / 准备'}
             </span>
           </div>
           <div className="choices">
@@ -179,17 +179,17 @@ export default function App() {
               <button
                 key={id}
                 disabled={active || busy}
-                className={pose === id ? "selected" : ""}
+                className={pose === id ? 'selected' : ''}
                 onClick={() => {
                   setPose(id);
-                  setPhase("prepare");
+                  setPhase('prepare');
                 }}
               >
                 {names[id]}
                 <small>
-                  {id === "tadasana"
-                    ? "举臂保持 · 持续肘部偏差提醒"
-                    : "侧弯 · 检测项待团队确认"}
+                  {id === 'tadasana'
+                    ? '举臂保持 · 持续肘部偏差提醒'
+                    : '侧弯 · 检测项待团队确认'}
                 </small>
               </button>
             ))}
@@ -198,12 +198,12 @@ export default function App() {
           <div className="choices">
             {!active && (
               <label>
-                图像来源{" "}
+                图像来源{' '}
                 <select
                   disabled={active || busy}
                   value={inputSource}
                   onChange={(e) =>
-                    setInputSource(e.target.value as "camera" | "video")
+                    setInputSource(e.target.value as 'camera' | 'video')
                   }
                 >
                   <option value="camera">摄像头</option>
@@ -212,7 +212,7 @@ export default function App() {
               </label>
             )}
             <label>
-              练习阶段{" "}
+              练习阶段{' '}
               <select
                 disabled={busy}
                 value={phase}
@@ -222,22 +222,22 @@ export default function App() {
               >
                 <option value="prepare">准备中（不纠错）</option>
                 <option value="arms_up_hold">
-                  {phaseLabel("双臂举起并保持", "arms_up_hold")}
+                  {phaseLabel('双臂举起并保持', 'arms_up_hold')}
                 </option>
                 <option value="arms_down_hold">双臂自然下垂（仅测量）</option>
-                {pose === "ardhakati_chakrasana" && (
+                {pose === 'ardhakati_chakrasana' && (
                   <option value="side_bend_hold">
-                    {phaseLabel("侧弯保持", "side_bend_hold")}
+                    {phaseLabel('侧弯保持', 'side_bend_hold')}
                   </option>
                 )}
                 <option value="transition">动作切换中（不纠错）</option>
               </select>
             </label>
           </div>
-          {pose === "ardhakati_chakrasana" && (
+          {pose === 'ardhakati_chakrasana' && (
             <div className="choices">
               <label>
-                举臂方式{" "}
+                举臂方式{' '}
                 <select
                   value={movementVariant}
                   onChange={(e) =>
@@ -249,14 +249,14 @@ export default function App() {
                   <option value="single_arm_overhead">单臂举起</option>
                 </select>
               </label>
-              {movementVariant === "single_arm_overhead" && (
+              {movementVariant === 'single_arm_overhead' && (
                 <label>
-                  举起的手臂{" "}
+                  举起的手臂{' '}
                   <select
                     value={raisedArm}
                     onChange={(e) =>
                       setRaisedArm(
-                        e.target.value as "unknown" | "left" | "right",
+                        e.target.value as 'unknown' | 'left' | 'right',
                       )
                     }
                   >
@@ -267,13 +267,13 @@ export default function App() {
                 </label>
               )}
               <label>
-                计划倾斜方向（画面）{" "}
+                计划倾斜方向（画面）{' '}
                 <select
                   value={bendDirection}
                   onChange={(e) =>
                     setBendDirection(
                       e.target.value as
-                        "unknown" | "image_left" | "image_right",
+                        'unknown' | 'image_left' | 'image_right',
                     )
                   }
                 >
@@ -303,7 +303,7 @@ export default function App() {
               }}
               onLost={() => {
                 setAnalysis(null);
-                live.current?.invalidate("画面已变化，等待新的 133 点结果。");
+                live.current?.invalidate('画面已变化，等待新的 133 点结果。');
               }}
             />
           ) : (
@@ -333,7 +333,7 @@ export default function App() {
                 : start
             }
           >
-            {active ? "结束并查看记录" : "开始练习"} <span>→</span>
+            {active ? '结束并查看记录' : '开始练习'} <span>→</span>
           </button>
           <p className="note">
             示范视频尚未接入，等待 A 提供授权资源。侧弯规则未审核时仅显示测量。
@@ -344,7 +344,7 @@ export default function App() {
             <h2>实时建议</h2>
             <div className="feedback-previous">
               <h3>上一条建议</h3>
-              <p>{previousAdvice || "暂无上一条建议。"}</p>
+              <p>{previousAdvice || '暂无上一条建议。'}</p>
             </div>
             <div className="feedback-current">
               <h3>本次提醒</h3>
@@ -355,18 +355,18 @@ export default function App() {
             {analysis && (
               <p>
                 {(
-                  ["left_elbow_angle_deg", "right_elbow_angle_deg"] as const
+                  ['left_elbow_angle_deg', 'right_elbow_angle_deg'] as const
                 ).map((key, i) => {
                   const item = analysis.observations?.find(
                     (o) => o.name === key,
                   );
                   return (
                     <span key={key}>
-                      {i ? " · " : ""}
-                      {i ? "右肘" : "左肘"}：
-                      {item?.valid && typeof item.value === "number"
-                        ? item.value.toFixed(1) + "°"
-                        : "暂不可测"}
+                      {i ? ' · ' : ''}
+                      {i ? '右肘' : '左肘'}：
+                      {item?.valid && typeof item.value === 'number'
+                        ? item.value.toFixed(1) + '°'
+                        : '暂不可测'}
                     </span>
                   );
                 })}
@@ -382,14 +382,14 @@ export default function App() {
               clearSummary();
               setAnalysis(null);
               setFeedbackState({
-                text: "服务器记录已清除。",
-                latestAdvice: "",
-                previousAdvice: "",
+                text: '服务器记录已清除。',
+                latestAdvice: '',
+                previousAdvice: '',
                 sessionId: run.current.id,
               });
             }}
             active={active || busy}
-            refreshKey={(summary?.id || "") + serverSummary}
+            refreshKey={(summary?.id || '') + serverSummary}
           />
           <section className="card">
             <h2>连接状态</h2>
@@ -397,17 +397,17 @@ export default function App() {
             <p role="status">{health}</p>
             <button
               onClick={() => {
-                setHealth("正在检查…");
+                setHealth('正在检查…');
                 void api
                   .health()
                   .then(async (r) => {
-                    if (r.mode === "mock") {
-                      setHealth("联调桩在线（非真实推理）");
+                    if (r.mode === 'mock') {
+                      setHealth('联调桩在线（非真实推理）');
                       return;
                     }
                     const state = await api.ready();
                     setHealth(
-                      `${state.model.name}：${state.model.available ? "模型可用" : "模型未就绪，请检查 LFS 下载"}；LLM ${state.llm.configured ? "已配置" : "使用模板"}。`,
+                      `${state.model.name}：${state.model.available ? '模型可用' : '模型未就绪，请检查 LFS 下载'}；LLM ${state.llm.configured ? '已配置' : '使用模板'}。`,
                     );
                   })
                   .catch((e) => setHealth(e.message));

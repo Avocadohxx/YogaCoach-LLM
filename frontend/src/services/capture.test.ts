@@ -1,7 +1,7 @@
-import { afterEach, expect, it, vi } from "vitest";
-import { createCaptureLoop, createFrameClock, releaseVideo } from "./capture";
+import { afterEach, expect, it, vi } from 'vitest';
+import { createCaptureLoop, createFrameClock, releaseVideo } from './capture';
 afterEach(() => vi.useRealTimers());
-it("重复帧和倒退不会累计时间，重置后接受新的媒体时间", () => {
+it('重复帧和倒退不会累计时间，重置后接受新的媒体时间', () => {
   const clock = createFrameClock();
   expect(clock.sample(2)).toBe(2000);
   expect(clock.sample(2)).toBeNull();
@@ -9,7 +9,7 @@ it("重复帧和倒退不会累计时间，重置后接受新的媒体时间", (
   clock.reset();
   expect(clock.sample(1)).toBe(1000);
 });
-it("冻结画面不重复提交，超过750ms撤回证据", async () => {
+it('冻结画面不重复提交，超过750ms撤回证据', async () => {
   vi.useFakeTimers();
   const capture = vi.fn().mockResolvedValue(undefined),
     lost = vi.fn();
@@ -35,10 +35,10 @@ it("冻结画面不重复提交，超过750ms撤回证据", async () => {
   expect(lost).toHaveBeenCalledOnce();
   loop.close();
 });
-it("失败后有上限重试，关闭后迟到任务不再调度", async () => {
+it('失败后有上限重试，关闭后迟到任务不再调度', async () => {
   vi.useFakeTimers();
   let time = 0;
-  const capture = vi.fn().mockRejectedValue(new Error("temporary"));
+  const capture = vi.fn().mockRejectedValue(new Error('temporary'));
   const loop = createCaptureLoop({
     video: () =>
       ({
@@ -62,7 +62,7 @@ it("失败后有上限重试，关闭后迟到任务不再调度", async () => {
   await vi.advanceTimersByTimeAsync(10000);
   expect(capture).toHaveBeenCalledTimes(4);
 });
-it("释放旧摄像头并清除srcObject，允许切换视频文件", () => {
+it('释放旧摄像头并清除srcObject，允许切换视频文件', () => {
   const stop = vi.fn(),
     video = {
       pause: vi.fn(),
@@ -73,9 +73,9 @@ it("释放旧摄像头并清除srcObject，允许切换视频文件", () => {
   releaseVideo(video);
   expect(stop).toHaveBeenCalledOnce();
   expect(video.srcObject).toBeNull();
-  expect(video.removeAttribute).toHaveBeenCalledWith("src");
+  expect(video.removeAttribute).toHaveBeenCalledWith('src');
 });
-it("媒体时钟继续但没有新呈现帧时不重复分析", async () => {
+it('媒体时钟继续但没有新呈现帧时不重复分析', async () => {
   vi.useFakeTimers();
   let time = 0;
   const capture = vi.fn().mockResolvedValue(undefined);
@@ -102,7 +102,7 @@ it("媒体时钟继续但没有新呈现帧时不重复分析", async () => {
   expect(capture).toHaveBeenCalledOnce();
   loop.close();
 });
-it("由新呈现帧回调驱动采样，关闭时取消回调", async () => {
+it('由新呈现帧回调驱动采样，关闭时取消回调', async () => {
   vi.useFakeTimers();
   let callback!: VideoFrameRequestCallback;
   const capture = vi.fn().mockResolvedValue(undefined),

@@ -15,8 +15,8 @@ export default function VoiceControls(props: Props) {
       </p>
       <button disabled={props.disabled} onClick={props.start}>
         开启语音
-      </button>{" "}
-      <button onClick={props.stop}>关闭语音</button>{" "}
+      </button>{' '}
+      <button onClick={props.stop}>关闭语音</button>{' '}
       <button onClick={props.cancel}>立即停止播报</button>
       <p role="status">{props.status}</p>
       {props.heard && <p>听到：{props.heard}</p>}
