@@ -100,7 +100,11 @@ export type ProgressSummary = {
   practice_count: number;
   measurement_count: number;
   summary: {
-    trend: "improving" | "maintaining" | "needs_attention" | "insufficient_data";
+    trend:
+      | "improving"
+      | "maintaining"
+      | "needs_attention"
+      | "insufficient_data";
     encouragement: string;
     summary: string;
     suggestions: string[];
