@@ -349,7 +349,6 @@ export default function App() {
             {active ? "结束并查看记录" : "开始练习"} <span>→</span>
           </button>
           <p className="note">
-
             {pose === "ardhakati_chakrasana"
               ? "侧弯纠错用于课程演示。请选择举臂方式；侧弯保持时需指定画面倾斜方向，单臂版还需指定举起侧。先选准备，动作稳定后再切到保持；回正或换侧时切到动作切换。"
               : "示范视频尚未接入，等待 A 提供授权资源。"}
