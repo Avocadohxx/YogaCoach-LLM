@@ -70,6 +70,7 @@ def compose(state: State):
         if selected:
             try:
                 evidence = _correction_evidence(selected, state['event'], state['reference'])
+                evidence['feedback_length'] = preference or 'normal'
                 suggestion = llm.generate_correction(evidence)
                 _validate_suggestion(suggestion, selected)
             except Exception:
