@@ -10,6 +10,7 @@ D 只存“观察到的事实”和“用户确认的偏好”，不编造姿态
 from __future__ import annotations
 
 import json
+from math import isfinite
 import re
 import uuid
 from collections import Counter, defaultdict
@@ -450,15 +451,27 @@ def get_progress_snapshot(user_id: str = "default", pose_id: str | None = None,
                         or not isinstance(bounds, list) or len(bounds) != 2):
                     continue
                 low, high = bounds
-                if not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in bounds):
+                if (not isfinite(observed) or all(x is None for x in bounds)
+                        or not all(x is None or (isinstance(x, (int, float))
+                                  and not isinstance(x, bool) and isfinite(x)) for x in bounds)):
                     continue
+                compared = payload.get('comparison_value', observed)
+                if compared is None:
+                    compared = observed
+                if not isinstance(compared, (int, float)) or isinstance(compared, bool) or not isfinite(compared):
+                    continue
+                distance = max(0, float(low) - compared if low is not None else 0,
+                               compared - float(high) if high is not None else 0)
                 numeric_events.append({
                     "event_type": row["event_type"], "target": payload.get("target") or row["side"],
                     "rule_id": payload["rule_id"], "rule_version": payload.get("rule_version"),
                     "feature_name": payload["feature_name"], "observed_value": round(float(observed), 2),
                     "unit": "deg" if str(payload["feature_name"]).endswith("_deg") else payload.get("unit"),
                     "reference_range": [low, high],
-                    "deviation_from_range": round(max(float(low) - float(observed), 0, float(observed) - float(high)), 2),
+                    "comparison_value": round(float(compared), 2),
+                    "transform": payload.get('transform', 'identity'),
+                    "bend_direction": payload.get('bend_direction'),
+                    "deviation_from_range": round(distance, 2),
                     "duration_ms": row["duration_ms"],
                     "lifecycle_status": payload.get("lifecycle_status", "confirmed"),
                 })

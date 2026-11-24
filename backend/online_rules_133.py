@@ -110,12 +110,14 @@ class OnlineRules:
                     continue
                 if rule['feature_name'] not in valid_observations:
                     rule.update(status='not_assessable', reason='required_measurement_invalid')
-            candidates = [r for r in comparison['rule_results'] if r['mode'] == 'candidate' and r['status'] != 'disabled']
+            # Preserve the comparator's phase/variant/raised-arm eligibility.
+            # Inapplicable rules must not block another variant's corrections.
+            eligible_ids = set(comparison['assessment_coverage']['eligible_rule_ids'])
+            candidates = [r for r in comparison['rule_results'] if r['rule_id'] in eligible_ids]
             if candidates and all(r['status'] in {'deviation', 'gray_zone', 'within_reference'} for r in candidates):
                 # Quality is scoped to the enabled corrections: unrelated missing
                 # ankle/stance measurements do not invalidate visible elbow data.
                 event.tracking_quality = 'good'
-            eligible_ids = {r['rule_id'] for r in candidates}
             assessed_ids = {r['rule_id'] for r in candidates if r['status'] in {'deviation', 'gray_zone', 'within_reference'}}
             comparison['assessment_coverage'].update(
                 eligible_rule_ids=sorted(eligible_ids), assessed_rule_ids=sorted(assessed_ids),
@@ -130,6 +132,9 @@ class OnlineRules:
                 review_record=rules['review_record'], phase=frame.phase, phase_source='user_declared',
                 phase_reviewed=False, execution_mode='reviewed_rules' if rules['reviewed'] else 'exploratory_preview',
                 camera_view_verified=False, stream_id=frame.stream_id,
+                movement_variant=frame.movement_variant, variant_source='user_declared', variant_reviewed=False,
+                raised_arm_side=frame.raised_arm_side, raised_arm_source='user_declared', raised_arm_reviewed=False,
+                bend_direction=frame.bend_direction, direction_source='user_declared', direction_reviewed=False,
                 source_model=source_model, assessment_coverage=comparison['assessment_coverage'],
                 rule_results=comparison['rule_results'], new_events=tracked['new_events'],
                 pending_count=len(tracked['pending_events']), scope='enabled_phase_rules_only_not_full_posture')
@@ -139,7 +144,8 @@ class OnlineRules:
                 return event
             assessed_candidates = [r for r in comparison['rule_results'] if r['mode'] == 'candidate' and r['rule_id'] in eligible_ids]
             if not assessed_candidates or any(r['status'] == 'not_assessable' for r in assessed_candidates):
-                event.reason_codes += sorted({r['reason'] for r in assessed_candidates if r['reason']})
+                event.reason_codes += sorted({r['reason'] for r in comparison['rule_results']
+                    if r['mode']=='candidate' and r['status']=='not_assessable' and r['reason']}) or ['explicit_supported_phase_required']
                 return event
             if comparison['reason_codes'] or not comparison['assessment_coverage']['complete_for_enabled_phase_rules']:
                 event.reason_codes += comparison['reason_codes'] or sorted({r['reason'] for r in comparison['rule_results'] if r['status']=='not_assessable' and r['reason']}) or ['explicit_supported_phase_required']
@@ -170,7 +176,10 @@ class OnlineRules:
                     dev = next((d for d in event.deviations if d.event_id == item['event_id']), None)
                     if dev:
                         memory.save_pose_event(frame.session_id, {**dev.model_dump(), 'timestamp_ms': frame.timestamp_ms,
-                            'start_timestamp_ms': item['start_timestamp_ms'], 'phase': frame.phase, 'source_model': source_model, 'server_generated': True})
+                            'comparison_value': item.get('comparison_value'), 'transform': item.get('transform'),
+                            'start_timestamp_ms': item['start_timestamp_ms'], 'phase': frame.phase,
+                            'movement_variant': frame.movement_variant, 'raised_arm_side': frame.raised_arm_side,
+                            'bend_direction': frame.bend_direction, 'source_model': source_model, 'server_generated': True})
             return event
 
 

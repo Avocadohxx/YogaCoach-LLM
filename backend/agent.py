@@ -151,6 +151,9 @@ def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict)
         for item in (event.rule_evaluation or {}).get('rule_results', [])
         if isinstance(item, dict) and isinstance(item.get('rule_id'), str)
     }
+    selected_evaluation = evaluated_rules.get(selected['rule_id'], {})
+    movement_context = {key: (event.rule_evaluation or {}).get(key)
+                        for key in ('movement_variant', 'raised_arm_side', 'bend_direction')}
     # Include only finite, server-validated measurements. Monitor-only values are
     # explicitly marked as context so they cannot become independent corrections.
     contextual_measurements = []
@@ -183,6 +186,9 @@ def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict)
             'event_type': selected['type'],
             'feature_name': selected['feature_name'],
             'observed_value': value,
+            'comparison_value': selected_evaluation.get('comparison_value'),
+            'transform': rule.get('transform'),
+            **movement_context,
             'unit': unit,
             'reference_range': [lo, hi],
             'duration_ms': selected['duration_ms'],
@@ -205,6 +211,7 @@ def _correction_evidence(selected: dict, event: AnalysisResult, reference: dict)
             'phase_reviewed': (event.rule_evaluation or {}).get('phase_reviewed'),
             'phase_source': (event.rule_evaluation or {}).get('phase_source'),
             'camera_view_verified': (event.rule_evaluation or {}).get('camera_view_verified'),
+            **movement_context,
             'scope': (event.rule_evaluation or {}).get('scope'),
         },
         'context_measurements': contextual_measurements,

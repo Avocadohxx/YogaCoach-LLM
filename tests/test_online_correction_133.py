@@ -122,7 +122,9 @@ def test_low_quality_interrupts_without_reporting_recovery(practice):
     assert not sequence(practice,start=2100,end=3300).feedback_allowed
 
 
-def test_unreviewed_side_bend_stays_guarded(practice):
+def test_unreviewed_side_bend_stays_guarded(practice, monkeypatch):
+    draft = Path(__file__).resolve().parents[1] / 'knowledge/ardhakati_chakrasana_rules.json'
+    monkeypatch.setenv('POSE133_ARDHAKATI_RULES_PATH', str(draft))
     sid, snapshots, service=practice
     side=uuid4().hex;memory.create_session(side,'ardhakati_chakrasana')
     for t in range(0,1801,300):

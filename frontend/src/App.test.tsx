@@ -36,11 +36,49 @@ vi.mock("./services/api", () => ({
 }));
 vi.mock("./components/MemoryPanel", () => ({ default: () => null }));
 vi.mock("./components/Source133", () => ({
-  default: ({ initialSource }: { initialSource: string }) => (
-    <div data-testid="source">{initialSource}</div>
+  default: ({
+    initialSource,
+    movementVariant,
+    raisedArm,
+  }: {
+    initialSource: string;
+    movementVariant: string;
+    raisedArm: string;
+  }) => (
+    <div
+      data-testid="source"
+      data-variant={movementVariant}
+      data-raised-arm={raisedArm}
+    >
+      {initialSource}
+    </div>
   ),
 }));
 import App from "./App";
+
+it("侧弯默认双臂，切换回双臂清空单侧参数以避免422", async () => {
+  const screen = render(<App />);
+  fireEvent.click(screen.getByRole("button", { name: /站立侧弯式/ }));
+  expect((screen.getByLabelText("举臂方式") as HTMLSelectElement).value).toBe(
+    "both_arms_overhead",
+  );
+  fireEvent.click(screen.getByRole("button", { name: /开始练习/ }));
+  await waitFor(() => expect(screen.getByTestId("source")).toBeTruthy());
+  fireEvent.change(screen.getByLabelText("举臂方式"), {
+    target: { value: "single_arm_overhead" },
+  });
+  fireEvent.change(screen.getByLabelText("举起的手臂"), {
+    target: { value: "left" },
+  });
+  expect(screen.getByTestId("source").dataset.raisedArm).toBe("left");
+  fireEvent.change(screen.getByLabelText("举臂方式"), {
+    target: { value: "both_arms_overhead" },
+  });
+  expect(screen.getByTestId("source").dataset.raisedArm).toBe("unknown");
+  expect(screen.getByTestId("source").dataset.variant).toBe(
+    "both_arms_overhead",
+  );
+});
 
 it("语音切换阶段，拒绝否定口令并结束练习", async () => {
   const screen = render(<App />);
