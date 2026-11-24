@@ -2,6 +2,34 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { api, parseFeedback } from "./api";
 afterEach(() => vi.unstubAllGlobals());
 describe("边界处理", () => {
+  it("就绪接口误返回前端首页时提示代理配置", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValue(
+          new Response("<!doctype html><html></html>", {
+            headers: { "Content-Type": "text/html" },
+          }),
+        ),
+    );
+    await expect(api.ready()).rejects.toThrow("/api/ready 返回了网页而非 JSON");
+  });
+  it("无效 JSON 显示接口路径", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValue(
+          new Response("broken", {
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
+    );
+    await expect(api.ready()).rejects.toThrow(
+      "/api/ready 返回的内容不是有效 JSON",
+    );
+  });
   it("拒绝不合法的反馈，而不是直接展示", () => {
     expect(() =>
       parseFeedback({

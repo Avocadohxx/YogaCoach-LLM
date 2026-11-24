@@ -20,9 +20,9 @@ const names: Record<Pose, string> = {
 export default function App() {
   const [route, setRoute] = useState(window.location.hash || "#/");
   const [pose, setPose] = useState<Pose>("tadasana");
-  const [status, setStatus] = useState("准备好后，开始一次练习。");
+  const [status, setStatus] = useState("选择动作和图像来源后开始练习。");
   const [feedback, setFeedbackState] = useState({
-    text: "把注意力放回身体，慢慢开始。",
+    text: "开始练习后，这里显示当前建议。",
     latestAdvice: "",
     previousAdvice: "",
     sessionId: "",
@@ -148,20 +148,14 @@ export default function App() {
     <main>
       <header>
         <a className="brand" href="#/">
-          ◌ YogaCoach<span>练习空间</span>
+          YogaCoach<span>/ 练习</span>
         </a>
         <a className="badge history-nav" href="#/history">
           训练历史
         </a>
       </header>
       <section className="intro">
-        <span className="eyebrow">留一点时间，照顾自己</span>
-        <h1>
-          看见动作，
-          <br />
-          找到自己的节奏。
-        </h1>
-        <p>选择一种练习，观察身体的位置。每次只关注一个小变化。</p>
+        <h1>选择动作与阶段，使用摄像头或本地视频开始练习。</h1>
       </section>
       <VoiceControls disabled={!active || busy} {...voice} />
       <div className="layout">
@@ -310,8 +304,10 @@ export default function App() {
             />
           ) : (
             <div className="placeholder">
-              <span className="pose-symbol">♧</span>
-              <h3>给身体留出完整的画面</h3>
+              <span className="pose-symbol" aria-hidden="true">
+                ▣
+              </span>
+              <h3>等待图像来源</h3>
               <p>正面拍摄，保持全身入镜，并摆正摄像头。</p>
             </div>
           )}
@@ -325,7 +321,7 @@ export default function App() {
           )}
           <button
             disabled={busy}
-            className="primary"
+            className={active ? "primary primary-exit" : "primary"}
             onClick={
               active
                 ? () => {
@@ -338,7 +334,7 @@ export default function App() {
             {active ? "结束并查看记录" : "开始练习"} <span>→</span>
           </button>
           <p className="note">
-            示范视频尚未接入，等待 A 提供授权资源。侧弯规则未审核时仅显示测量。
+            暂不提供示范视频。侧弯目前仅显示测量，不提供纠错建议。
           </p>
         </section>
         <aside>
