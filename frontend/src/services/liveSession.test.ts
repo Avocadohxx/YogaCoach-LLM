@@ -36,6 +36,25 @@ function setup() {
   };
 }
 afterEach(() => vi.useRealTimers());
+it.each([
+  ["movement_variant_required", "请选择侧弯的举臂方式（单臂或双臂）。"],
+  ["raised_arm_side_required", "请选择当前举起的是身体左臂还是右臂。"],
+  [
+    "independent_intended_direction_required",
+    "请选择计划倾斜的画面方向，再进行侧弯保持纠错。",
+  ],
+])("侧弯缺少上下文%s时显示操作提示而不是等待LLM", async (reason, text) => {
+  const t = setup();
+  await t.session.observe({
+    ...event,
+    pose_id: "ardhakati_chakrasana",
+    feedback_allowed: false,
+    deviations: [],
+    reason_codes: [reason],
+  });
+  expect(t.transport.feedback).not.toHaveBeenCalled();
+  expect(t.show).toHaveBeenLastCalledWith(text);
+});
 describe("133 点后端结果接入", () => {
   it("新画面清晰时丢弃旧镜头提示", async () => {
     const t = setup(),
@@ -117,8 +136,8 @@ describe("持续纠错事件", () => {
 
 describe("测量不可评估时的提示", () => {
   it.each([
-    ["source_model_missing_or_mismatch", "当前模型不符合已配置的山式规则。"],
-    ["front_view_required", "请正对摄像头练习山式。"],
+    ["source_model_missing_or_mismatch", "当前模型不符合已配置的动作规则。"],
+    ["front_view_required", "请正对摄像头练习。"],
     [
       "required_measurement_invalid",
       "请调整摄像头，让双肩、手肘和手腕完整入镜。",

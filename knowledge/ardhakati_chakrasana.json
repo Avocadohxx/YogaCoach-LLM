@@ -1,10 +1,32 @@
 {
   "pose_id": "ardhakati_chakrasana",
   "name_zh": "站立侧弯式",
-  "reviewed": false,
-  "allowed_camera_views": ["front"],
-  "allowed_targets": [],
-  "feedback_rules": {},
+  "reviewed": true,
+  "allowed_camera_views": [
+    "front"
+  ],
+  "allowed_targets": [
+    "left_elbow",
+    "right_elbow",
+    "left_upper_arm",
+    "right_upper_arm",
+    "torso"
+  ],
+  "feedback_rules": {
+    "elbow_bend": "只针对当前要求举起臂的持续肘部弯曲，在舒适范围内轻轻伸展，不强行锁死。",
+    "upper_arm_alignment": "仅双臂版，核对目标侧上臂与躯干的二维相对位置，不评价单臂变体。",
+    "bend_direction_mismatch": "画面侧倾方向与所选方向不符，先回正再核对画面方向，不鼓励加深。"
+  },
   "safety_note": "出现不适请暂停练习",
-  "todo": "待 B 确认检测项后由 C 补充 feedback_rules；内容需有懂瑜伽的人审核后再把 reviewed 改为 true"
+  "review_record": {
+    "authorization": "User requested enabling standing-side-bend correction on 2026-11-24",
+    "review_type": "user_authorized_course_demo_enablement",
+    "professional_review_completed": false,
+    "scope": "Explicit hold phase and movement variant; 2D rule evidence only",
+    "limitations": [
+      "Single-arm reference clips do not validate both-arm thresholds",
+      "No clinical or professional teaching validation; existing engineering thresholds retained"
+    ]
+  },
+  "activation_scope": "user_authorized_course_demo_not_professional_validation"
 }

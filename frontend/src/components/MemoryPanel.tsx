@@ -130,7 +130,11 @@ export default function MemoryPanel({
       ))}
       <hr />
       {!confirm ? (
-        <button disabled={active} onClick={() => setConfirm(true)}>
+        <button
+          className="danger"
+          disabled={active}
+          onClick={() => setConfirm(true)}
+        >
           删除服务器记录和偏好
         </button>
       ) : (

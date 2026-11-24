@@ -138,6 +138,17 @@ export function createLiveSession(
             item.name === "right_elbow_angle_deg") &&
           item.valid,
       );
+      const contextHint = reasons.has("movement_variant_required")
+        ? "请选择侧弯的举臂方式（单臂或双臂）。"
+        : reasons.has("raised_arm_side_required")
+          ? "请选择当前举起的是身体左臂还是右臂。"
+          : reasons.has("independent_intended_direction_required")
+            ? "请选择计划倾斜的画面方向，再进行侧弯保持纠错。"
+            : null;
+      if (contextHint) {
+        show(contextHint);
+        return;
+      }
       show(
         reasons.has("phase_mismatch_arms_down")
           ? "画面与举臂阶段不一致，请核对阶段或举臂位置。"
@@ -148,11 +159,13 @@ export function createLiveSession(
               : reasons.has("rules_require_manual_review")
                 ? "当前动作规则尚未审核，仅显示测量。"
                 : reasons.has("source_model_missing_or_mismatch")
-                  ? "当前模型不符合已配置的山式规则。"
+                  ? "当前模型不符合已配置的动作规则。"
                   : reasons.has("front_view_required")
-                    ? "请正对摄像头练习山式。"
+                    ? "请正对摄像头练习。"
                     : reasons.has("explicit_supported_phase_required")
-                      ? "请选择实际动作阶段；山式纠错支持双臂举起保持。"
+                      ? event.pose_id === "ardhakati_chakrasana"
+                        ? "请选择举臂保持或侧弯保持阶段，再查看持续纠错。"
+                        : "请选择实际动作阶段；山式纠错支持双臂举起保持。"
                       : reasons.has("required_measurement_invalid") ||
                           !hasElbowEvidence
                         ? "请调整摄像头，让双肩、手肘和手腕完整入镜。"

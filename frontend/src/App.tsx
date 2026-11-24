@@ -20,9 +20,9 @@ const names: Record<Pose, string> = {
 export default function App() {
   const [route, setRoute] = useState(window.location.hash || "#/");
   const [pose, setPose] = useState<Pose>("tadasana");
-  const [status, setStatus] = useState("准备好后，开始一次练习。");
+  const [status, setStatus] = useState("选择动作和图像来源后开始练习。");
   const [feedback, setFeedbackState] = useState({
-    text: "把注意力放回身体，慢慢开始。",
+    text: "开始练习后，这里显示当前建议。",
     latestAdvice: "",
     previousAdvice: "",
     sessionId: "",
@@ -148,20 +148,14 @@ export default function App() {
     <main>
       <header>
         <a className="brand" href="#/">
-          ◌ YogaCoach<span>练习空间</span>
+          YogaCoach<span>/ 练习</span>
         </a>
         <a className="badge history-nav" href="#/history">
           训练历史
         </a>
       </header>
       <section className="intro">
-        <span className="eyebrow">留一点时间，照顾自己</span>
-        <h1>
-          看见动作，
-          <br />
-          找到自己的节奏。
-        </h1>
-        <p>选择一种练习，观察身体的位置。每次只关注一个小变化。</p>
+        <h1>选择动作与阶段，使用摄像头或本地视频开始练习。</h1>
       </section>
       <VoiceControls disabled={!active || busy} {...voice} />
       <div className="layout">
@@ -183,13 +177,20 @@ export default function App() {
                 onClick={() => {
                   setPose(id);
                   setPhase("prepare");
+                  setMovementVariant(
+                    id === "ardhakati_chakrasana"
+                      ? "both_arms_overhead"
+                      : "unknown",
+                  );
+                  setRaisedArm("unknown");
+                  setBendDirection("unknown");
                 }}
               >
                 {names[id]}
                 <small>
                   {id === "tadasana"
                     ? "举臂保持 · 持续肘部偏差提醒"
-                    : "侧弯 · 检测项待团队确认"}
+                    : "侧弯保持 · 持续偏差纠错"}
                 </small>
               </button>
             ))}
@@ -222,7 +223,13 @@ export default function App() {
               >
                 <option value="prepare">准备中（不纠错）</option>
                 <option value="arms_up_hold">
-                  {phaseLabel("双臂举起并保持", "arms_up_hold")}
+                  {phaseLabel(
+                    pose === "ardhakati_chakrasana" &&
+                      movementVariant === "single_arm_overhead"
+                      ? "单臂举起并保持"
+                      : "双臂举起并保持",
+                    "arms_up_hold",
+                  )}
                 </option>
                 <option value="arms_down_hold">双臂自然下垂（仅测量）</option>
                 {pose === "ardhakati_chakrasana" && (
@@ -240,9 +247,11 @@ export default function App() {
                 举臂方式{" "}
                 <select
                   value={movementVariant}
-                  onChange={(e) =>
-                    setMovementVariant(e.target.value as Variant133)
-                  }
+                  onChange={(e) => {
+                    const next = e.target.value as Variant133;
+                    setMovementVariant(next);
+                    if (next !== "single_arm_overhead") setRaisedArm("unknown");
+                  }}
                 >
                   <option value="unknown">请选择</option>
                   <option value="both_arms_overhead">双臂举起</option>
@@ -310,8 +319,10 @@ export default function App() {
             />
           ) : (
             <div className="placeholder">
-              <span className="pose-symbol">♧</span>
-              <h3>给身体留出完整的画面</h3>
+              <span className="pose-symbol" aria-hidden="true">
+                ▣
+              </span>
+              <h3>等待图像来源</h3>
               <p>正面拍摄，保持全身入镜，并摆正摄像头。</p>
             </div>
           )}
@@ -325,7 +336,7 @@ export default function App() {
           )}
           <button
             disabled={busy}
-            className="primary"
+            className={active ? "primary primary-exit" : "primary"}
             onClick={
               active
                 ? () => {
@@ -338,7 +349,9 @@ export default function App() {
             {active ? "结束并查看记录" : "开始练习"} <span>→</span>
           </button>
           <p className="note">
-            示范视频尚未接入，等待 A 提供授权资源。侧弯规则未审核时仅显示测量。
+            {pose === "ardhakati_chakrasana"
+              ? "侧弯纠错用于课程演示。请选择举臂方式；侧弯保持时需指定画面倾斜方向，单臂版还需指定举起侧。先选准备，动作稳定后再切到保持；回正或换侧时切到动作切换。"
+              : "示范视频尚未接入，等待 A 提供授权资源。"}
           </p>
         </section>
         <aside>
