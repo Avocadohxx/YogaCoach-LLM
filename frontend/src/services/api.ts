@@ -154,7 +154,16 @@ async function request<T>(
       detail || `接口 ${path} 返回 ${response.status}，请检查后端是否实现。`,
     );
   }
-  return response.json();
+  if (response.headers?.get("content-type")?.includes("text/html")) {
+    throw new Error(
+      `接口 ${path} 返回了网页而非 JSON。请在 frontend 目录重启 npm run dev，并确认 /api 代理指向后端 8000。`,
+    );
+  }
+  try {
+    return await response.json();
+  } catch {
+    throw new Error(`接口 ${path} 返回的内容不是有效 JSON，请检查后端响应。`);
+  }
 }
 export const api = {
   ready: () =>
