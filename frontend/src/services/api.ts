@@ -24,6 +24,7 @@ export type Analysis = {
     valid: boolean;
   }[];
   analysis_mode?: string;
+  assessment_status?: string;
   reason_codes?: string[];
   rule_evaluation?: {
     pending_count: number;
@@ -46,7 +47,7 @@ export type Analysis = {
 };
 export type Feedback = {
   should_speak: boolean;
-  feedback_type: "correction" | "camera_hint" | "none";
+  feedback_type: "correction" | "camera_hint" | "encouragement" | "none";
   text: string;
   target?: string;
   grounded_event_type?: string;
@@ -263,7 +264,7 @@ export function parseFeedback(value: Feedback): Feedback {
   if (
     typeof value.should_speak !== "boolean" ||
     typeof value.text !== "string" ||
-    !["correction", "camera_hint", "none"].includes(value.feedback_type)
+    !["correction", "camera_hint", "encouragement", "none"].includes(value.feedback_type)
   )
     throw new Error("反馈格式不符合约定。");
   return value;

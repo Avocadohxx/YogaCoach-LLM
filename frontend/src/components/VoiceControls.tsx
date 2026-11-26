@@ -27,8 +27,7 @@ export default function VoiceControls(props: Props) {
       </p>
       {props.heard && <p className="voice-heard">听到：{props.heard}</p>}
       <p className="voice-commands">
-        口令：教练，准备 / 开始举臂保持 / 双臂放下保持 / 切换动作 / 开始侧弯保持
-        / 结束练习。每条均以“教练”开头。
+        口令：教练，准备 / 开始 / 放下 / 结束。每条均以“教练”开头。
       </p>
     </section>
   );

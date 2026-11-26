@@ -89,23 +89,31 @@ export function createLiveSession(
       event.feedback_allowed &&
       event.tracking_quality === "good" &&
       event.deviations.length > 0;
+    const confirmedCorrect =
+      event.analysis_mode === "reviewed_rules_133" &&
+      event.assessment_status === "within_reference" &&
+      event.tracking_quality === "good";
     const signature = trustedEvidence
       ? event.deviations
           .map((x) => (x.event_id || x.type) + ":" + (x.side || ""))
           .sort()
           .join("|")
-      : ["partial", "poor"].includes(event.tracking_quality)
-        ? "camera_hint"
-        : "";
+      : confirmedCorrect
+        ? "within_reference"
+        : ["partial", "poor"].includes(event.tracking_quality)
+          ? "camera_hint"
+          : "";
     const isNewEvidence = Boolean(signature && signature !== evidence);
     if (signature !== evidence) {
       evidence = signature;
       evidenceVersion++;
       if (!signature) evidenceSnapshot = null;
       show(
-        signature
-          ? "正在获取当前画面的提醒…"
-          : "已获得 133 点测量，参考规则尚未校准。",
+        confirmedCorrect
+          ? "动作保持在参考范围内，正在获取练习提示…"
+          : signature
+            ? "正在获取当前画面的提醒…"
+            : "已获得 133 点测量，参考规则尚未校准。",
       );
     }
     if (isNewEvidence && trustedEvidence && history && transport.saveSnapshot) {

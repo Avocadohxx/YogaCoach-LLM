@@ -355,6 +355,23 @@ export default function App() {
           </p>
         </section>
         <aside>
+          <MemoryPanel
+            onOpenSession={(sessionId) => {
+              window.location.hash = `#/history/${encodeURIComponent(sessionId)}`;
+            }}
+            onDeleted={() => {
+              clearSummary();
+              setAnalysis(null);
+              setFeedbackState({
+                text: "服务器记录已清除。",
+                latestAdvice: "",
+                previousAdvice: "",
+                sessionId: run.current.id,
+              });
+            }}
+            active={active || busy}
+            refreshKey={(summary?.id || "") + serverSummary}
+          />
           <section className="card feedback">
             <h2>实时建议</h2>
             <div className="feedback-previous">
@@ -389,23 +406,7 @@ export default function App() {
             )}
             <p>图像帧发送到本机后端，使用 RTMW 提取 133 点；不上传到 LLM。</p>
           </section>
-          <MemoryPanel
-            onOpenSession={(sessionId) => {
-              window.location.hash = `#/history/${encodeURIComponent(sessionId)}`;
-            }}
-            onDeleted={() => {
-              clearSummary();
-              setAnalysis(null);
-              setFeedbackState({
-                text: "服务器记录已清除。",
-                latestAdvice: "",
-                previousAdvice: "",
-                sessionId: run.current.id,
-              });
-            }}
-            active={active || busy}
-            refreshKey={(summary?.id || "") + serverSummary}
-          />
+
           <section className="card">
             <h2>连接状态</h2>
             <p>网页 5173 → 后端 8000</p>

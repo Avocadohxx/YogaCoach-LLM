@@ -4,7 +4,7 @@ from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
 from backend import llm, memory
 from backend.evidence import store
-from backend.prompts import CAMERA_MESSAGES, CORRECTION_MESSAGES, Feedback
+from backend.prompts import CAMERA_MESSAGES, CORRECTION_MESSAGES, Feedback, WITHIN_REFERENCE_MESSAGE
 from backend.schemas import AnalysisResult
 from backend.tools import context_for, reference_for
 
@@ -47,6 +47,19 @@ def decide(state: State):
         prior=state['context'].get('prior_focus',[])
         candidates.sort(key=lambda d: not any(x['type']==d.type and x['side']==d.side for x in prior))
         return {'selected': candidates[0].model_dump()}
+    coverage = (event.rule_evaluation or {}).get('assessment_coverage') or {}
+    if (event.analysis_mode == 'reviewed_rules_133'
+            and event.tracking_quality == 'good'
+            and event.assessment_status == 'within_reference'
+            and coverage.get('complete_for_enabled_phase_rules')):
+        if not store.reserve(event.session_id, 'within_reference', seconds=30.0):
+            return {'feedback': Feedback(reason='within_reference_cooldown', tools_used=tools)}
+        return {'feedback': Feedback(
+            should_speak=True, feedback_type='encouragement',
+            text=WITHIN_REFERENCE_MESSAGE, mode='template',
+            reason='within_reference', grounded_event_type='within_reference',
+            tools_used=tools,
+        )}
     if event.tracking_quality == 'good':
         return {'feedback': Feedback(text='当前测量未触发新的持续偏差提醒。' if event.analysis_mode == 'reviewed_rules_133' else '已获取姿态测量；当前阶段或规则尚不能提供纠错。', reason='no_confirmed_deviation' if event.analysis_mode == 'reviewed_rules_133' else 'uncalibrated', tools_used=tools)}
     if not store.reserve(event.session_id, 'camera_hint'):

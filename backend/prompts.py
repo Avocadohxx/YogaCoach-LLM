@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class Feedback(BaseModel):
     model_config = ConfigDict(extra="forbid")
     should_speak: bool = False
-    feedback_type: Literal["correction", "camera_hint", "none"] = "none"
+    feedback_type: Literal["correction", "camera_hint", "encouragement", "none"] = "none"
     text: str = ""
     mode: Literal["evidence_gate", "template", "llm"] = "evidence_gate"
     reason: str = ""
@@ -14,6 +14,9 @@ class Feedback(BaseModel):
     target: str | None = None
     grounded_event_type: str | None = None
     tools_used: list[str] = Field(default_factory=list)
+
+
+WITHIN_REFERENCE_MESSAGE = "当前动作保持在参考范围内，继续自然呼吸，保持舒适。"
 
 
 CAMERA_MESSAGES = {
